@@ -255,7 +255,8 @@ function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $ka
      $pageNav = new pageNav( $total, $limitstart, $limit);
      
      
-     $query = "SELECT h.*, m.mahalle FROM #__hastalar AS h "
+     $query = "SELECT h.*, m.mahalle, i.ilce FROM #__hastalar AS h "
+     . "\n LEFT JOIN #__ilce AS i ON i.id=h.ilce "
      . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      . "\n GROUP BY h.id " 
@@ -271,6 +272,7 @@ function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $ka
         $rows[$i]['isim'] = $hasta->isim." ".$hasta->soyisim;
         $rows[$i]['tckimlik'] = $hasta->tckimlik;
         $rows[$i]['dogumtarihi'] = $hasta->dogumtarihi;
+        $rows[$i]['ilce'] = $hasta->ilce;
         $rows[$i]['mahalle'] = $hasta->mahalle;
         $rows[$i]['kayityili'] = $hasta->kayityili;
         $rows[$i]['kayitay'] = $hasta->kayitay; 
@@ -408,15 +410,6 @@ function editHasta($id) {
     $dbase->setQuery("SELECT * FROM #__ilce ORDER BY ilce ASC");
     $adres['ilce'] = $dbase->loadObjectList();
     
-    $dbase->setQuery("SELECT * FROM #__mahalle ORDER BY mahalle ASC");
-    $adres['mahalle'] = $dbase->loadObjectList();
-    
-    $dbase->setQuery("SELECT * FROM #__sokak ORDER BY sokakadi ASC");
-    $adres['sokak'] = $dbase->loadObjectList();
-    
-    $dbase->setQuery("SELECT * FROM #__kapino ORDER BY kapino ASC");
-    $adres['kapino'] = $dbase->loadObjectList();
-    
     $dilce[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
     $dmahalle[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
     $dsokak[] = mosHTML::makeOption('', 'Bir Sokak Seçin');
@@ -426,22 +419,46 @@ function editHasta($id) {
     $dilce[] = mosHTML::makeOption($ilce->id, $ilce->ilce);
     }
     
-    foreach ($adres['mahalle'] as $mahalle) {
-    $dmahalle[] = mosHTML::makeOption($mahalle->id, $mahalle->mahalle);
+    if ($row->ilce) {
+        $dbase->setQuery("SELECT * FROM #__mahalle "
+        . "\n WHERE ilceid=".$row->ilce
+        . "\n ORDER BY mahalle ASC");
+        $adres['mahalle'] = $dbase->loadObjectList();
+        
+        foreach ($adres['mahalle'] as $m) {
+        $dmahalle[] = mosHTML::makeOption($m->id, $m->mahalle);
+        }
     }
     
-    foreach ($adres['sokak'] as $sokak) {
-    $dsokak[] = mosHTML::makeOption($sokak->id, $sokak->sokakadi);
+    if ($row->mahalle) {
+        $dbase->setQuery("SELECT * FROM #__sokak "
+        . "\n WHERE mahalleid=".$row->mahalle
+        . "\n ORDER BY sokakadi ASC "
+        );
+        $adres['sokak'] = $dbase->loadObjectList();
+        
+        foreach ($adres['sokak'] as $s) {
+        $dsokak[] = mosHTML::makeOption($s->id, $s->sokakadi);
+        }
     }
     
-    foreach ($adres['kapino'] as $kapino) {
-    $dkapino[] = mosHTML::makeOption($kapino->id, $kapino->kapino);
+    if ($row->sokak) {
+        $dbase->setQuery("SELECT * FROM #__kapino "
+        . "\n WHERE sokakid=".$row->sokak
+        . "\n ORDER BY kapino ASC "
+        );
+        $adres['kapino'] = $dbase->loadObjectList();
+        
+        foreach ($adres['kapino'] as $k) {
+        $dkapino[] = mosHTML::makeOption($k->id, $k->kapino);
+        }
     }
+    
     
     $lists['ilce'] = mosHTML::selectList($dilce, 'ilce', 'id="ilce" required', 'value', 'text', $row->ilce);
-    $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalle', 'id="mahalle" required disabled="disabled"', 'value', 'text', $row->mahalle);
-    $lists['sokak'] = mosHTML::selectList($dsokak, 'sokak', 'id="sokak" required disabled="disabled"', 'value', 'text', $row->sokak);
-    $lists['kapino'] = mosHTML::selectList($dkapino, 'kapino', 'id="kapino" required disabled="disabled"', 'value', 'text', $row->kapino);
+    $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalle', 'id="mahalle" required', 'value', 'text', $row->mahalle);
+    $lists['sokak'] = mosHTML::selectList($dsokak, 'sokak', 'id="sokak" required', 'value', 'text', $row->sokak);
+    $lists['kapino'] = mosHTML::selectList($dkapino, 'kapino', 'id="kapino" required', 'value', 'text', $row->kapino);
 
     HastaList::editHasta($row, $lists, $limitstart, $limit);
 }

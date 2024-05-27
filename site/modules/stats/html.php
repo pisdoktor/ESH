@@ -1207,6 +1207,7 @@ echo $pageNav->writePagesLinks($link);
     <table class="table table-striped">
     <thead class="thead-dark"> 
     <tr>
+    <th scope="col">İlçe Adı</th>
       <th scope="col">Mahalle Adı</th>
       <th scope="col">Hasta Sayısı</th>
     </tr>
@@ -1218,6 +1219,7 @@ echo $pageNav->writePagesLinks($link);
    
   ?>
   <tr>
+  <th><?php echo $row->ilce ? $row->ilce : 'İlçe Girilmemiş';?></th>
     <th><?php echo $row->mahalle ? $row->mahalle : 'Mahalle Girilmemiş';?></th>
     <td><?php echo $row->sayi;?></td>
       </tr>
@@ -1226,6 +1228,7 @@ echo $pageNav->writePagesLinks($link);
   
   <tr>
     <th>TOPLAM:</th>
+    <th></th>
     <th><?php echo $total;?></th>
   </tr>
   </tbody>

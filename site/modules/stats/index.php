@@ -362,6 +362,32 @@ function adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ordering) {
     foreach ($adres['ilce'] as $ai) {
     $dilce[] = mosHTML::makeOption($ai->id, $ai->ilce."(".$ai->hastasayisi.")");
     }
+    
+    if ($ilce) {
+        $dbase->setQuery("SELECT m.*, COUNT(h.id) as sayi FROM #__mahalle AS m "
+        . "\n LEFT JOIN #__hastalar AS h ON h.mahalle=m.id "
+        . "\n WHERE h.pasif=0 AND m.ilceid=".$ilce
+        . "\n GROUP BY m.id "
+        );
+        $mahalleler = $dbase->loadObjectList();
+        
+        foreach ($mahalleler as $m) {
+        $dmahalle[] = mosHTML::makeOption($m->id, $m->mahalle."(".$m->sayi.")");
+        }
+    }
+    
+    if ($mahalle) {
+        $dbase->setQuery("SELECT s.*, COUNT(h.id) as sayi FROM #__sokak AS s "
+        . "\n LEFT JOIN #__hastalar AS h ON h.sokak=s.id "
+        . "\n WHERE h.pasif=0 AND s.mahalleid=".$mahalle
+        . "\n GROUP BY s.id "
+        );
+        $sokaklar = $dbase->loadObjectList();
+        
+        foreach ($sokaklar as $s) {
+        $dsokak[] = mosHTML::makeOption($s->id, $s->sokakadi."(".$s->sayi.")");
+        }
+    }
 
 
     $lists['ilce'] = mosHTML::selectList($dilce, 'ilce', 'id="ilce"', 'value', 'text', $ilce);
@@ -849,11 +875,12 @@ function temelStats($baslangictarih, $bitistarih, $ordering) {
 function hMahalle() {
     global $dbase;
     
-    $dbase->setQuery("SELECT COUNT(h.id) as sayi, m.mahalle FROM #__hastalar AS h "
+    $dbase->setQuery("SELECT COUNT(h.id) as sayi, m.*, i.ilce FROM #__hastalar AS h "
     . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
+    . "\n LEFT JOIN #__ilce AS i ON i.id=m.ilceid "
     . "\n WHERE h.pasif='0' "
     . "\n GROUP BY m.id "
-    . "\n ORDER BY m.mahalle ASC" );
+    . "\n ORDER BY i.ilce ASC, m.mahalle ASC" );
     
     $rows = $dbase->loadObjectList();
     

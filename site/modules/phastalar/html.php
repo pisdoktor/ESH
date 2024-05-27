@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class HastaList {
     
-    function getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering) {
+    function getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden) {
         $link = 'index.php?option=site&bolum=phastalar';
         if ($baslangictarih) {
             $link .= "&amp;baslangictarih=".$baslangictarih;
@@ -46,11 +46,13 @@ class HastaList {
     <div class="input-group-addon">arası</div>
      
     </div>
+    </div>
     
-    
+    <div class="col-sm-3">
+    <?php echo $pasifneden;?>
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-3">
     <input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-primary"  />
     </div>
     
@@ -90,14 +92,14 @@ class HastaList {
     <tbody>
     <?php
     $pasif = array(
-  '0' => 'İyileşme',
-  '1' => 'Vefat',
-  '2' => 'İkamet Değişikliği',
-  '3' => 'Tedaviyi Reddetme',
-  '4' => 'Tedaviye Yanıt Alamama',
-  '5' => 'Sonlandırmanın Talep Edilmesi',
-  '6' => 'Tedaviye Personel Gerekmemesi',
-  '7' => 'ESH Takibine Uygun Olmaması'
+  '1' => 'İyileşme',
+  '2' => 'Vefat',
+  '3' => 'İkamet Değişikliği',
+  '4' => 'Tedaviyi Reddetme',
+  '5' => 'Tedaviye Yanıt Alamama',
+  '6' => 'Sonlandırmanın Talep Edilmesi',
+  '7' => 'Tedaviye Personel Gerekmemesi',
+  '8' => 'ESH Takibine Uygun Olmaması'
   ); 
     foreach($rows as $row) {
         $aylar = array('' => 'Boş','01' => 'Ocak','02' => 'Şubat','03' => 'Mart','04' => 'Nisan','05' => 'Mayıs',

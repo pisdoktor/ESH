@@ -294,14 +294,14 @@ class Hasta extends DBTable {
     function hastaPasifNedeni($required=0) {
         
         $c = array();
-        $c[] = mosHTML::makeOption('0', 'İyileşme');
-        $c[] = mosHTML::makeOption('1', 'Vefat');
-        $c[] = mosHTML::makeOption('2', 'İkamet Değişikliği');
-        $c[] = mosHTML::makeOption('3', 'Tedaviyi Reddetme');
-        $c[] = mosHTML::makeOption('4', 'Tedaviye Yanıt Alamama');
-        $c[] = mosHTML::makeOption('5', 'Sonlandırmanın Talep Edilmesi');
-        $c[] = mosHTML::makeOption('6', 'Tedaviye Personel Gerekmemesi');
-        $c[] = mosHTML::makeOption('7', 'ESH Takibine Uygun Olmaması');
+        $c[] = mosHTML::makeOption('1', 'İyileşme');
+        $c[] = mosHTML::makeOption('2', 'Vefat');
+        $c[] = mosHTML::makeOption('3', 'İkamet Değişikliği');
+        $c[] = mosHTML::makeOption('4', 'Tedaviyi Reddetme');
+        $c[] = mosHTML::makeOption('5', 'Tedaviye Yanıt Alamama');
+        $c[] = mosHTML::makeOption('6', 'Sonlandırmanın Talep Edilmesi');
+        $c[] = mosHTML::makeOption('7', 'Tedaviye Personel Gerekmemesi');
+        $c[] = mosHTML::makeOption('8', 'ESH Takibine Uygun Olmaması');
         
         
         return mosHTML::radioList($c, 'pasifnedeni', 'id="pasifnedeni" class="radio-inline"', 'value', 'text', $this->pasifnedeni);

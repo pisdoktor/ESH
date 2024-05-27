@@ -880,10 +880,17 @@ foreach ($tab2 as $v=>$k) {
 <input type="hidden" name="task" value="list" /> 
 
 <div class="row">
-<div class="col-sm-3">
+<div class="col-sm-2" id="leftside">
 
-<div class="panel panel-default" id="leftside"> 
-<div class="panel-heading"><h4>Arama Seçenekleri</h4></div>
+<div class="panel panel-default"> 
+<div class="panel-heading">
+<div class="row">
+<div class="col-xs-10"><h4>Arama Seçenekleri</h4></div>
+<div class="col-xs-2" align="right">
+
+</div>
+</div>
+</div>
         
 <div class="panel-body">
 
@@ -992,9 +999,9 @@ $(document).ready(function(){
 </div> <!-- col-sm -->
 
 
-<div class="col-sm-9">    
+<div class="col-sm-10" id="mainside">    
     
-<div class="panel panel-primary" id="mainside">
+<div class="panel panel-primary">
 <div class="panel-heading">
 <div class="row">
     <div class="col-xs-11"><h4><?php echo $pasif ? 'Pasif' : 'Aktif';?> Hasta Listesi</h4></div>
@@ -1020,6 +1027,12 @@ $(document).ready(function(){
       TC Kimlik Numarası
   <span><a href="<?php echo $link;?>&ordering=h.tckimlik-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.tckimlik-ASC">▼</a></span>
+    </div>  
+    </th>
+    <th scope="col"> <div>
+      İlçe
+  <span><a href="<?php echo $link;?>&ordering=h.ilce-DESC">▲</a></span>
+  <span><a href="<?php echo $link;?>&ordering=h.ilce-ASC">▼</a></span>
     </div>  
     </th>
       <th scope="col"> <div>
@@ -1083,7 +1096,8 @@ $(document).ready(function(){
 </div> 
       </th>
       <td><?php echo $row['tckimlik'];?></td>
-      <td><?php echo $row['mahalle'];?> </td>
+      <td><?php echo $row['ilce'];?></td> 
+      <td><?php echo $row['mahalle'];?></td>
       <td><?php echo $row['kayityili'];?> <?php echo $aylar[$row['kayitay']];?></td>
       <td><?php echo $row['dtarihi'];?></td>
       <td><?php echo yas_bul($row['dogumtarihi']);?></td> 
@@ -1132,7 +1146,7 @@ echo $pageNav->writePagesLinks($link);
 
 </div>
    
-</form> 
+</form>
 <?php    
     }    
 }

@@ -9,7 +9,7 @@ class Version {
 	
 	var $DEV_STATUS  = 'Stabil';
 	
-	var $DEV_LEVEL   = '1';
+	var $DEV_LEVEL   = '3';
 	
 	var $CODENAME    = 'Kayseri';
 	
