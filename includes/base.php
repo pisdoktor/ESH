@@ -27,6 +27,11 @@ foreach ($classes as $class) {
 }
 
 $dbase = new DB( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
+/**
+* @desc SET sql mode utf-8
+*/
+$dbase->setQuery("SET NAMES utf8");
+$dbase->query();
 
 if ($dbase->getErrorNum()) {
 	$systemError = $dbase->getErrorNum();

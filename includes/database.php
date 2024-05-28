@@ -84,6 +84,7 @@ class DB {
 		//@mysql_query("SET NAMES 'utf8'", $this->_resource);
 		$this->_ticker = 0;
 		$this->_log = array();
+        //@mysqli_set_charset($this->_resource, 'utf8');
 	}
 	/**
 	 * @param int

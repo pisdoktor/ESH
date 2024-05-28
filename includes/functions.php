@@ -64,6 +64,8 @@ if (!$my->id) {
 <li><a href="index.php?option=site&bolum=stats&task=personel">Tarihe Göre Personeller</a></li>
 
 <li><a href="index.php?option=site&bolum=stats&task=hgirilmeyen">Bilgileri Eksik Hastalar</a></li> 
+
+<li><a href="index.php?option=site&bolum=dosyalama">Dosyalama için Hastalar</a></li>
 </ul>
 </li>
 
@@ -215,14 +217,14 @@ function loadCikarilmaNedeni() {
     $rows = $dbase->loadObjectList();
     
     $neden = array(
-    '0' => 'İyileşme',
-    '1' => 'Vefat',
-    '2' => 'İkamet Değişikliği',
-    '3' => 'Tedaviyi Reddetme',
-    '4' => 'Tedaviye Yanıt Alamama',
-    '5' => 'Sonlandırmanın Talep Edilmesi',
-    '6' => 'Tedaviye Personel Gerekmemesi',
-    '7' => 'ESH Takibine Uygun Olmaması'
+    '1' => 'İyileşme',
+    '2' => 'Vefat',
+    '3' => 'İkamet Değişikliği',
+    '4' => 'Tedaviyi Reddetme',
+    '5' => 'Tedaviye Yanıt Alamama',
+    '6' => 'Sonlandırmanın Talep Edilmesi',
+    '7' => 'Tedaviye Personel Gerekmemesi',
+    '8' => 'ESH Takibine Uygun Olmaması'
     );
     ?>
 <div class="panel panel-danger">

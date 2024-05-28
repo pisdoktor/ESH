@@ -1008,7 +1008,7 @@ $(document).ready(function(){
     <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
 </div>
 </div>
-    <table class="table table-striped">
+    <table class="table table-striped" id="datatablesSimple">
     <thead class="thead-dark">
     <tr>
     <th scope="col">
@@ -1111,6 +1111,20 @@ $(document).ready(function(){
     </tbody>
 </table>
 <!--
+<script src="<?php echo SITEURL;?>/site/modules/hastalar/datatables-simple.js" type="text/javascript"></script>
+<script>
+new DataTable('#datatablesSimple', {
+    fixedHeader: true,
+    layout: {
+        topStart: {
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
+        }
+    }
+    
+});
+</script>
 <script>
     $(document).ready(function () {
         $("#btnExport").click(function () {

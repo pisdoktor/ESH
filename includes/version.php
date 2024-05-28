@@ -9,9 +9,9 @@ class Version {
 	
 	var $DEV_STATUS  = 'Stabil';
 	
-	var $DEV_LEVEL   = '3';
+	var $DEV_LEVEL   = '4';
 	
-	var $CODENAME    = 'Kayseri';
+	var $CODENAME    = 'Yozgat';
 	
 	var $RELDATE     = '14 Mart 2024';
 	
