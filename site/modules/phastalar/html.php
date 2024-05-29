@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class HastaList {
     
-    function getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden) {
+    function getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim) {
         $link = 'index.php?option=site&bolum=phastalar';
         if ($baslangictarih) {
             $link .= "&amp;baslangictarih=".$baslangictarih;
@@ -16,6 +16,10 @@ class HastaList {
         
          if ($ordering) {
             $link .= "&ordering=".$ordering;
+        }
+        
+        if ($secim) {
+            $link .= "&secim=".$secim;
         }
     ?>
     <form action="index.php" method="GET" name="adminForm" role="form"> 

@@ -95,5 +95,5 @@ function getHastaList($baslangictarih, $bitistarih, $ordering, $secim) {
     $dbase->setQuery($query, $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
-    HastaList::getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden);
+    HastaList::getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim);
 }
