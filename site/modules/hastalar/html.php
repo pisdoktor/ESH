@@ -212,51 +212,47 @@ $list[] = $k;
     } 
     
     function editHasta($row, $lists, $limitstart, $limit) {
+    include(dirname(__FILE__). '/hastaliklar.php');
     ?>
     <form action="index.php" data-toggle="validator" method="post" name="adminForm" role="form" novalidate>
     
-    <div class="panel panel-<?php echo $row->pasif ? 'danger':'default';?>">
+    <div class="panel panel-<?php echo $row->pasif ? 'danger':'default';?>"><!-- main panel -->
     
     <div class="panel-heading"><h4><?php echo $row->id ? 'Düzenle : '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Ekle';?></h4></div>
     
-    <div class="panel-body">       
+    <div class="panel-body"><!-- main panel-body -->
     
-    <div class="form-group"> 
-    <div class="panel with-nav-tabs">  <!-- panel navtabs -->
+    <div class="row"><!-- row 1 -->
     
-    <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1default" data-toggle="tab"><strong>Temel Bilgiler</strong></a></li>
-    <li><a href="#tab2default" data-toggle="tab"><strong>Hastalık Bilgileri</strong></a></li> 
-    <li><a href="#tab3default" data-toggle="tab"><strong>Hasta Özellikleri</strong></a></li>
-    </ul>
-
-    <div class="panel-body">  <!-- panel body -->
-    <div class="tab-content">        <!-- tab content -->
-                        
-<div class="tab-pane fade in active" id="tab1default"> <!-- 1. Tab -->
-                        
+    <div class="col-sm-6">
+    
+    <div class="panel panel-primary">
+    <div class="panel-heading"><h5>Temel Bilgileri</h5></div>
+    <div class="panel-body"><!-- temel bilgiler-->
+    
 <div class="form-group row">
-<div class="col-sm-3"><label for="tckimlik">TC Kimlik Numarası:</label></div>
-<div class="col-sm-4"><input type="text" data-minlength="11" maxlength="11" id="tckimlik" name="tckimlik" class="form-control" value="<?php echo $row->tckimlik;?>" required>
+<div class="col-sm-6"><label for="tckimlik">TC Kimlik Numarası:</label></div>
+<div class="col-sm-6"><input type="text" data-minlength="11" maxlength="11" id="tckimlik" name="tckimlik" class="form-control" value="<?php echo $row->tckimlik;?>" required>
 <?php if (!$row->id) { ?>
 <span id="sonuc"></span>
 <?php } ?>
 </div>
 </div>
-    
+
 <div class="form-group row">
-<div class="col-sm-3"><label for="isim">Hastanın Adı:</label></div>
-<div class="col-sm-4"><input id="isim" type="text" name="isim" class="form-control" value="<?php echo $row->isim;?>" required></div>
+<div class="col-sm-6"><label for="isim">Hastanın Adı:</label></div>
+<div class="col-sm-6"><input id="isim" type="text" name="isim" class="form-control" value="<?php echo $row->isim;?>" required></div>
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="soyisim">Hastanın Soyadı:</label></div>
-<div class="col-sm-4"><input type="text" id="soyisim" name="soyisim" class="form-control" value="<?php echo $row->soyisim;?>" required></div>
+<div class="col-sm-6"><label for="soyisim">Hastanın Soyadı:</label></div>
+<div class="col-sm-6"><input type="text" id="soyisim" name="soyisim" class="form-control" value="<?php echo $row->soyisim;?>" required></div>
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="dogumtarihi">Doğum Tarihi:</label></div>  
-<div class="col-sm-4 date" id="datepicker">
+
+<div class="col-sm-6"><label for="dogumtarihi">Doğum Tarihi:</label></div>  
+<div class="col-sm-6 date" id="datepicker">
 
 <div class='input-group date' id='datepicker1' data-date-format="dd.mm.yyyy">
 <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="dogumtarihi" name="dogumtarihi" value="<?php echo $row->dogumtarihi;?>" required>
@@ -264,76 +260,343 @@ $list[] = $k;
 <span class="glyphicon glyphicon-calendar"></span>
 </span>
 </div>
-
-</div>
 </div>
 
-<div class="form-group row">
-<div class="col-sm-3"><label>Cinsiyeti:</label></div>
-<div class="col-sm-4"><?php  echo $row->hastaCinsiyet(1); ?></div>
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="kayityili">Kayıt Yılı:</label></div>
-<div class="col-sm-4"><?php  echo $row->hastaKayitYili(1);?></div>
+<div class="col-sm-6"><label>Cinsiyeti:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaCinsiyet(1); ?></div>
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="kayitay">Kayıt Ayı:</label></div>
-<div class="col-sm-4"><?php  echo mosHTML::monthSelectList('kayitay', 'id="kayitay" required', $row->kayitay, 1);?></div>
+<div class="col-sm-6"><label for="kayityili">Kayıt Yılı:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaKayitYili(1);?></div>
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="ilce">İlçe:</label></div>
-<div class="col-sm-4"><?php echo $lists['ilce'];?></div>
+<div class="col-sm-6"><label for="kayitay">Kayıt Ayı:</label></div>
+<div class="col-sm-6"><?php  echo mosHTML::monthSelectList('kayitay', 'id="kayitay" required', $row->kayitay, 1);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label for="ilce">İlçe:</label></div>
+<div class="col-sm-6"><?php echo $lists['ilce'];?></div>
 </div>
 
 <div class="form-group row"> 
-<div class="col-sm-3"><label for="mahalle">Mahalle:</label></div>
-<div class="col-sm-4"><?php echo $lists['mahalle'];?></div>
+<div class="col-sm-6"><label for="mahalle">Mahalle:</label></div>
+<div class="col-sm-6"><?php echo $lists['mahalle'];?></div>
 </div>
                     
- 
 <div class="form-group row">                    
-<div class="col-sm-3"><label for="sokak">Cadde/Sokak:</label></div>
-<div class="col-sm-4"><?php echo $lists['sokak'];?></div>
+<div class="col-sm-6"><label for="sokak">Cadde/Sokak:</label></div>
+<div class="col-sm-6"><?php echo $lists['sokak'];?></div>
 </div>
 
 <div class="form-group row">                    
-<div class="col-sm-3"><label for="kapino">Kapı No:</label></div>
-<div class="col-sm-4"><?php echo $lists['kapino'];?></div>
+<div class="col-sm-6"><label for="kapino">Kapı No:</label></div>
+<div class="col-sm-6"><?php echo $lists['kapino'];?></div>
 </div>
-
-
 
 
 
 <div class="form-group row">
-<div class="col-sm-3"><label>Hasta Dosyası Pasif:</label></div>
-<div class="col-sm-4"><?php  echo $row->hastaPasif(1);?></div>
+<div class="col-sm-6"><label>Hastanın Bağımlılık Durumu:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaBagimlilik($row->id);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Nazogastrik Takılı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('ng', '', $row->ng);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>PEG Takılı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('peg', '', $row->peg);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Port Takılı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('port', '', $row->port);?></div>
+</div>
+ 
+<div class="form-group row">
+<div class="col-sm-6"><label>Oksijen Bağımlı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('o2bagimli', '', $row->o2bagimli);?></div>
+</div>
+ 
+<div class="form-group row">
+<div class="col-sm-6"><label>Ventilatöre Bağlı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('ventilator', '', $row->ventilator);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Kolostomili:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('kolostomi', '', $row->kolostomi);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Hasta Geçici Takipli:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaGecici($row->id);?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Sonda Takılı:</label></div>
+<div class="col-sm-6"><?php echo mosHTML::yesnoRadioList('sonda', '', $row->sonda);?></div>
+</div>
+
+<div id="sondacheck" style="display:none">
+<div class="form-group row">
+<div class="col-sm-6"><label for="sondatarihi">En Son Sonda Takılma Tarihi:</label></div>
+<div class='col-sm-6 input-group date' id='sondatarihi1' data-date-format="dd.mm.yyyy">
+<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="sondatarihi" name="sondatarihi" value="<?php echo $row->sondatarihi ? tarihCevir($row->sondatarihi, 1) : '';?>" />
+<span class="input-group-addon">
+<span class="glyphicon glyphicon-calendar"></span>
+</span>
+</div>
+
+</div>
+
+</div> <!-- sondacheck -->
+
+<div class="form-group row">
+<div class="col-sm-6"><label>Hasta Dosyası Pasif:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaPasif(1);?></div>
 </div>
 
 <div id="pasifcheck" style="display:none">
+
 <div class="form-group row">
-<div class="col-sm-3"><label for="pasiftarihi">Pasif Edilme Tarihi:</label></div>
-<div class='col-sm-4 input-group date' id='pasiftarihi1' data-date-format="dd.mm.yyyy">
+<div class="col-sm-6"><label for="pasiftarihi">Pasif Edilme Tarihi:</label></div>
+
+<div class='col-sm-6 input-group date' id='pasiftarihi1' data-date-format="dd.mm.yyyy">
 <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="pasiftarihi" name="pasiftarihi" value="<?php echo $row->pasiftarihi ? tarihCevir($row->pasiftarihi, 1) : '';?>" />
 <span class="input-group-addon">
 <span class="glyphicon glyphicon-calendar"></span>
 </span>
 </div>
+
 </div>
 
 
 <div class="form-group row">
-<div class="col-sm-3"><label>Pasif Edilme Nedeni:</label></div>
-<div class="col-sm-9"><?php  echo $row->hastaPasifNedeni();?></div>
+<div class="col-sm-6"><label>Pasif Edilme Nedeni:</label></div>
+<div class="col-sm-6"><?php  echo $row->hastaPasifNedeni();?></div>
+</div>
+
+</div><!-- pasifcheck -->
+
+    </div><!-- body temel bilgiler -->
+    </div><!-- panel-primary-->
+    </div><!-- col-sm-6-->
+    
+    <div class="col-sm-6">
+    <div class="panel panel-primary">
+    <div class="panel-heading"><h5>Hastalıkları</h5></div>
+    <div class="panel-body"><!-- ek özellikler-->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab1" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+<h5 class="collapsed">Nörolojik ve Psikiyatrik Hastalıklar</h5>
+</div>
+</span>
+                    
+<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+<div class="panel-body">
+<?php 
+foreach ($tab[1] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
 </div>
 </div>
 
-</div>  <!-- 1. Tab -->
+</div> 
+ 
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab2" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+<h5 class="collapsed">Kas Hastalıkları (Yatağa Bağımlı)</h5>
+</div>
+</span>
 
-<script>                                  
+<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+<div class="panel-body">
+<?php 
+foreach ($tab[2] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>
+ 
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab3" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+<h5 class="collapsed">Kardiyovasküler Hastalıklar</h5>
+</div>
+</span>
+
+<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+<div class="panel-body">
+<?php 
+foreach ($tab[3] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab4" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+<h5 class="collapsed">Kronik ve Endokrin Hastalıklar</h5>
+</div>
+</span>
+
+<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+<div class="panel-body">
+<?php 
+foreach ($tab[4] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div> 
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab5" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+<h5 class="collapsed">Hematolojik ve Onkolojik Hastalıklar</h5>
+</div>
+</span>
+
+<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+<div class="panel-body">
+<?php 
+foreach ($tab[5] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab6" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingSix" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+<h5 class="collapsed">Akciğer ve Solunum Sistemi Hastalıkları</h5>
+</div>
+</span>
+
+<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+<div class="panel-body">
+<?php 
+foreach ($tab[6] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab7" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingSeven" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+<h5 class="collapsed">Ortopedi ve Travmatoloji Hastalıkları</h5>
+</div>
+</span>
+
+<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+<div class="panel-body">
+<?php 
+foreach ($tab[7] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>
+
+<div class="panel panel-primary">
+<span class="side-tab" data-target="#tab8" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="headingEight" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+<h5 class="collapsed">Diğer Hastalıklar</h5>
+</div>
+</span>
+
+<div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+<div class="panel-body">
+<?php 
+foreach ($tab[8] as $v=>$k) {
+    
+    $checked = $row->$v ? " checked=\"checked\"" : "";
+
+    echo '<label class="checkbox-inline">';
+    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+}
+?>
+</div>
+</div>
+</div>   
+ 
+</div>
+    </div><!-- body hastalıkları -->
+    </div><!-- panel-success -->
+    </div><!-- col-sm-6 -->
+
+    
+    
+    </div><!-- row 1-->
+
+    
+    <div class="form-group row">
+<div class="col-sm-7">
+<input type="button" id="save" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a>
+</div>
+</div>
+<input type="hidden" name="option" value="site" />
+    <input type="hidden" name="bolum" value="hastalar" />
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
+    <input type="hidden" name="limit" value="<?php echo $limit;?>" />
+    <input type="hidden" name="id" value="<?php echo $row->id;?>" />
+    <script>                                  
 $(document).ready(function(){
     
         $("#ilce").on("change", function(){
@@ -379,378 +642,8 @@ $(document).ready(function(){
                 }});
         }
     });
-</script>
-                        
-                        
-<div class="tab-pane fade" id="tab2default"> <!-- 2. tab -->
 
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab1" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-<h5 class="collapsed">Nörolojik ve Psikiyatrik Hastalıklar</h5>
-</div>
-</span>
-                    
-<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-<div class="panel-body">
-<?php 
-$tab1 = array(
-'parkinson' => 'Parkinson',
-'alzheimer' => 'Alzheimer',
-'demans' => 'Demans',
-'senilite' => 'Senilite(Yaşlılık)',
-'epilepsi' => 'Epilepsi',
-'hidrosefali' => 'Hidrosefali',
-'ensefalopati' => 'Ensefalopati',
-'svo' => 'SVO',
-'sspe' => 'SSPE',
-'miyelit' => 'Miyelit',
-'als' => 'ALS',
-'motornoron' => 'Motor Nöron Hastalığı',
-'multiplskleroz' => 'Multipl Skleroz',
-'noropatikagri' => 'Nöropatik Ağrı',
-'kuadripleji' => 'Kuadripleji',
-'hemipleji' => 'Hemipleji',
-'parapleji' => 'Parapleji',
-'tetrapleji' => 'Tetrapleji',
-'mentalretardasyon' => 'Mental Retardasyon',
-'poliosekel' => 'Polio Sekeli',
-'depresyon' => 'Depresyon',
-'psikoz' => 'Psikoz',
-'bipolar' => 'Bipolar Bozukluk',
-'sizofren' => 'Şizofreni',
-'serebralpalsi' => 'Serebral Palsi'
-);
-
-foreach ($tab1 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div> 
- 
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab2" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-<h5 class="collapsed">Kas Hastalıkları (Yatağa Bağımlı)</h5>
-</div>
-</span>
-
-<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-<div class="panel-body">
-<?php 
-$tab2 = array(
-'kasatrofisi' => 'Kas Atrofisi',
-'ataksi' => 'Ataksi',
-'muskulerdistrofi' => 'Müsküler Distrofi',
-'spastikveflask' => 'Spastik ve Flask Tip Özürlü'
-);
-
-foreach ($tab2 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
- 
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab3" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-<h5 class="collapsed">Kardiyovasküler Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-<div class="panel-body">
-<?php 
-$tab3 = array(
-'aritmi' => 'Aritmi',
-'ht' => 'Hipertansiyon',
-'kalpkapak' => 'Kalp Kapak Hastalıkları',
-'kalpyet' => 'Kalp Yetmezliği',
-'koronerarter' => 'Koroner Arter Hastalığı',
-'venozdol' => 'Venöz Dolaşım Bozukluğu'
-);
-
-foreach ($tab3 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab4" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-<h5 class="collapsed">Kronik ve Endokrin Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-<div class="panel-body">
-<?php 
-$tab4 = array(
-'dm' => 'Diyabet',
-'hiperlipidemi' => 'Hiperlipidemi',
-'hipertiroidi' => 'Hipertiroidi',
-'hipotiroidi' => 'Hipotiroidi',
-'obezite' => 'Obezite',
-'diyaliz' => 'Diyaliz Hastası',
-'bobrekyet' => 'Böbrek Yetmezliği',
-'siroz' => 'Karaciğer Sirozu'
-);
-
-foreach ($tab4 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div> 
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab5" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-<h5 class="collapsed">Hematolojik ve Onkolojik Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-<div class="panel-body">
-<?php 
-$tab5 = array(
-'anemi' => 'Anemi',
-'itp' => 'ITP',
-'ciltkanser' => 'Cilt Kanseri',
-'memekanser' => 'Meme Kanseri',
-'farinkskanser' => 'Farinks Kanseri',
-'trakeakanser' => 'Trakea Kanseri',
-'akckanseri' => 'Akciğer Kanseri',
-'ozofaguskanser' => 'Özofagus Kanseri',
-'midekanser' => 'Mide Kanseri',
-'barsakkanser' => 'Bağırsak Kanseri',
-'karacigerkanser' => 'Karaciğer Kanseri',
-'pankreaskanser' => 'Pankreas Kanseri',
-'safrakanser' => 'Safra Kesesi Kanseri',
-'prostatkanser' => 'Prostat Kanseri',
-'tiroidkanser' => 'Tiroid Kanseri',
-'hipofizkanser' => 'Hipofiz Kanseri',
-'bobrekkanser' => 'Böbrek Kanseri',
-'overkanser' => 'Over Kanseri',
-'uteruskanser' => 'Uterus Kanseri',
-'kemikkanser' => 'Kemik Kanseri',
-'beyinkanser' => 'Beyin Kanseri',
-'multiplmiyelom' => 'Multipl Miyelom'
-);
-
-foreach ($tab5 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab6" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingSix" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-<h5 class="collapsed">Akciğer ve Solunum Sistemi Hastalıkları</h5>
-</div>
-</span>
-
-<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-<div class="panel-body">
-<?php 
-$tab6 = array(
-'koah' => 'KOAH',
-'astim' => 'Astım',
-'tuberkuloz' => 'Tüberküloz',
-'kistikfibroz' => 'Kistik Fibrozis'
-);
-
-foreach ($tab6 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab7" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingSeven" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-<h5 class="collapsed">Ortopedi ve Travmatoloji Hastalıkları</h5>
-</div>
-</span>
-
-<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
-<div class="panel-body">
-<?php 
-$tab7 = array(
-'dekubitulseri' => 'Dekübitus Ülseri',
-'diskopati' => 'Diskopati',
-'extremiteamp' => 'Ekstremitelerde Ampütasyon',
-'kalcafraktur' => 'Kalça Fraktürü',
-'operekirik' => 'Opere Edilmiş veya mobilizasyon kısıtlayıcı kırıklar',
-'osteoporoz' => 'Osteoporoz',
-'omurgafraktur' => 'Omurga Fraktürü'
-);
-
-foreach ($tab7 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-default">
-<span class="side-tab" data-target="#tab8" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingEight" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-<h5 class="collapsed">Diğer Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
-<div class="panel-body">
-<?php 
-$tab2 = array(
-'ebullosa' => 'Epidermolizis Büllosa',
-'zona' => 'Zona',
-'fil' => 'Fil Hastalığı',
-'sle' => 'Sistemik Lupus Eritomatozus',
-'bph' => 'Benign Prostat Hipertrofisi'
-);
-
-foreach ($tab2 as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>   
- 
-</div>
-</div>  <!-- 2. tab -->     
-
-<div class="tab-pane fade" id="tab3default"> <!-- 3. Tab -->     
-<div class="form-group row">
-<div class="col-sm-3"><label>Hastanın Bağımlılık Durumu:</label></div>
-<div class="col-sm-4"><?php  echo $row->hastaBagimlilik($row->id);?></div>
-</div>
-
-<div class="form-group row">
-<div class="col-sm-3"><label>Nazogastrik Takılı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('ng', '', $row->ng);?></div>
-</div>
-<div class="form-group row">
-<div class="col-sm-3"><label>PEG Takılı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('peg', '', $row->peg);?></div>
-</div>
-<div class="form-group row">
-<div class="col-sm-3"><label>Port Takılı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('port', '', $row->port);?></div>
-</div>
-<div class="form-group row">
-<div class="col-sm-3"><label>Oksijen Bağımlı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('o2bagimli', '', $row->o2bagimli);?></div>
-</div>
-<div class="form-group row">
-<div class="col-sm-3"><label>Ventilatöre Bağlı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('ventilator', '', $row->ventilator);?></div>
-</div>
-
-<div class="form-group row">
-<div class="col-sm-3"><label>Kolostomili:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('kolostomi', '', $row->kolostomi);?></div>
-</div>
-
-<div class="form-group row">
-<div class="col-sm-3"><label>Hasta Geçici Takipli:</label></div>
-<div class="col-sm-4"><?php  echo $row->hastaGecici($row->id);?></div>
-</div>
-
-<div class="form-group row">
-<div class="col-sm-3"><label>Sonda Takılı:</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('sonda', '', $row->sonda);?></div>
-</div>
-
-<div id="sondacheck" style="display:none">
-<div class="form-group row">
-<div class="col-sm-3"><label for="sondatarihi">En Son Sonda Takılma Tarihi:</label></div>
-<div class='col-sm-4 input-group date' id='sondatarihi1' data-date-format="dd.mm.yyyy">
-<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="sondatarihi" name="sondatarihi" value="<?php echo $row->sondatarihi ? tarihCevir($row->sondatarihi, 1) : '';?>" />
-<span class="input-group-addon">
-<span class="glyphicon glyphicon-calendar"></span>
-</span>
-</div>
-</div>
-
-</div> <!-- 3. tab -->
-
-</div> <!-- tabcontent -->
-</div> <!-- panel body -->
-</div> <!-- panel navtabs -->     
-
-</div>     
-  
-<div class="form-group row">
-<div class="col-sm-7">
-<input type="button" id="save" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
-<a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a>
-</div>
-</div>
-
-</div>   <!-- panel-body -->
-
-</div>  <!-- panel default -->
-
-
-    <input type="hidden" name="option" value="site" />
-    <input type="hidden" name="bolum" value="hastalar" />
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
-    <input type="hidden" name="limit" value="<?php echo $limit;?>" />
-    <input type="hidden" name="id" value="<?php echo $row->id;?>" />
-    <script type="text/javascript">
-    $(document).ready(function(){
+        $(document).ready(function(){
         $("#save").on("click", function() {
             $(this).prop("disabled", true);
         });
@@ -776,8 +669,7 @@ foreach ($tab2 as $v=>$k) {
 });
 <?php } ?>  
     });
-</script>
-    <script type="text/javascript">
+
     $('#dogumtarihi').datepicker({
         format: "dd.mm.yyyy",
         weekStart: 1,
@@ -835,9 +727,12 @@ foreach ($tab2 as $v=>$k) {
     });
     });
     </script>
-    </form>
-    <?php
-    }
+
+    </div><!-- main panel-body -->
+    </div><!-- main panel -->
+        </form>
+<?php
+}
     
     function getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering, $lists) {
         $link = 'index.php?option=site&bolum=hastalar';

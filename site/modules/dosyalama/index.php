@@ -9,16 +9,17 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 $isim = strval(getParam($_REQUEST, 'isim'));
 $soyisim = strval(getParam($_REQUEST, 'soyisim'));
+$mahalle = getParam($_REQUEST, 'mahalle');
 
 switch($task) {
     default:
     case 'list':
-    getirHastalar($isim, $soyisim);
+    getirHastalar($isim, $soyisim, $mahalle);
     break;
 
 }
 
-function getirHastalar($isim, $soyisim) {
+function getirHastalar($isim, $soyisim, $mahalle) {
     global $dbase, $limit, $limitstart;
     
     $alfabe = array(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,R,S,T,U,V,Y,Z);
@@ -42,6 +43,15 @@ function getirHastalar($isim, $soyisim) {
     $where[] = "soyisim LIKE '" . $dbase->getEscaped( trim( $soyisim ) ) . "%'";
     }
     
+    
+    /*
+    if ($mahalle) {
+        $dizi = implode(',', $mahalle);
+        
+        $where[] = "mahalle IN (".$dizi.")";
+    
+    }
+    */
     $query = "SELECT COUNT(id) FROM #__hastalar "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      ;
@@ -54,7 +64,8 @@ function getirHastalar($isim, $soyisim) {
     $lists['isim'] = mosHTML::selectList($list, 'isim', '', 'value', 'text', $isim);
     $lists['soyisim'] = mosHTML::selectList($list, 'soyisim', '', 'value', 'text', $soyisim);
     
-    $query = "SELECT isim, soyisim FROM #__hastalar "
+    $query = "SELECT h.isim, h.soyisim, m.mahalle FROM #__hastalar AS h "
+    . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
     . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" ) 
     . "\n ORDER BY isim ASC, soyisim ASC";
     
@@ -62,6 +73,16 @@ function getirHastalar($isim, $soyisim) {
     
     $rows = $dbase->loadObjectList();
     
+    /*
+    $dbase->setQuery("SELECT * FROM #__mahalle ORDER BY mahalle ASC");
+    
+    $mahalleler = $dbase->loadObjectList();
+    
+    foreach ($mahalleler as $mahalle){
+        $mlist[] = mosHTML::makeOption($mahalle->id, $mahalle->mahalle);
+    }
+    $lists['mahalle'] = mosHTML::selectList($mlist, 'mahalle[]', 'multiple', 'value', 'text', $mahalle); 
+     */
     Dosyalama::getirHastalar($rows, $lists, $pageNav, $isim, $soyisim);
 
 }

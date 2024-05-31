@@ -374,7 +374,7 @@ static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $
     <?php
     }
     
-static function getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering) {
+static function getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $list, $secim) {
         $link = 'index.php?option=site&bolum=izlemler';
 
             $link .= '&baslangictarih='.$baslangictarih;
@@ -386,6 +386,10 @@ static function getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ord
         
          if ($ordering) {
             $link .= "&ordering=".$ordering;
+        }
+        
+        if ($secim) {
+            $link .= "&secim=".$secim;
         }
     ?>
     <form action="index.php" method="GET" name="adminForm" role="form">
@@ -421,6 +425,10 @@ static function getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ord
     </div>
     
     
+    </div>
+    
+     <div class="col-sm-3">
+    <?php echo $list['islem'];?>
     </div>
 
     <div class="col-sm-2">

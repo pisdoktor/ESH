@@ -21,13 +21,13 @@ if (!$my->id) {
 ?>
 
 <li><a href="<?php echo SITEURL;?>"><span>Anasayfa</span></a></li>
+<!--
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
-
+-->
 <li class="has-sub"><a href="#"><span>Hasta İşlemleri</span></a>
 <ul>
 <li><a href="index.php?option=site&bolum=hastalar">Aktif Hasta Listesi</a></li>
-<li><a href="index.php?option=site&bolum=phastalar">Pasif Hasta Listesi</a></li>
-<li><div class="divider"></li> 
+<li><a href="index.php?option=site&bolum=phastalar">Pasif Hasta Listesi</a></li> 
 <li><a href="index.php?option=site&bolum=hastalar&task=new">Yeni Hasta Kayıt</a></li>
 </ul>
 </li>

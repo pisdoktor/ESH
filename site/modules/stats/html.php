@@ -852,7 +852,7 @@ echo $pageNav->writePagesLinks($link);
       <?php  
     }
     
-    function hastalikStats($hastalik, $total, $thasta) {
+    function hastalikStats($tab, $total, $thasta) {
         ?>
       <div class="panel panel-default">
         <div class="panel-heading"><h4>Hastalıklarına Göre Hastalar</h4></div>
@@ -866,14 +866,16 @@ echo $pageNav->writePagesLinks($link);
   </thead>
   <tbody>
         <?php
-         foreach ($hastalik as $k=>$v) {
+         foreach ($tab as $k=>$v) {
+             foreach ($v as $i=>$s) {
              ?>
           <tr>
-          <th><?php echo $v;?></th>
-          <td><?php echo $total[$k];?></td>
-          <td><?php echo round(($total[$k]*100)/$thasta, 2);?> %</td>
+          <th><?php echo $s;?></th>
+          <td><?php echo $total[$i];?></td>
+          <td><?php echo round(($total[$i]*100)/$thasta, 2);?> %</td>
           </tr>   
          <?php    
+             }
          }
         ?>
     </tbody>

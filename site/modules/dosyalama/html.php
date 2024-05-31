@@ -43,12 +43,16 @@ class Dosyalama {
     </div>
     
     </div>
+    <div class="form-group row">
+    <div class="col-sm-11"><?php echo $lists['mahalle'];?></div>
+    </div>
     <table class="table table-striped" id="datatablesSimple">
     <thead>
     <tr>
     <th>Sıra No</th>
     <th>İsim</th>
     <th>Soyisim</th>
+    <th>Mahalle</th>
     </tr>
     </thead>
     
@@ -61,6 +65,7 @@ class Dosyalama {
      <td><?php echo $pageNav->rowNumber( $i );?></td>
      <td><?php echo $row->isim;?></td>
      <td><?php echo $row->soyisim;?></td>
+     <td><?php echo $row->mahalle;?></td>
      <?php
      $i++;
      }

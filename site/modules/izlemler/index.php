@@ -14,12 +14,14 @@ $last = date("t.m.Y", strtotime($today));
 $baslangictarih = getParam($_REQUEST, 'baslangictarih', $today);
 $bitistarih = getParam($_REQUEST, 'bitistarih', $today);
 
-$ordering = getParam($_REQUEST, 'ordering');  
+$ordering = getParam($_REQUEST, 'ordering');
+
+$secim = intval(getParam($_REQUEST, 'secim'));  
 
 switch($task) {
     default:
     case 'list':
-    getIzlemList($baslangictarih, $bitistarih, $ordering);
+    getIzlemList($baslangictarih, $bitistarih, $ordering, $secim);
     break;
     
     case 'izlemgetir':
@@ -219,7 +221,7 @@ function controlTC($tc) {
    
 }
 
-function getIzlemList($baslangictarih, $bitistarih, $ordering) {
+function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim) {
     global $dbase, $limit, $limitstart;
     
     if ($baslangictarih) { 
@@ -242,10 +244,13 @@ function getIzlemList($baslangictarih, $bitistarih, $ordering) {
      } else {
          $orderingfilter = "ORDER BY i.izlemtarihi DESC, h.isim ASC, h.soyisim ASC, i.planli DESC";
      }
+     
+     if ($secim) {
+     
+         $where[] = "i.yapilan IN (".$secim.")";
+     
+     }
     
-    $islemtype = new Islem($dbase);
-
-
     $query = "SELECT COUNT(i.id) FROM #__izlemler AS i"
     . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
     ;
@@ -267,7 +272,18 @@ function getIzlemList($baslangictarih, $bitistarih, $ordering) {
     $dbase->setQuery($query, $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
-    IzlemList::getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering);
+    //işlemler select listesi
+    $dbase->setQuery("SELECT * FROM #__islem ORDER BY id");
+    $islemler = $dbase->loadObjectList();
+    
+    $data[] = mosHTML::makeOption('0', 'Bir İşlem Seçin'); 
+    foreach ($islemler as $islem) {
+    $data[] = mosHTML::makeOption($islem->id, $islem->islemadi);
+    }
+    
+    $list['islem'] = mosHTML::selectList($data, 'secim', '', 'value', 'text', $secim);
+    
+    IzlemList::getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $list, $secim);
 }
 
 function saveIzlem() {

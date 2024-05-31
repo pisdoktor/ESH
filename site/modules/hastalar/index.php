@@ -2,6 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
+
 include(dirname(__FILE__). '/html.php');
 
 $id = intval(getParam($_REQUEST, 'id')); 
@@ -21,6 +22,8 @@ $cinsiyet = getParam($_REQUEST, 'cinsiyet');
 $bagimlilik = getParam($_REQUEST, 'bagimlilik');
 
 $ordering = getParam($_REQUEST, 'ordering');
+
+
 
 switch($task) {
     default:
