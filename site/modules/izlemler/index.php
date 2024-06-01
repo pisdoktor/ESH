@@ -164,9 +164,7 @@ function IzlemGetir($tc) {
 
 function heditIzlem($tc) {
     global $dbase, $limitstart, $limit;
-    
-    
-                                                                                
+                                                                      
      $dbase->setQuery("SELECT id, isim, soyisim, tckimlik FROM #__hastalar WHERE tckimlik=".$tc);
      $dbase->loadObject($hasta);
      
@@ -183,7 +181,7 @@ function heditIzlem($tc) {
         $islemtype[] = mosHTML::makeOption($islem->id, $islem->islemadi);
     }
         
-    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', 'required', 'value','text');
+    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text');
     $isyapilacak = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text');
     
     // PERSONEL SEÇME KUTULARI YAPALIM
@@ -197,7 +195,7 @@ function heditIzlem($tc) {
     
     $row->izlemiyapan = explode(',', $row->izlemiyapan);
         
-    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', 'requried', 'value', 'text');
+    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text');
     
     IzlemList::heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist);
 
@@ -356,7 +354,7 @@ function editIzlem($id) {
     $row->yapilan = explode(',', $row->yapilan);
     $row->yapilacak = explode(',', $row->yapilacak);
     
-    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', 'required', 'value','text', $row->yapilan);
+    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text', $row->yapilan);
     $isyapilacak = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text', $row->yapilacak);
     
     // PERSONEL SEÇME KUTULARI YAPALIM
@@ -370,7 +368,7 @@ function editIzlem($id) {
     
     $row->izlemiyapan = explode(',', $row->izlemiyapan);
         
-    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', 'required', 'value', 'text', $row->izlemiyapan);
+    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text', $row->izlemiyapan);
     
     IzlemList::editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist);
 

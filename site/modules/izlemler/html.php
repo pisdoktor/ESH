@@ -87,7 +87,7 @@ echo $pageNav->writePagesLinks($link);
     
 static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist) {
     ?>
-    <form action="index.php" data-toggle="validator" method="post" name="adminForm" role="form">
+    <form action="index.php" method="post">
     
     <div class="panel panel-default">
     
@@ -97,17 +97,17 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
         
 <div class="form-group row">
 <div class="col-sm-3"><label for="hastatckimlik">Hastanın TC Kimlik No:</label></div>
-<div class="col-sm-4"><input maxlength="11" type="text" id="hastatckimlik" name="hastatckimlik" class="form-control" value="<?php echo $hasta->tckimlik;?>" readonly required></div>
+<div class="col-sm-3"><input maxlength="11" type="text" id="hastatckimlik" name="hastatckimlik" class="form-control" value="<?php echo $hasta->tckimlik;?>" readonly required></div>
 </div>
 
 <div class="form-group row">
 <div class="col-sm-3"><label for="hastaisim">Hastanın Adı:</label></div>
-<div class="col-sm-4"><div class="form-control" id="sonuc"><?php echo $hasta ? $hasta->isim.' '.$hasta->soyisim : '';?></div></div>
+<div class="col-sm-3"><div class="form-control" id="sonuc"><?php echo $hasta ? $hasta->isim.' '.$hasta->soyisim : '';?></div></div>
 </div>
 
 <div class="form-group row">
 <div class="col-sm-3"><label for="izlemtarihi">İzlem Tarihi:</label></div>  
-<div class="col-sm-4 date" id="datepicker">
+<div class="col-sm-3 date" id="datepicker">
 
 <div class='input-group date' id='datepicker1' data-date-format="dd.mm.yyyy">
 <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="izlemtarihi" name="izlemtarihi" value="<?php echo date('d.m.Y');?>" required />
@@ -115,14 +115,7 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
 <span class="glyphicon glyphicon-calendar"></span>
 </span>
 </div>
- <script type="text/javascript">
-    $('#izlemtarihi').datepicker({
-    todayHighlight: true,
-        autoclose: true,
-        language: "tr"
 
-    }); 
-</script>
 </div>  
 </div>
 
@@ -138,29 +131,21 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
 
 <div class="form-group row">
 <div class="col-sm-3"><label for="planli">Planlı İşlem Var mı?</label></div>
-<div class="col-sm-4"><?php echo mosHTML::yesnoRadioList('planli', '', 0);?></div>
+<div class="col-sm-9"><?php echo mosHTML::yesnoRadioList('planli', '', 0);?></div>
 </div>
 
 <div id="planli"  style="display:none">
 <div class="form-group row">
 <div class="col-sm-3"><label for="izlemtarihi">Planlanan İzlem Tarihi:</label></div>  
-<div class="col-sm-4 date" id="datepicker">
+<div class="col-sm-3 date" id="datepicker">
 
 <div class='input-group date' id='datepicker1' data-date-format="dd.mm.yyyy">
-<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="planlanantarih" name="planlanantarih" value="" required />
+<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="planlanantarih" name="planlanantarih" value="" />
 <span class="input-group-addon">
 <span class="glyphicon glyphicon-calendar"></span>
 </span>
 </div>
- <script type="text/javascript">
-    $('#planlanantarih').datepicker({
-        format: "dd.mm.yyyy",
-        weekStart: 1,
-                todayHighlight: true,
-        autoclose: true,
-        language: "tr"
-    }); 
-</script>
+
 </div>  
 </div>
 
@@ -172,7 +157,7 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
     
 <div class="form-group row">
 <div class="col-sm-4">
-<input type="button" name="button" id="save" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<button type="submit" id="save" class="btn btn-primary">Kaydet</button>
 <a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a>
 </div>
 </div>
@@ -183,15 +168,12 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
 
     <input type="hidden" name="option" value="site" />
     <input type="hidden" name="bolum" value="izlemler" />
-    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="task" value="save" />
     <input type="hidden" name="id" value="" />
     <input type="hidden" name="limit" value="<?php echo $limit;?>" />
     <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
     <script type="text/javascript">
     $(document).ready(function(){
-        $("#save").on("click", function() {
-            $(this).prop("disabled", true);
-        });
         
     $('#hastatckimlik').keyup(function(){
     var val = $('#hastatckimlik').val(); 
@@ -223,6 +205,21 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
             $("#planli").show();
     }
   }); 
+  
+    $('#planlanantarih').datepicker({
+        format: "dd.mm.yyyy",
+        weekStart: 1,
+                todayHighlight: true,
+        autoclose: true,
+        language: "tr"
+    }); 
+
+    $('#izlemtarihi').datepicker({
+    todayHighlight: true,
+        autoclose: true,
+        language: "tr"
+
+    }); 
 </script>
     </form>
     <?php
@@ -230,7 +227,7 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
     
 static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist) {
     ?>
-    <form action="index.php" data-toggle="validator" method="post" name="adminForm" role="form">
+    <form action="index.php" method="post">
     
     <div class="panel panel-default">
     
@@ -293,7 +290,7 @@ static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $
 <div class="col-sm-4 date" id="datepicker">
 
 <div class='input-group date' id='datepicker1' data-date-format="dd.mm.yyyy">
-<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="planlanantarih" name="planlanantarih" value="<?php echo $row->planlanantarih ? tarihCevir($row->planlanantarih, 1) : '';?>" required />
+<input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="planlanantarih" name="planlanantarih" value="<?php echo $row->planlanantarih ? tarihCevir($row->planlanantarih, 1) : '';?>" />
 <span class="input-group-addon">
 <span class="glyphicon glyphicon-calendar"></span>
 </span>
@@ -319,7 +316,7 @@ static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $
     
 <div class="form-group row">
 <div class="col-sm-4">
-<input type="button" name="button" id="save" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<button type="submit" id="save" class="btn btn-primary">Kaydet</button>
 <a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a></div>
 </div>
 
@@ -330,16 +327,13 @@ static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $
 
     <input type="hidden" name="option" value="site" />
     <input type="hidden" name="bolum" value="izlemler" />
-    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="task" value="save" />
     <input type="hidden" name="id" value="<?php echo $row->id;?>" />
     <input type="hidden" name="limit" value="<?php echo $limit;?>" />
     <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
     <script type="text/javascript">
     $(document).ready(function(){
-        $("#save").on("click", function() {
-            $(this).prop("disabled", true);
-        });
-        
+            
     $('#hastatckimlik').keyup(function(){
     var val = $('#hastatckimlik').val(); 
     var uzunluk = val.length;

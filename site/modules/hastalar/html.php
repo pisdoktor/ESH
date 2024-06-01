@@ -214,7 +214,7 @@ $list[] = $k;
     function editHasta($row, $lists, $limitstart, $limit) {
     include(dirname(__FILE__). '/hastaliklar.php');
     ?>
-    <form action="index.php" method="post">
+    <form action="index.php" method="post" data-toggle="validator" novalidate>
     <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>"><!-- main panel -->
     
     <div class="panel-heading"><h4><?php echo $row->id ? 'Düzenle: '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Kayıt';?></h4></div>
