@@ -10,6 +10,7 @@ $limit = intval(getParam($_REQUEST, 'limit', 50));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 $tc = getParam($_REQUEST, 'tc');
+ 
 
 $search = strval(getParam($_REQUEST, 'search'));
 $ilce = intval(getParam($_REQUEST, 'ilce'));
@@ -29,6 +30,14 @@ switch($task) {
     default:
     case 'list':
     getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering);
+    break;
+    
+    case 'savesokak':
+    ekleSokak();
+    break;
+    
+    case 'savekapino':
+    ekleKapino();
     break;
     
     case 'show':
@@ -71,6 +80,47 @@ switch($task) {
     case 'kapino':
     hastaKapino($id);
     break;
+}
+
+function ekleSokak() {
+    global $dbase;
+    $uid = intval(getParam($_REQUEST, 'uid'));
+    
+    $row = new Sokak($dbase);
+    
+    if ( !$row->bind( $_POST ) ) {
+        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+        exit();
+    }
+    
+    if (!$row->store()) {
+        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+        exit();
+    }
+    
+        Redirect('index.php?option=site&bolum=hastalar&task=edit&id='.$uid);
+}
+
+function ekleKapino() {
+    global $dbase;
+    $uid = intval(getParam($_REQUEST, 'uid'));
+    $row = new KapiNo( $dbase );
+    
+    if ( !$row->bind( $_POST ) ) {
+        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+        exit();
+    }
+    
+    if ( !$row->check( $_POST ) ) {
+        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+        exit();
+    }
+    
+    if (!$row->store()) {
+        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+        exit();
+    }
+    Redirect('index.php?option=site&bolum=hastalar&task=edit&id='.$uid);
 }
 /*
 function hastaIlce($id) {
@@ -357,7 +407,7 @@ function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $ka
 }
 
 function saveHasta() {
-         global $dbase, $search, $limitstart, $limit;
+         global $dbase;
     
     $row = new Hasta( $dbase );
     
@@ -460,9 +510,13 @@ function editHasta($id) {
     
     $lists['ilce'] = mosHTML::selectList($dilce, 'ilce', 'id="ilce" required', 'value', 'text', $row->ilce);
     $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalle', 'id="mahalle" required', 'value', 'text', $row->mahalle);
-    $lists['sokak'] = mosHTML::selectList($dsokak, 'sokak', 'id="sokak" required', 'value', 'text', $row->sokak);
-    $lists['kapino'] = mosHTML::selectList($dkapino, 'kapino', 'id="kapino" required', 'value', 'text', $row->kapino);
-
+    $lists['sokak'] = mosHTML::selectList($dsokak, 'sokak', 'id="sokak"', 'value', 'text', $row->sokak);
+    $lists['kapino'] = mosHTML::selectList($dkapino, 'kapino', 'id="kapino"', 'value', 'text', $row->kapino);
+    
+    $lists['ilceid'] = mosHTML::selectList($dilce, 'ilceid', 'id="ilce" required', 'value', 'text', $row->ilce);
+    $lists['mahalleid'] = mosHTML::selectList($dmahalle, 'mahalleid', 'id="mahalle" required', 'value', 'text', $row->mahalle);
+    $lists['sokakid'] = mosHTML::selectList($dsokak, 'sokakid', 'id="sokak" required', 'value', 'text', $row->sokak);
+    
     HastaList::editHasta($row, $lists, $limitstart, $limit);
 }
 

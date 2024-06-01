@@ -1082,13 +1082,21 @@ echo $pageNav->writePagesLinks($link);
 
   new Chart(ctx, {
     type: 'bar',
-    data: {
+    data:{
       labels: ['0-1 Aylık', '2 Ay-2 Yaş', '3-18 Yaş', '19-45 Yaş', '46-65 Yaş', '66-85 Yaş', '85 Yaş Üzeri'],
       datasets: [{
-        label: 'Kişi Sayısı',
-        data: [<?php echo $yasaralik[01].','.$yasaralik[22].','.$yasaralik[318].','.$yasaralik[1945].','.$yasaralik[4665].','.$yasaralik[6685].','.$yasaralik[86];?>
-        ],
-        borderWidth: 1
+        label: 'Kadın Sayısı',
+        data: [<?php echo $yasaralik[01]['K'].','.$yasaralik[22]['K'].','.$yasaralik[318]['K'].','.$yasaralik[1945]['K'].','.$yasaralik[4665]['K'].','.$yasaralik[6685]['K'].','.$yasaralik[86]['K'];?>],
+        backgroundColor: 'pink',
+        borderWidth: 1,
+        stack: '1'
+      },
+      {
+      label: 'Erkek Sayısı',
+        data: [<?php echo $yasaralik[01]['E'].','.$yasaralik[22]['E'].','.$yasaralik[318]['E'].','.$yasaralik[1945]['E'].','.$yasaralik[4665]['E'].','.$yasaralik[6685]['E'].','.$yasaralik[86]['E'];?>],
+        backgroundColor: 'blue',
+        borderWidth: 1,
+        stack: '1'
       }]
     },
     options: {
@@ -1104,61 +1112,71 @@ echo $pageNav->writePagesLinks($link);
           <thead class="thead-dark"> 
           <tr>
       <th scope="col">Yaş Aralığı</th>
-      <th scope="col">Hasta Sayısı</th>
-      <th scope="col">Genele Oranı</th> 
+      <th scope="col">Kadın Hasta Sayısı</th>
+      <th scope="col">Erkek Hasta Sayısı</th>
+      <th scope="col">Toplam Hasta Sayısı</th>
     </tr>
     </thead>
     
     <tbody>
     <tr>
     <th>0-1 Aylık</th>
-    <td><?php echo $yasaralik[01];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[01]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[01]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[01]['K'];?></td>
+    <td><?php echo $yasaralik[01]['E'];?></td>
+    <td><?php echo $yasaralik[01]['K']+$yasaralik[01]['E'];?></td>
     </tr>
     
      <tr>
     <th>2 Ay-2 Yaş</th>
-    <td><?php echo $yasaralik[22];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[22]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[22]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[22]['K'];?></td>
+    <td><?php echo $yasaralik[22]['E'];?></td>
+    <td><?php echo $yasaralik[22]['K']+$yasaralik[22]['E'];?></td> 
     </tr>
     
      <tr>
     <th>3-18 Yaş</th>
-    <td><?php echo $yasaralik[318];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[318]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[318]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[318]['K'];?></td>
+    <td><?php echo $yasaralik[318]['E'];?></td>
+    <td><?php echo $yasaralik[318]['K']+$yasaralik[318]['E'];?></td> 
     </tr>
     
     <tr>
     <th>19-45 Yaş</th>
-    <td><?php echo $yasaralik[1945];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[1945]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[1945]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[1945]['K'];?></td>
+    <td><?php echo $yasaralik[1945]['E'];?></td>
+    <td><?php echo $yasaralik[1945]['K']+$yasaralik[1945]['E'];?></td>
     </tr>
     
     <tr>
     <th>46-65 Yaş</th>
-    <td><?php echo $yasaralik[4665];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[4665]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[4665]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[4665]['K'];?></td>
+    <td><?php echo $yasaralik[4665]['E'];?></td>
+    <td><?php echo $yasaralik[4665]['K']+$yasaralik[4665]['E'];?></td>
     </tr>
     
     <tr>
     <th>66-85 Yaş</th>
-    <td><?php echo $yasaralik[6685];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[6685]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[6685]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[6685]['K'];?></td>
+    <td><?php echo $yasaralik[6685]['E'];?></td>
+    <td><?php echo $yasaralik[6685]['K']+$yasaralik[6685]['E'];?></td>
     </tr>
     
     <tr>
     <th>86 Yaş ve Üzeri</th>
-    <td><?php echo $yasaralik[86];?></td>
-    <td><div class="progress-bar" style="width:<?php echo round(($yasaralik[86]*100)/$yasaralik['toplam'], 2);?>%"><?php echo round(($yasaralik[86]*100)/$yasaralik['toplam'], 2);?>%</div></td>
+    <td><?php echo $yasaralik[86]['K'];?></td>
+    <td><?php echo $yasaralik[86]['E'];?></td>
+    <td><?php echo $yasaralik[86]['K']+$yasaralik[86]['E'];?></td>
     </tr>
-    
+    </tbody> 
+    <tfoot>
     <tr>
-    <th>TOPLAM:</th>
-    <th><?php echo $yasaralik['toplam'];?></th>
-    <th>100%</th>
+    <th>TOPLAM</th>
+    <th><?php echo $yasaralik['toplam']['K'];?></th>
+    <th><?php echo $yasaralik['toplam']['E'];?></th>
+    <th><?php echo $yasaralik['toplam']['K']+$yasaralik['toplam']['E'];?></th>
     </tr>
+    </tfoot> 
     
-    </tbody>
     </table>
         
         </div> 

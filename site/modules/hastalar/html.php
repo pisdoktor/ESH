@@ -214,19 +214,19 @@ $list[] = $k;
     function editHasta($row, $lists, $limitstart, $limit) {
     include(dirname(__FILE__). '/hastaliklar.php');
     ?>
-    <form action="index.php" data-toggle="validator" method="post" name="adminForm" role="form" novalidate>
+    <form action="index.php" method="post">
+    <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>"><!-- main panel -->
     
-    <div class="panel panel-<?php echo $row->pasif ? 'danger':'default';?>"><!-- main panel -->
-    
-    <div class="panel-heading"><h4><?php echo $row->id ? 'Düzenle : '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Ekle';?></h4></div>
+    <div class="panel-heading"><h4><?php echo $row->id ? 'Düzenle: '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Kayıt';?></h4></div>
     
     <div class="panel-body"><!-- main panel-body -->
     
+     
     <div class="row"><!-- row 1 -->
     
     <div class="col-sm-6">
     
-    <div class="panel panel-primary">
+    <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>">
     <div class="panel-heading"><h5>Temel Bilgileri</h5></div>
     <div class="panel-body"><!-- temel bilgiler-->
     
@@ -288,7 +288,21 @@ $list[] = $k;
 <div class="col-sm-6"><label for="mahalle">Mahalle:</label></div>
 <div class="col-sm-6"><?php echo $lists['mahalle'];?></div>
 </div>
-                    
+
+<?php 
+if ($row->id) { ?>                    
+<div class="form-group row">                    
+<div class="col-sm-5"><label for="sokak">Cadde/Sokak:</label></div>
+<div class="col-sm-1"><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#sokakEkle">Ekle</button></div> 
+<div class="col-sm-6"><?php echo $lists['sokak'];?></div>
+</div>
+
+<div class="form-group row">                    
+<div class="col-sm-5"><label for="kapino">Kapı No:</label></div>
+<div class="col-sm-1"><button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#kapinoEkle">Ekle</button></div> 
+<div class="col-sm-6"><?php echo $lists['kapino'];?></div>
+</div>
+<?php } else { ?>
 <div class="form-group row">                    
 <div class="col-sm-6"><label for="sokak">Cadde/Sokak:</label></div>
 <div class="col-sm-6"><?php echo $lists['sokak'];?></div>
@@ -298,8 +312,7 @@ $list[] = $k;
 <div class="col-sm-6"><label for="kapino">Kapı No:</label></div>
 <div class="col-sm-6"><?php echo $lists['kapino'];?></div>
 </div>
-
-
+<?php } ?>
 
 <div class="form-group row">
 <div class="col-sm-6"><label>Hastanın Bağımlılık Durumu:</label></div>
@@ -392,7 +405,7 @@ $list[] = $k;
     </div><!-- col-sm-6-->
     
     <div class="col-sm-6">
-    <div class="panel panel-primary">
+    <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>">
     <div class="panel-heading"><h5>Hastalıkları</h5></div>
     <div class="panel-body"><!-- ek özellikler-->
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -584,26 +597,28 @@ foreach ($tab[8] as $v=>$k) {
     </div><!-- row 1-->
 
     
-    <div class="form-group row">
+<div class="form-group row">
 <div class="col-sm-7">
-<input type="button" id="save" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<button type="submit" id="save" class="btn btn-primary">Kaydet</button>
 <a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a>
 </div>
 </div>
-<input type="hidden" name="option" value="site" />
+    
+    </div><!-- main panel-body -->
+    </div><!-- main panel -->
+    <input type="hidden" name="option" value="site" />
     <input type="hidden" name="bolum" value="hastalar" />
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
-    <input type="hidden" name="limit" value="<?php echo $limit;?>" />
-    <input type="hidden" name="id" value="<?php echo $row->id;?>" />
-    <script>                                  
+    <input type="hidden" name="task" value="save" />
+    <input type="hidden" name="id" value="<?php echo $row->id;?>" /> 
+    </form> 
+        <script>                                  
 $(document).ready(function(){
     
         $("#ilce").on("change", function(){
 
-            $("#mahalle").attr("disabled", false).html("<option value=''>Bir Mahalle Seçin</option>");
-            $("#sokak").attr("disabled", true).html("<option value=''>Bir Sokak Seçin</option>");
-            $("#kapino").attr("disabled", true).html("<option value=''>Bir Kapı No Seçin</option>");
+            $("#mahalle").html("<option value=''>Bir Mahalle Seçin</option>");
+            $("#sokak").html("<option value=''>Bir Sokak Seçin</option>");
+            $("#kapino").html("<option value=''>Bir Kapı No Seçin</option>");
             console.log($(this).val()); 
             
             ajaxFunc("mahalle", $(this).val(), "#mahalle");
@@ -612,8 +627,8 @@ $(document).ready(function(){
 
         $("#mahalle").on("change", function(){
 
-            $("#sokak").attr("disabled", false).html("<option value=''>Bir Sokak Seçin</option>");
-            $("#kapino").attr("disabled", true).html("<option value=''>Bir Kapı No Seçin</option>");
+            $("#sokak").html("<option value=''>Bir Sokak Seçin</option>");
+            $("#kapino").html("<option value=''>Bir Kapı No Seçin</option>");
             console.log($(this).val());
             
             ajaxFunc("sokak", $(this).val(), "#sokak");
@@ -622,7 +637,7 @@ $(document).ready(function(){
         
         $("#sokak").on("change", function(){
 
-            $("#kapino").attr("disabled", false).html("<option value=''>Bir Kapı No Seçin</option>");
+            $("#kapino").html("<option value=''>Bir Kapı No Seçin</option>");
             console.log($(this).val());
             
             ajaxFunc("kapino", $(this).val(), "#kapino");
@@ -643,11 +658,7 @@ $(document).ready(function(){
         }
     });
 
-        $(document).ready(function(){
-        $("#save").on("click", function() {
-            $(this).prop("disabled", true);
-        });
-        
+        $(document).ready(function(){        
   <?php if (!$row->id) { ?>        
     $('#tckimlik').keyup(function(){
     var val = $('#tckimlik').val(); 
@@ -727,10 +738,99 @@ $(document).ready(function(){
     });
     });
     </script>
+        
+<!-- Sokak Ekle -->
+<form action="index.php" data-toggle="validator" method="post" role="form" novalidate>
+<div id="sokakEkle" class="modal fade" role="dialog">
+  <div class="modal-dialog">
 
-    </div><!-- main panel-body -->
-    </div><!-- main panel -->
-        </form>
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Yeni Sokak Ekle</h4>
+      </div>
+      <div class="modal-body">
+<div class="form-group row">
+<div class="col-sm-6"><label for="ilceid">İlçe:</label></div>
+<div class="col-sm-6"><?php echo $lists['ilceid'];?></div>
+</div>
+
+<div class="form-group row"> 
+<div class="col-sm-6"><label for="mahalleid">Mahalle:</label></div>
+<div class="col-sm-6"><?php echo $lists['mahalleid'];?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label for="sokakadi">Cadde/Sokak:</label></div>
+<div class="col-sm-6"><input type="text" id="sokakadi" name="sokakadi" class="form-control" value="" required></div>
+</div>
+
+    </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<input type="hidden" name="option" value="site">
+<input type="hidden" name="bolum" value="hastalar">
+<input type="hidden" name="task" value="savesokak">
+<input type="hidden" name="uid" value="<?php echo $row->id;?>"> 
+</form>
+<!-- Sokak ekle-->  
+
+<!-- Kapı No Ekle -->
+<form action="index.php" data-toggle="validator" method="post" role="form" novalidate>
+<div id="kapinoEkle" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Yeni Kapı No Ekle</h4>
+      </div>
+      <div class="modal-body">
+      
+      <div class="form-group row">
+<div class="col-sm-6"><label for="ilceid">İlçe:</label></div>
+<div class="col-sm-6"><?php echo $lists['ilceid'];?></div>
+</div>
+
+<div class="form-group row"> 
+<div class="col-sm-6"><label for="mahalleid">Mahalle:</label></div>
+<div class="col-sm-6"><?php echo $lists['mahalleid'];?></div>
+</div>
+                    
+<div class="form-group row">                    
+<div class="col-sm-6"><label for="sokakid">Cadde/Sokak:</label></div>
+<div class="col-sm-6"><?php echo $lists['sokakid'];?></div>
+</div>
+
+<div class="form-group row">
+<div class="col-sm-6"><label for="kapino">Kapı No:</label></div>
+<div class="col-sm-6"><input type="text" id="kapino" name="kapino" class="form-control" value="" required></div>
+</div>
+      
+      
+      </div>
+      <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Kaydet</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<input type="hidden" name="option" value="site">
+<input type="hidden" name="bolum" value="hastalar">
+<input type="hidden" name="task" value="savekapino">
+<input type="hidden" name="uid" value="<?php echo $row->id;?>">
+</form>
+<!-- Kapı No ekle-->
 <?php
 }
     
@@ -775,7 +875,7 @@ $(document).ready(function(){
 <input type="hidden" name="task" value="list" /> 
 
 <div class="row">
-<div class="col-sm-2" id="leftside">
+<div class="col-sm-3" id="leftside">
 
 <div class="panel panel-default"> 
 <div class="panel-heading">
@@ -894,7 +994,7 @@ $(document).ready(function(){
 </div> <!-- col-sm -->
 
 
-<div class="col-sm-10" id="mainside">    
+<div class="col-sm-9" id="mainside">    
     
 <div class="panel panel-primary">
 <div class="panel-heading">
@@ -903,7 +1003,7 @@ $(document).ready(function(){
     <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
 </div>
 </div>
-    <table class="table table-striped" id="datatablesSimple">
+    <table class="table table-hover" id="datatablesSimple">
     <thead class="thead-dark">
     <tr>
     <th scope="col">
@@ -919,18 +1019,12 @@ $(document).ready(function(){
     </div>  
     </th>
       <th scope="col"><div>
-      TC Kimlik Numarası
+      TC Kimlik
   <span><a href="<?php echo $link;?>&ordering=h.tckimlik-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.tckimlik-ASC">▼</a></span>
     </div>  
     </th>
     <th scope="col"> <div>
-      İlçe
-  <span><a href="<?php echo $link;?>&ordering=h.ilce-DESC">▲</a></span>
-  <span><a href="<?php echo $link;?>&ordering=h.ilce-ASC">▼</a></span>
-    </div>  
-    </th>
-      <th scope="col"> <div>
       Mahalle
   <span><a href="<?php echo $link;?>&ordering=h.mahalle-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.mahalle-ASC">▼</a></span>
@@ -943,14 +1037,14 @@ $(document).ready(function(){
     </div>  
     </th>
       <th scope="col"><div>
-      Doğum Tarihi
+      D. Tarihi
   <span><a href="<?php echo $link;?>&ordering=h.dogumtarihi-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.dogumtarihi-ASC">▼</a></span>
     </div>  
     </th>
       <th scope="col">Yaşı</th> 
       <th scope="col">Cinsiyet</th> 
-      <th scope="col">Son İzlem Tarihi</th>
+      <th scope="col">Son İzlem</th>
     </tr>
   </thead>
   <tbody>
@@ -976,7 +1070,7 @@ $(document).ready(function(){
        '06' => 'Haziran','07' => 'Temmuz','08' => 'Ağustos','09' => 'Eylül','10' => 'Ekim','11' => 'Kasım','12' => 'Aralık');
       ?>
       
-      <tr>
+      <tr class="<?php echo $row['cinsiyet'] == "E" ? "active":"warning";?>">
       <td scope="row"><span data-toggle="tooltip" title="<?php echo $row['izlemsayisi'];?> İzlem" class="label label-<?php echo $row['izlemsayisi'] ? 'default':'warning';?>"><?php echo $row['izlemsayisi'];?></span></td>
       <th scope="row">
        <div class="dropdown">
@@ -991,7 +1085,6 @@ $(document).ready(function(){
 </div> 
       </th>
       <td><?php echo $row['tckimlik'];?></td>
-      <td><?php echo $row['ilce'];?></td> 
       <td><?php echo $row['mahalle'];?></td>
       <td><?php echo $row['kayityili'];?> <?php echo $aylar[$row['kayitay']];?></td>
       <td><?php echo $row['dtarihi'];?></td>

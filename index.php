@@ -14,7 +14,6 @@ $bolum = strval(strtolower(getParam($_REQUEST, 'bolum')));
 $task = strval(strtolower(getParam($_REQUEST, 'task')));
 $return = strval( getParam( $_REQUEST, 'return', NULL ) );
 $code = strval(getParam($_REQUEST, 'code'));
-$return = strval(getParam($_REQUEST, 'return')); 
 
 $mosmsg = getParam($_REQUEST, 'mosmsg');
 

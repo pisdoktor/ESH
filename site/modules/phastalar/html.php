@@ -64,7 +64,7 @@ class HastaList {
         
     </div>  <!-- panel-body -->
     
-    <table class="table table-striped">
+    <table class="table table-hover">
     <thead class="thead-dark">
     <tr>
       <th scope="col">Hasta Adı
@@ -110,7 +110,7 @@ class HastaList {
        '06' => 'Haziran','07' => 'Temmuz','08' => 'Ağustos','09' => 'Eylül','10' => 'Ekim','11' => 'Kasım','12' => 'Aralık');
       
       ?>
-   <tr class="<?php echo $row->cinsiyet == "E" ? "success":"warning";?>">
+   <tr class="<?php echo $row->cinsiyet == "E" ? "info":"warning";?>">
       <th scope="row"><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>"><?php echo $row->isim;?> <?php echo $row->soyisim;?></a></th>
       <td><?php echo $row->tckimlik;?></td>
       <td><?php echo $row->mahalleadi;?></td>

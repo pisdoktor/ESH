@@ -829,61 +829,104 @@ function hYasGruplari() {
     global $dbase;
     
     //yaşlarına göre gruplandıralım
-    $dbase->setQuery("SELECT dogumtarihi FROM #__hastalar WHERE pasif='0'");
-    $tarihler = $dbase->loadResultArray();
+    $dbase->setQuery("SELECT dogumtarihi FROM #__hastalar WHERE pasif='0' AND cinsiyet='E'");
+    $tarihler['E'] = $dbase->loadResultArray();
+    
+    $dbase->setQuery("SELECT dogumtarihi FROM #__hastalar WHERE pasif='0' AND cinsiyet='K'");
+    $tarihler['K'] = $dbase->loadResultArray();
     
     $yasaralik = array();
     
     //0-1 ay
-    $yasaralik[01] = 0; 
+    $yasaralik[01]['K'] = 0; 
+    $yasaralik[01]['E'] = 0;
     // 2 ay-2 yaş
-    $yasaralik[22] = 0;
+    $yasaralik[22]['K'] = 0;
+    $yasaralik[22]['E'] = 0;
     //3-18 yaş
-    $yasaralik[318] = 0;
+    $yasaralik[318]['K'] = 0;
+    $yasaralik[318]['E'] = 0;
     //19-45 yaş
-    $yasaralik[1945] = 0;
+    $yasaralik[1945]['K'] = 0;
+    $yasaralik[1945]['E'] = 0;
     //46-65 yaş
-    $yasaralik[4665] = 0;
+    $yasaralik[4665]['K'] = 0;
+    $yasaralik[4665]['E'] = 0;
     //66-85 yaş
-    $yasaralik[6685] = 0;
+    $yasaralik[6685]['K'] = 0;
+    $yasaralik[6685]['E'] = 0;
     // 86 ve üzeri
-    $yasaralik[86] = 0;
+    $yasaralik[86]['K'] = 0;
+    $yasaralik[86]['E'] = 0;
     
-    $yasaralik['toplam'] = 0;
+    $yasaralik['toplam'] = array();
     
-    foreach ($tarihler as $dtarih) {
+    foreach ($tarihler['E'] as $dtarih) {
         
         $yas = yas_bul($dtarih);
         
         if ($yas < 1) {
-            ++$yasaralik[01];
+            ++$yasaralik[01]['E'];
         }
         
         if ($yas > 1 && $yas < 3) {
-           ++$yasaralik[22];
+           ++$yasaralik[22]['E'];
         }
         
         if ($yas > 2 && $yas < 19) {
-           ++$yasaralik[318];
+           ++$yasaralik[318]['E'];
         }
         
         if ($yas > 18 && $yas < 46) {
-           ++$yasaralik[1945]; 
+           ++$yasaralik[1945]['E']; 
         }
         
         if ($yas > 45 && $yas < 66) {
-          ++$yasaralik[4665];  
+          ++$yasaralik[4665]['E'];  
         }
         if ($yas > 65 && $yas < 86) {
-          ++$yasaralik[6685];  
+          ++$yasaralik[6685]['E'];  
         }
         
         if ($yas > 85) {
-          ++$yasaralik[86];
+          ++$yasaralik[86]['E'];
         }
     }
     
-    $yasaralik['toplam'] = $yasaralik[01] + $yasaralik[22] + $yasaralik[318] + $yasaralik[1945] + $yasaralik[4665] + $yasaralik[6685] + $yasaralik[86]; 
+    foreach ($tarihler['K'] as $dtarih) {
+        
+        $yas = yas_bul($dtarih);
+        
+        if ($yas < 1) {
+            ++$yasaralik[01]['K'];
+        }
+        
+        if ($yas > 1 && $yas < 3) {
+           ++$yasaralik[22]['K'];
+        }
+        
+        if ($yas > 2 && $yas < 19) {
+           ++$yasaralik[318]['K'];
+        }
+        
+        if ($yas > 18 && $yas < 46) {
+           ++$yasaralik[1945]['K']; 
+        }
+        
+        if ($yas > 45 && $yas < 66) {
+          ++$yasaralik[4665]['K'];  
+        }
+        if ($yas > 65 && $yas < 86) {
+          ++$yasaralik[6685]['K'];  
+        }
+        
+        if ($yas > 85) {
+          ++$yasaralik[86]['K'];
+        }
+    }
+    
+    $yasaralik['toplam']['E'] = $yasaralik[01]['E'] + $yasaralik[22]['E'] + $yasaralik[318]['E'] + $yasaralik[1945]['E'] + $yasaralik[4665]['E'] + $yasaralik[6685]['E'] + $yasaralik[86]['E']; 
+    $yasaralik['toplam']['K'] = $yasaralik[01]['K'] + $yasaralik[22]['K'] + $yasaralik[318]['K'] + $yasaralik[1945]['K'] + $yasaralik[4665]['K'] + $yasaralik[6685]['K'] + $yasaralik[86]['K']; 
     
     StatsHTML::hYasGruplari($yasaralik);
 }

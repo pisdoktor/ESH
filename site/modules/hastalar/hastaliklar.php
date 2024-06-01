@@ -36,6 +36,7 @@ $tab[2] = array(
 'muskulerdistrofi' => 'Müsküler Distrofi',
 'spastikveflask' => 'Spastik ve Flask Tip Özürlü'
 );
+
 $tab[3] = array(
 'aritmi' => 'Aritmi',
 'ht' => 'Hipertansiyon',
