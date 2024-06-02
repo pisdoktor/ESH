@@ -160,7 +160,7 @@ class IzlemList {
     <div class="panel panel-default">
     <div class="panel-heading">
      <div class="row">
-        <div class="col-xs-11"><h4>Planlanan İzlem Listesi</h4></div>
+        <div class="col-xs-11"><h4><i class="fa-solid fa-receipt"></i> Planlanan İzlemler</h4></div>
         <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>

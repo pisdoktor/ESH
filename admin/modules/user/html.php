@@ -96,7 +96,7 @@ $(document).ready(function() {
 		</script>
 <form action="index.php" method="post" name="adminForm" role="form">
 <div class="panel panel-default">
-    <div class="panel-heading"><h4>Yönetim Paneli - Kullanıcı <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
+    <div class="panel-heading"><h4><i class="fa-solid fa-user-plus"></i> Yönetim Paneli - Kullanıcı <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
     </div>
     <div class="panel-body">
     
@@ -185,6 +185,19 @@ $(document).ready(function() {
 
 </div>
 
+
+<div class="form-group row">
+
+<div class="col-sm-3">
+<label for="name">Kullanıcı Admin:</label>
+</div>
+
+<div class="col-sm-4">
+<?php echo mosHTML::yesnoRadioList('isadmin', '', $row->isadmin);?>
+</div>
+
+</div>
+
 <input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="user" />
 <input type="hidden" name="task" value="" />
@@ -208,9 +221,15 @@ $(document).ready(function() {
 }
 	
 	static function getKullaniciList($rows, $pageNav, $search) {
+        $link = 'index.php?option=admin&bolum=user';
 		?>
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Kullanıcılar</h4></div>
+	<div class="panel-heading">
+    <div class="row">
+    <div class="col-xs-11"><h4><i class="fa-solid fa-users"></i> Yönetim Paneli - Kullanıcılar</h4></div>
+    <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
+</div>
+    </div>
 	<div class="panel-body">
 	
 <form action="index.php" method="post" name="adminForm" role="form">
@@ -237,6 +256,7 @@ $(document).ready(function() {
 <th>Kullanıcı Adı</th>
 <th>E-posta Adresi</th>
 <th>Aktif?</th> 
+<th>ADMİN</th>
 </thead>
 <tbody>
 
@@ -254,6 +274,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 <td><?php echo $row->username;?></td>
 <td><?php echo $row->email;?></td>
 <td><?php echo $row->activated ? 'EVET':'HAYIR';?></td>
+<td><?php echo $row->isadmin ? '<strong>EVET</strong>':'HAYIR';?></td>
 </tr>
 <?php
 $t = 1 - $t;
@@ -269,18 +290,21 @@ $t = 1 - $t;
 
 </form>
 
-</div>
-
+<div class="panel-footer">
 <div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
 </div>
 <div class="pagenav_links">
 <?php 
-$link = 'index.php?option=admin&bolum=user';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
+</div>
+
+</div>
+
+
 
 
 

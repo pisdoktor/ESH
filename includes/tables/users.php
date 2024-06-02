@@ -27,6 +27,8 @@ class Users extends DBTable {
 	var $activated    = null;
 	
 	var $activation = null;
+    
+    var $isadmin = null;
 	
 	/**
 	* @param database A database connector object

@@ -8,7 +8,7 @@ class ConfigHTML {
 		?>
         <form action="index.php" method="post" name="adminForm" role="form"> 
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Yapılandırma Dosyası</h4></div>
+	<div class="panel-heading"><h4><i class="fa-solid fa-gears"></i> Yönetim Paneli - Yapılandırma Dosyası</h4></div>
 	<div class="panel-body">
 		
 		

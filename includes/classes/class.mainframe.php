@@ -562,9 +562,10 @@ class mainFrame {
 				$session->userid     = intval( $row->id );
 				$session->nerede     = $bolum;
                 $session->access_type = 'site';
+                $session->isadmin = $row->isadmin;
 				   
-				if ($row->id == 1) {
-				$this->_isAdmin = true;
+				if ($row->isadmin) {
+				$this->set('_isAdmin', true);
 				} 
                 
 				$session->update();
@@ -667,6 +668,7 @@ class mainFrame {
 			$user->email        = $my->email;
 			$user->lastvisit    = $my->lastvisit;
             $user->tckimlikno   = $my->tckimlikno;
+            $user->isadmin      = $my->isadmin;
 
 		}
 

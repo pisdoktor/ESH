@@ -12,7 +12,7 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
 <div class="panel panel-default">
         <div class="panel-heading">
         <div class="row">
-    <div class="col-xs-11"><h4>İzlem Listesi: <a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $hasta->id;?>"><?php echo $hasta->isim.' '.$hasta->soyisim;?></a></h4></div>
+    <div class="col-xs-11"><h4><i class="fa-solid fa-stethoscope"></i> İzlem Listesi: <a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $hasta->id;?>"><?php echo $hasta->isim.' '.$hasta->soyisim;?></a></h4></div>
     <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>
@@ -29,6 +29,7 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
     <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
+      <th scope="col">SIRA</th>
       <th scope="col">İzlem Tarihi</th>
       <th scope="col">Yapılan İşlem</th>
       <th scope="col">İzlemi Yapan</th>
@@ -40,9 +41,11 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
     $iz = new Izlem($dbase);
   $is = new Islem($dbase);
   
+  $i = 0;
    foreach($rows as $row) {
       ?>
        <tr>
+       <td><a href="index.php?option=site&bolum=izlemler&task=edit&id=<?php echo $row->id;?>"><?php echo $pageNav->rowNumber( $i );?></a></td>
       <th>
       <div class="dropdown">
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo tarihCevir($row->izlemtarihi, 1);?></a>
@@ -57,7 +60,7 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
       <td><?php echo $iz->IzlemiYapanlar($row->izlemiyapan);?> </td>
     </tr>
  <?php 
-
+  $i++;
   }?>
   
     </tbody>
@@ -89,9 +92,9 @@ static function heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, 
     ?>
     <form action="index.php" method="post">
     
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
     
-    <div class="panel-heading"><h4>İzlem <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4></div>
+    <div class="panel-heading"><h4><i class="fa-solid fa-hospital-user"></i> İzlem Ekle</h4></div>
     
     <div class="panel-body">
         
@@ -231,7 +234,7 @@ static function editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $
     
     <div class="panel panel-default">
     
-    <div class="panel-heading"><h4>İzlem <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4></div>
+    <div class="panel-heading"><h4><i class="fa-solid fa-hospital-user"></i> İzlem <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4></div>
     
     <div class="panel-body">
     
@@ -393,7 +396,7 @@ static function getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ord
     <div class="panel panel-default">
     <div class="panel-heading">
      <div class="row">
-        <div class="col-xs-11"><h4>Aktif İzlem Listesi</h4></div>
+        <div class="col-xs-11"><h4><i class="fa-solid fa-file-medical"></i> Aktif İzlemler</h4></div>
         <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>

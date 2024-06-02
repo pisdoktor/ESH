@@ -20,63 +20,34 @@ if (!$my->id) {
 } else {
 ?>
 
-<li><a href="<?php echo SITEURL;?>"><span>Anasayfa</span></a></li>
+<li><a href="<?php echo SITEURL;?>"><i class="fa-solid fa-bars-progress"></i> <span>Anasayfa</span></a></li>
 <!--
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
 -->
-<li class="has-sub"><a href="#"><span>Hasta İşlemleri</span></a>
+<li class="has-sub"><a href="#"><i class="fa-solid fa-people-roof"></i> <span>Hasta İşlemleri</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=hastalar">Aktif Hasta Listesi</a></li>
-<li><a href="index.php?option=site&bolum=phastalar">Pasif Hasta Listesi</a></li> 
-<li><a href="index.php?option=site&bolum=hastalar&task=new">Yeni Hasta Kayıt</a></li>
+<li><a href="index.php?option=site&bolum=hastalar"><i class="fa-solid fa-person-cane"></i> <span>Aktif Hasta Listesi</span></a></li>
+<li><a href="index.php?option=site&bolum=phastalar"><i class="fa-solid fa-bed-pulse"></i> <span>Pasif Hasta Listesi</span></a></li> 
+<li><a href="index.php?option=site&bolum=hastalar&task=new"><i class="fa-solid fa-square-plus"></i> <span>Yeni Hasta Kayıt</span></a></li>
 </ul>
 </li>
 
-<li class="has-sub"><a href="#"><span>İzlem İşlemleri</span></a>
+<li class="has-sub"><a href="#"><i class="fa-solid fa-book-medical"></i> <span>İzlem İşlemleri</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=izlemler">Aktif İzlem Listesi</a></li>
-<li><a href="index.php?option=site&bolum=pizlemler">Planlanan İzlem Listesi</a></li>
-<li><a href="index.php?option=site&bolum=stats&task=izlenmeyen">İzlem Girilmeyen Hastalar</a></li>
+<li><a href="index.php?option=site&bolum=izlemler"><i class="fa-solid fa-file-medical"></i> <span>Aktif İzlemler</span></a></li>
+<li><a href="index.php?option=site&bolum=pizlemler"><i class="fa-solid fa-receipt"></i> <span>Planlanan İzlemler</span></a></li>
 </ul>
 </li>
 
-<li class="has-sub"><a href="#"><span>Genel İstatistik</span></a>
-<ul>
-
-<li><a href="index.php?option=site&bolum=stats&task=temel">İzleme Göre Hastalar</a></li>
-<!-- mahalleye göre istatistikler -->
-<li><a href="index.php?option=site&bolum=stats&task=hmahalle">Mahalleye Göre Hastalar</a></li>
-<!-- kayıt yılına göre istatistikler -->
-<li><a href="index.php?option=site&bolum=stats&task=kayityili">Kayıt Yılına Göre Hastalar</a></li>
-<!-- kayıt yılına göre istatistikler -->
-<li><a href="index.php?option=site&bolum=stats&task=yasgruplari">Yaşına Göre Hastalar</a></li>
-<!-- hastalıklara göre istatistikler -->
-<li><a href="index.php?option=site&bolum=stats&task=hastalik">Hastalıklara Göre Hastalar</a></li>
-<!-- özelliği olan hasta istatistikler -->
-<li><a href="index.php?option=site&bolum=stats&task=special">Özelliğine Göre Hastalar</a></li>
-
-<li><a href="index.php?option=site&bolum=stats&task=dogumgunu">Bugün Doğan Hastalar</a></li>
-
-<li><a href="index.php?option=site&bolum=stats&task=adres">Adrese Göre Hastalar</a></li> 
-
-<li><a href="index.php?option=site&bolum=stats&task=islem">Tarihe Göre İşlemler</a></li> 
-
-<li><a href="index.php?option=site&bolum=stats&task=personel">Tarihe Göre Personeller</a></li>
-
-<li><a href="index.php?option=site&bolum=stats&task=hgirilmeyen">Bilgileri Eksik Hastalar</a></li> 
-
-<li><a href="index.php?option=site&bolum=dosyalama">Dosyalama için Hastalar</a></li>
-</ul>
-</li>
 
 <?php 
-if ($my->id == 1) {
+if ($my->isadmin) {
 ?>
-<li><a href="index.php?option=admin"><span>Yönetim Paneli</span></a></li>
+<li><a href="index.php?option=admin"><i class="fa-solid fa-chart-line"></i> <span>Yönetim Paneli</span></a></li>
 <?php    
 }
 ?>
-<li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>    
+<li><a href="index.php?option=logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Çıkış Yap</span></a></li>    
 </ul>
 </div>
 <div id="messages"></div>
@@ -89,7 +60,7 @@ if ($my->id == 1) {
 function convertAdmin() {
     global $mainframe, $dbase, $my;
     
-    if ($my->id == 1) {
+    if ($my->isadmin) {
     $session = new Session($dbase);
     $session->load($mainframe->_session->session);
 
@@ -182,7 +153,7 @@ function izlemSikligi() {
      
     ?>
     <div class="panel panel-success">
-  <div class="panel-heading">Bu Ayın İzlem Sıklığı</div>
+  <div class="panel-heading"><i class="fa-solid fa-list"></i> Bu Ayın İzlem Sıklığı</div>
   <table class="table table-rounded">
   <tr>
   <th>T. HASTA</th>
@@ -228,7 +199,7 @@ function loadCikarilmaNedeni() {
     );
     ?>
 <div class="panel panel-danger">
-  <div class="panel-heading">Bu Ay Takipten Çıkarılma Nedenleri</div>
+  <div class="panel-heading"><i class="fa-solid fa-share-from-square"></i> Bu Ay Takipten Çıkarılma Nedenleri</div>
   
 <table class="table">
           <thead class="thead-dark"> 
@@ -327,7 +298,7 @@ function loadYasGrup() {
 ?>
 
 <div class="panel panel-danger">
-  <div class="panel-heading">Bu Ay İzlem Yapılan Hasta Yaş Grupları</div>
+  <div class="panel-heading"><i class="fa-solid fa-users"></i> Bu Ay İzlem Yapılan Hasta Yaş Grupları</div>
 
 <table class="table">
           <thead class="thead-dark"> 
@@ -385,7 +356,7 @@ function UserPanel() {
     
 
     echo '<div class="panel panel-primary">';
-    echo '<div class="panel-heading">Hoşgeldiniz '.$my->name.'</div>';
+    echo '<div class="panel-heading"><i class="fa-solid fa-user"></i> Hoşgeldiniz '.$my->name.'</div>';
     echo '<div class="panel-body">';
     echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span><br />';
     echo '</div>';
@@ -443,7 +414,7 @@ function GenelStats() {
     $toplambagimli = $dbase->loadResult();
     ?>
     <div class="panel panel-default">
-  <div class="panel-heading">Genel İstatistikler</div>
+  <div class="panel-heading"><i class="fa-solid fa-chart-simple"></i> Genel İstatistikler</div>
  <table class="table table-striped">
  <thead>
  </thead>

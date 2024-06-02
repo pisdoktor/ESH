@@ -156,7 +156,7 @@ function IzlemGetir($tc) {
     
     $pageNav = new pageNav($total, $limitstart, $limit);
     
-    $dbase->setQuery("SELECT * FROM #__izlemler WHERE hastatckimlik='".$tc."' ORDER BY izlemtarihi DESC", $limitstart, $limit);
+    $dbase->setQuery("SELECT * FROM #__izlemler WHERE hastatckimlik='".$tc."' ORDER BY izlemtarihi ASC", $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
     IzlemList::IzlemGetir($hasta, $rows, $pageNav);

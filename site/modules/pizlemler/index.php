@@ -112,8 +112,8 @@ function getTakvim() {
 <div class="panel panel-default">
     <div class="panel-heading">
      <div class="row">
-        <div class="col-xs-10"><h4>Planlanan İzlem Listesi</h4></div>
-        <div class="col-xs-2" align="right"><a href="index.php?option=site&bolum=pizlemler&task=list" class="btn btn-sm btn-default">Listeyi Göster</a></div>
+        <div class="col-xs-10"><h4><i class="fa-solid fa-calendar-days"></i> Planlanan İzlemler (Takvim)</h4></div>
+        <div class="col-xs-2" align="right"><a href="index.php?option=site&bolum=pizlemler&task=list" class="btn btn-sm btn-primary">Listeyi Göster</a></div>
     </div>
     </div>
     <div class="panel-body">

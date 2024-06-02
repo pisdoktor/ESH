@@ -9,7 +9,7 @@ class BackupHTML {
 		?>
             <form action="index.php" method="post" name="adminForm" role="form"> 
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Veritabanı Tabloları</h4></div>
+	<div class="panel-heading"><h4><i class="fa-solid fa-database"></i> Yönetim Paneli - Veritabanı Tabloları</h4></div>
 	<div class="panel-body">
 	
 

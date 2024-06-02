@@ -80,7 +80,7 @@ class MahalleHTML {
 <input type="hidden" name="boxchecked" value="0" />
 
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Mahalleler</h4></div>
+	<div class="panel-heading"><h4><i class="fa-solid fa-house"></i> Yönetim Paneli - Mahalleler</h4></div>
 	<div class="panel-body">
 	
 <div class="form-group">

@@ -114,7 +114,7 @@ static function getKapinoList($rows, $search, $ilce, $mahalle, $sokak, $ordering
 <div class="panel panel-primary">
         <div class="panel-heading in" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
           <div class="row">
-            <div class="col-xs-6"><h5>Arama Seçenekleri</h5></div>
+            <div class="col-xs-6"><h5><i class="fa-solid fa-magnifying-glass"></i> Arama Seçenekleri</h5></div>
             <div class="col-xs-6" align="right"><span class="badge" align="right">X</span></div>
           </div>
         </div>
@@ -168,7 +168,7 @@ $(document).ready(function(){
 </script> 
 
 <div class="panel panel-default">
-<div class="panel-heading"><h4>Yönetim Paneli - Kapı Numaraları</h4></div>
+<div class="panel-heading"><h4><i class="fa-solid fa-door-open"></i> Yönetim Paneli - Kapı Numaraları</h4></div>
 <div class="panel-body">
 	
 <div class="form-group">

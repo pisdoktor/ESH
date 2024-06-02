@@ -14,101 +14,21 @@ class HastaList {
          // kayıt ayını seç
         $aylar = array('01' => 'Ocak', '02' => 'Şubat', '03' => 'Mart', '04' => 'Nisan', '05' => 'Mayıs', '06' => 'Haziran', '07' => 'Temmuz', '08' => 'Ağustos', '09' => 'Eylül', '10' => 'Ekim', '11' => 'Kasım', '12' => 'Aralık');
          // hastalıkları
-        $hastaliklar = array(
-'parkinson' => 'Parkinson',
-'alzheimer' => 'Alzheimer',
-'demans' => 'Demans',
-'senilite' => 'Senilite(Yaşlılık)',
-'epilepsi' => 'Epilepsi',
-'hidrosefali' => 'Hidrosefali',
-'ensefalopati' => 'Ensefalopati',
-'svo' => 'SVO',
-'sspe' => 'SSPE',
-'miyelit' => 'Miyelit',
-'als' => 'ALS',
-'motornoron' => 'Motor Nöron Hastalığı',
-'multiplskleroz' => 'Multipl Skleroz',
-'noropatikagri' => 'Nöropatik Ağrı',
-'kuadripleji' => 'Kuadripleji',
-'hemipleji' => 'Hemipleji',
-'parapleji' => 'Parapleji',
-'tetrapleji' => 'Tetrapleji',
-'mentalretardasyon' => 'Mental Retardasyon',
-'poliosekel' => 'Polio Sekeli',
-'depresyon' => 'Depresyon',
-'psikoz' => 'Psikoz',
-'bipolar' => 'Bipolar Bozukluk',
-'sizofren' => 'Şizofreni',
-'serebralpalsi' => 'Serebral Palsi',
-'kasatrofisi' => 'Kas Atrofisi',
-'ataksi' => 'Ataksi',
-'muskulerdistrofi' => 'Müsküler Distrofi',
-'spastikveflask' => 'Spastik ve Flask Tip Özürlü',
-'aritmi' => 'Aritmi',
-'ht' => 'Hipertansiyon',
-'kalpkapak' => 'Kalp Kapak Hastalıkları',
-'kalpyet' => 'Kalp Yetmezliği',
-'koronerarter' => 'Koroner Arter Hastalığı',
-'venozdol' => 'Venöz Dolaşım Bozukluğu',
-'dm' => 'Diyabet',
-'hiperlipidemi' => 'Hiperlipidemi',
-'hipertiroidi' => 'Hipertiroidi',
-'hipotiroidi' => 'Hipotiroidi',
-'obezite' => 'Obezite',
-'diyaliz' => 'Diyaliz Hastası',
-'bobrekyet' => 'Böbrek Yetmezliği',
-'siroz' => 'Karaciğer Sirozu',
-'anemi' => 'Anemi',
-'itp' => 'ITP',
-'ciltkanser' => 'Cilt Kanseri',
-'memekanser' => 'Meme Kanseri',
-'farinkskanser' => 'Farinks Kanseri',
-'trakeakanser' => 'Trakea Kanseri',
-'akckanseri' => 'Akciğer Kanseri',
-'ozofaguskanser' => 'Özofagus Kanseri',
-'midekanser' => 'Mide Kanseri',
-'barsakkanser' => 'Bağırsak Kanseri',
-'karacigerkanser' => 'Karaciğer Kanseri',
-'pankreaskanser' => 'Pankreas Kanseri',
-'safrakanser' => 'Safra Kesesi Kanseri',
-'prostatkanser' => 'Prostat Kanseri',
-'tiroidkanser' => 'Tiroid Kanseri',
-'hipofizkanser' => 'Hipofiz Kanseri',
-'bobrekkanser' => 'Böbrek Kanseri',
-'overkanser' => 'Over Kanseri',
-'uteruskanser' => 'Uterus Kanseri',
-'kemikkanser' => 'Kemik Kanseri',
-'beyinkanser' => 'Beyin Kanseri',
-'multiplmiyelom' => 'Multipl Miyelom',
-'koah' => 'KOAH',
-'astim' => 'Astım',
-'tuberkuloz' => 'Tüberküloz',
-'kistikfibroz' => 'Kistik Fibrozis',
-'dekubitulseri' => 'Dekübitus Ülseri',
-'diskopati' => 'Diskopati',
-'extremiteamp' => 'Ekstremitelerde Ampütasyon',
-'kalcafraktur' => 'Kalça Fraktürü',
-'operekirik' => 'Opere Edilmiş veya mobilizasyon kısıtlayıcı kırıklar',
-'osteoporoz' => 'Osteoporoz',
-'omurgafraktur' => 'Omurga Fraktürü',
-'ebullosa' => 'Epidermolizis Büllosa',
-'zona' => 'Zona',
-'fil' => 'Fil Hastalığı',
-'sle' => 'Sistemik Lupus Eritomatozus',
-'bph' => 'Benign Prostat Hipertrofisi'
-);
+        include(dirname(__FILE__). '/hastaliklar.php');
 
 
 $list = array();
-foreach ($hastaliklar as $v=>$k) {
-if ($hasta->$v == 1) {
-$list[] = $k;
-}
+foreach ($tab as $v=>$k) {
+    foreach ($k as $i => $s) {
+        if ($hasta->$i == 1) {
+            $list[] = $s;
+        }
+    }
 }
 ?>
      <div class="panel panel-default">
     
-    <div class="panel-heading"><h4>Hasta Bilgileri:  <?php echo $hasta->isim." ".$hasta->soyisim;?></h4></div>
+    <div class="panel-heading"><h4><i class="fa-solid fa-file-lines"></i> Hasta Bilgileri:  <?php echo $hasta->isim." ".$hasta->soyisim;?></h4></div>
     
     <div class="panel-body">
     
@@ -217,7 +137,7 @@ $list[] = $k;
     <form action="index.php" method="post" data-toggle="validator" novalidate>
     <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>"><!-- main panel -->
     
-    <div class="panel-heading"><h4><?php echo $row->id ? 'Düzenle: '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Kayıt';?></h4></div>
+    <div class="panel-heading"><h4><i class="fa-solid fa-square-plus"></i> <?php echo $row->id ? 'Düzenle: '.$row->isim.' '.$row->soyisim : 'Yeni Hasta Kayıt';?></h4></div>
     
     <div class="panel-body"><!-- main panel-body -->
     
@@ -227,7 +147,7 @@ $list[] = $k;
     <div class="col-sm-6">
     
     <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>">
-    <div class="panel-heading"><h5>Temel Bilgileri</h5></div>
+    <div class="panel-heading"><h5><i class="fa-regular fa-user"></i> Temel Bilgileri</h5></div>
     <div class="panel-body"><!-- temel bilgiler-->
     
 <div class="form-group row">
@@ -406,7 +326,7 @@ if ($row->id) { ?>
     
     <div class="col-sm-6">
     <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>">
-    <div class="panel-heading"><h5>Hastalıkları</h5></div>
+    <div class="panel-heading"><h5><i class="fa-solid fa-bacterium"></i> Hastalıkları</h5></div>
     <div class="panel-body"><!-- ek özellikler-->
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
@@ -880,7 +800,7 @@ $(document).ready(function(){
 <div class="panel panel-default"> 
 <div class="panel-heading">
 <div class="row">
-<div class="col-xs-10"><h4>Arama Seçenekleri</h4></div>
+<div class="col-xs-10"><h4><i class="fa-solid fa-magnifying-glass"></i> Arama Seçenekleri</h4></div>
 <div class="col-xs-2" align="right">
 
 </div>
@@ -999,7 +919,7 @@ $(document).ready(function(){
 <div class="panel panel-primary">
 <div class="panel-heading">
 <div class="row">
-    <div class="col-xs-11"><h4><?php echo $pasif ? 'Pasif' : 'Aktif';?> Hasta Listesi</h4></div>
+    <div class="col-xs-11"><h4><i class="fa-solid fa-person-cane"></i> Aktif Hasta Listesi</h4></div>
     <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
 </div>
 </div>

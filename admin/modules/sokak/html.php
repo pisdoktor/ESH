@@ -88,7 +88,7 @@ $(document).ready(function(){
 		?>
         <form action="index.php" method="GET" name="adminForm" role="form">
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Sokaklar</h4></div>
+	<div class="panel-heading"><h4><i class="fa-solid fa-road"></i> Yönetim Paneli - Sokaklar</h4></div>
 	<div class="panel-body">
     
 <div class="form-group">

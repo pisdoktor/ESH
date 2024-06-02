@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));
-$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limit = intval(getParam($_REQUEST, 'limit', 50));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 $search = getParam($_REQUEST, 'search');
 

@@ -1,6 +1,8 @@
 <?php
 // no direct access
-defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
+defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
+
+$mainframe->addStyleSheet(SITEURL.'/includes/fontawesome/css/all.min.css'); 
 ?>
 <!DOCTYPE html>
 <head>
@@ -13,8 +15,16 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 <div id="header">
 <div id="logo clearfix">
-<img class="float-left" src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/evdesagliklogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
-<img class="float-right" src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/sblogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<div class="row">
+<div class="col-sm-6 text-left">
+<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/evdesagliklogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+</div>
+
+<div class="col-sm-6 text-right">
+<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/sblogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+</div>
+</div>
+
 </div>
 </div>
 

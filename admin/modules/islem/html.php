@@ -6,7 +6,7 @@ class IslemHTML {
     static function editIslem($row) {
         ?>
         <div class="panel panel-default">
-    <div class="panel-heading"><h4>Yönetim Paneli - İşlem <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
+    <div class="panel-heading"><h4><i class="fa-solid fa-syringe"></i> Yönetim Paneli - İşlem <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
     </div>
     <div class="panel-body">
 
@@ -54,10 +54,16 @@ class IslemHTML {
 }
     
     static function getIslemList($rows, $pageNav) {
+        $link = 'index.php?option=admin&bolum=islem';
         ?>
         <form action="index.php" method="post" name="adminForm" role="form"> 
         <div class="panel panel-default">
-    <div class="panel-heading"><h4>Yönetim Paneli - İşlemler</h4></div>
+    <div class="panel-heading">
+        <div class="row">
+    <div class="col-xs-11"><h4><i class="fa-solid fa-book-journal-whills"></i> Yönetim Paneli - İşlemler</h4></div>
+    <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
+</div>
+   </div> 
     <div class="panel-body">
     
 <div class="form-group">
@@ -113,7 +119,6 @@ $t = 1 - $t;
 </div>
 <div class="pagenav_links">
 <?php 
-$link = 'index.php?option=admin&bolum=islem';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>

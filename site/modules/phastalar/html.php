@@ -26,7 +26,7 @@ class HastaList {
     <div class="panel panel-warning">
     <div class="panel-heading">
     <div class="row">
-        <div class="col-xs-11"><h4>Pasif Hasta Listesi</h4></div>
+        <div class="col-xs-11"><h4><i class="fa-solid fa-bed-pulse"></i> Pasif Hasta Listesi</h4></div>
         <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>

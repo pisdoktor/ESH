@@ -1,6 +1,7 @@
 <?php
 // no direct access
-defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
+defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
+$mainframe->addStyleSheet(SITEURL.'/includes/fontawesome/css/all.min.css');  
 ?>
 <!DOCTYPE html>
 <head>
@@ -19,9 +20,17 @@ $validate = spoofValue(1);
 
 <div id="header">
 <div id="logo clearfix">
-<img class="float-left" src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/evdesagliklogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
-<img class="float-right" src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/sblogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<div class="row">
+<div class="col-sm-6 text-left">
+<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/evdesagliklogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
+
+<div class="col-sm-6 text-right">
+<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/sblogo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+</div>
+</div>
+</div>
+
 </div>
 
 <div id="header-bar" class="clearfix">
@@ -42,7 +51,7 @@ $validate = spoofValue(1);
 
 <div class="col-sm-4 center">
 <div class="panel panel-default">
-<div class="panel-heading">ÜYE GİRİŞİ</div>
+<div class="panel-heading"><i class="fa-solid fa-right-to-bracket"></i> ÜYE GİRİŞİ</div>
 <div class="panel-body">
 <form action="index.php" method="post" name="login" id="loginForm" role="form">
 
