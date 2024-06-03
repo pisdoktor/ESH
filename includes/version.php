@@ -9,7 +9,7 @@ class Version {
 	
 	var $DEV_STATUS  = 'Stabil';
 	
-	var $DEV_LEVEL   = '0';
+	var $DEV_LEVEL   = '1';
 	
 	var $CODENAME    = 'Kahramanmaraş';
 	

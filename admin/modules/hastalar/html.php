@@ -60,7 +60,7 @@ foreach ($tab as $v=>$k) {
 
  <div class="form-group row">
 <div class="col-sm-6"><label for="toplamizlem">Toplam İzlem Sayısı:</label></div>
-<div class="col-sm-6"><span class="label label-warning"><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $hasta->tckimlik;?>"><?php echo $hasta->toplamizlem;?> İzlem</a></span></div>
+<div class="col-sm-6"><?php echo $hasta->toplamizlem;?> İzlem</div>
 </div>
 
  <div class="form-group row">
@@ -71,7 +71,7 @@ foreach ($tab as $v=>$k) {
 
 
 <div class="form-group row">
-<a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $hasta->id;?>" class="btn btn-warning">Bilgileri Düzenle</a>
+<a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $hasta->id;?>" class="btn btn-warning">Bilgileri Düzenle</a>
 <a href="javascript:history.go(-1);" class="btn btn-default">Geri Git</a>
 </div>
 
@@ -526,7 +526,7 @@ foreach ($tab[8] as $v=>$k) {
     
     </div><!-- main panel-body -->
     </div><!-- main panel -->
-    <input type="hidden" name="option" value="site" />
+    <input type="hidden" name="option" value="admin" />
     <input type="hidden" name="bolum" value="hastalar" />
     <input type="hidden" name="task" value="save" />
     <input type="hidden" name="id" value="<?php echo $row->id;?>" /> 
@@ -586,7 +586,7 @@ $(document).ready(function(){
     
     if (uzunluk==11) {
             $.ajax({
-                url:'index2.php?&option=site&bolum=hastalar&task=control&tc='+val,
+                url:'index2.php?&option=admin&bolum=hastalar&task=control&tc='+val,
                 type:'GET',
                 success:function(result){
                     $('#sonuc').html(result);
@@ -695,7 +695,7 @@ $(document).ready(function(){
 
   </div>
 </div>
-<input type="hidden" name="option" value="site">
+<input type="hidden" name="option" value="admin">
 <input type="hidden" name="bolum" value="hastalar">
 <input type="hidden" name="task" value="savesokak">
 <input type="hidden" name="uid" value="<?php echo $row->id;?>"> 
@@ -745,7 +745,7 @@ $(document).ready(function(){
 
   </div>
 </div>
-<input type="hidden" name="option" value="site">
+<input type="hidden" name="option" value="admin">
 <input type="hidden" name="bolum" value="hastalar">
 <input type="hidden" name="task" value="savekapino">
 <input type="hidden" name="uid" value="<?php echo $row->id;?>">
@@ -755,7 +755,7 @@ $(document).ready(function(){
 }
     
     function getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering, $lists) {
-        $link = 'index.php?option=site&bolum=hastalar';
+        $link = 'index.php?option=admin&bolum=hastalar';
         if ($search) {
             $link .= "&amp;search=".$search;
         }
@@ -790,7 +790,7 @@ $(document).ready(function(){
         
     ?>
 <form action="index.php" method="GET" name="adminForm" role="form">
-<input type="hidden" name="option" value="site" />
+<input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="hastalar" />
 <input type="hidden" name="task" value="list" /> 
 
@@ -896,7 +896,7 @@ $(document).ready(function(){
                 
         function ajaxFunc(task, id, name ){
             $.ajax({
-                url: "index2.php?option=site&bolum=hastalar",
+                url: "index2.php?option=admin&bolum=hastalar",
                 type: "GET",
                 data: {task:task, id:id},
                 success: function(sonuc){
@@ -996,11 +996,11 @@ $(document).ready(function(){
        <div class="dropdown">
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row['isim'];?></a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row['id'];?>">Bilgileri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row['id'];?>">Bilgileri Düzenle</a></li>
+  <li><a href="index.php?option=admin&bolum=hastalar&task=show&id=<?php echo $row['id'];?>">Bilgileri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row['id'];?>">Bilgileri Düzenle</a></li>
      <li class="divider"></li> 
-    <li><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row['tckimlik'];?>">İzlemleri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=izlemler&task=hedit&tc=<?php echo $row['tckimlik'];?>">Yeni İzlem Gir</a></li>
+    <li><a href="index.php?option=admin&bolum=izlemler&task=izlemgetir&tc=<?php echo $row['tckimlik'];?>">İzlemleri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=izlemler&task=hedit&tc=<?php echo $row['tckimlik'];?>">Yeni İzlem Gir</a></li>
   </ul>
 </div> 
       </th>
@@ -1019,7 +1019,7 @@ $(document).ready(function(){
     </tbody>
 </table>
 <!--
-<script src="<?php echo SITEURL;?>/site/modules/hastalar/datatables-simple.js" type="text/javascript"></script>
+<script src="<?php echo SITEURL;?>/admin/modules/hastalar/datatables-simple.js" type="text/javascript"></script>
 <script>
 new DataTable('#datatablesSimple', {
     fixedHeader: true,

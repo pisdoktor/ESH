@@ -31,28 +31,29 @@ function getirHastalar($isim, $soyisim, $mahalle) {
     }
     
     
-    $where[] = " pasif='0' ";
+    $where[] = "h.pasif='0' ";
     
     
     
     if ($isim) {
-    $where[] = "isim LIKE '" . $dbase->getEscaped( trim( $isim ) ) . "%'";
+    $where[] = "h.isim LIKE '" . $dbase->getEscaped( trim( $isim ) ) . "%'";
     }
     
     if ($soyisim) {
-    $where[] = "soyisim LIKE '" . $dbase->getEscaped( trim( $soyisim ) ) . "%'";
+    $where[] = "h.soyisim LIKE '" . $dbase->getEscaped( trim( $soyisim ) ) . "%'";
     }
     
     
-    /*
     if ($mahalle) {
         $dizi = implode(',', $mahalle);
         
-        $where[] = "mahalle IN (".$dizi.")";
+        $where[] = "h.mahalle IN (".$dizi.")";
     
     }
-    */
-    $query = "SELECT COUNT(id) FROM #__hastalar "
+    
+
+    
+    $query = "SELECT COUNT(h.id) FROM #__hastalar AS h "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      ;
      
@@ -73,16 +74,18 @@ function getirHastalar($isim, $soyisim, $mahalle) {
     
     $rows = $dbase->loadObjectList();
     
-    /*
-    $dbase->setQuery("SELECT * FROM #__mahalle ORDER BY mahalle ASC");
+    
+
+    $dbase->setQuery("SELECT m.*, i.ilce FROM #__mahalle AS m "
+     . "\n LEFT JOIN #__ilce AS i ON i.id=m.ilceid ORDER BY i.ilce ASC, m.mahalle ASC");
     
     $mahalleler = $dbase->loadObjectList();
     
-    foreach ($mahalleler as $mahalle){
-        $mlist[] = mosHTML::makeOption($mahalle->id, $mahalle->mahalle);
+    foreach ($mahalleler as $mah){
+        $mlist[] = mosHTML::makeOption($mah->id, $mah->ilce.'-'.$mah->mahalle);
     }
-    $lists['mahalle'] = mosHTML::selectList($mlist, 'mahalle[]', 'multiple', 'value', 'text', $mahalle); 
-     */
+    $lists['mahalle'] = mosHTML::checkboxList($mlist, 'mahalle', '', 'value', 'text', $mahalle); 
+    
     Dosyalama::getirHastalar($rows, $lists, $pageNav, $isim, $soyisim);
 
 }

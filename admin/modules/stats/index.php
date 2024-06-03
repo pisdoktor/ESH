@@ -98,93 +98,15 @@ switch($task) {
 function hastalikGirilmemiş() {
     global $dbase;
     
-$hastaliklar = array(
-'parkinson' => 'Parkinson',
-'alzheimer' => 'Alzheimer',
-'demans' => 'Demans',
-'senilite' => 'Senilite(Yaşlılık)',
-'epilepsi' => 'Epilepsi',
-'hidrosefali' => 'Hidrosefali',
-'ensefalopati' => 'Ensefalopati',
-'svo' => 'SVO',
-'sspe' => 'SSPE',
-'miyelit' => 'Miyelit',
-'als' => 'ALS',
-'motornoron' => 'Motor Nöron Hastalığı',
-'multiplskleroz' => 'Multipl Skleroz',
-'noropatikagri' => 'Nöropatik Ağrı',
-'kuadripleji' => 'Kuadripleji',
-'hemipleji' => 'Hemipleji',
-'parapleji' => 'Parapleji',
-'tetrapleji' => 'Tetrapleji',
-'mentalretardasyon' => 'Mental Retardasyon',
-'poliosekel' => 'Polio Sekeli',
-'depresyon' => 'Depresyon',
-'psikoz' => 'Psikoz',
-'bipolar' => 'Bipolar Bozukluk',
-'sizofren' => 'Şizofreni',
-'serebralpalsi' => 'Serebral Palsi',
-'kasatrofisi' => 'Kas Atrofisi',
-'ataksi' => 'Ataksi',
-'muskulerdistrofi' => 'Müsküler Distrofi',
-'spastikveflask' => 'Spastik ve Flask Tip Özürlü',
-'aritmi' => 'Aritmi',
-'ht' => 'Hipertansiyon',
-'kalpkapak' => 'Kalp Kapak Hastalıkları',
-'kalpyet' => 'Kalp Yetmezliği',
-'koronerarter' => 'Koroner Arter Hastalığı',
-'venozdol' => 'Venöz Dolaşım Bozukluğu',
-'dm' => 'Diyabet',
-'hiperlipidemi' => 'Hiperlipidemi',
-'hipertiroidi' => 'Hipertiroidi',
-'hipotiroidi' => 'Hipotiroidi',
-'obezite' => 'Obezite',
-'diyaliz' => 'Diyaliz Hastası',
-'bobrekyet' => 'Böbrek Yetmezliği',
-'siroz' => 'Karaciğer Sirozu',
-'anemi' => 'Anemi',
-'itp' => 'ITP',
-'ciltkanser' => 'Cilt Kanseri',
-'memekanser' => 'Meme Kanseri',
-'farinkskanser' => 'Farinks Kanseri',
-'trakeakanser' => 'Trakea Kanseri',
-'akckanseri' => 'Akciğer Kanseri',
-'ozofaguskanser' => 'Özofagus Kanseri',
-'midekanser' => 'Mide Kanseri',
-'barsakkanser' => 'Bağırsak Kanseri',
-'karacigerkanser' => 'Karaciğer Kanseri',
-'pankreaskanser' => 'Pankreas Kanseri',
-'safrakanser' => 'Safra Kesesi Kanseri',
-'prostatkanser' => 'Prostat Kanseri',
-'tiroidkanser' => 'Tiroid Kanseri',
-'hipofizkanser' => 'Hipofiz Kanseri',
-'bobrekkanser' => 'Böbrek Kanseri',
-'overkanser' => 'Over Kanseri',
-'uteruskanser' => 'Uterus Kanseri',
-'kemikkanser' => 'Kemik Kanseri',
-'beyinkanser' => 'Beyin Kanseri',
-'multiplmiyelom' => 'Multipl Miyelom',
-'koah' => 'KOAH',
-'astim' => 'Astım',
-'tuberkuloz' => 'Tüberküloz',
-'kistikfibroz' => 'Kistik Fibrozis',
-'dekubitulseri' => 'Dekübitus Ülseri',
-'diskopati' => 'Diskopati',
-'extremiteamp' => 'Ekstremitelerde Ampütasyon',
-'kalcafraktur' => 'Kalça Fraktürü',
-'operekirik' => 'Opere Edilmiş veya mobilizasyon kısıtlayıcı kırıklar',
-'osteoporoz' => 'Osteoporoz',
-'omurgafraktur' => 'Omurga Fraktürü',
-'ebullosa' => 'Epidermolizis Büllosa',
-'zona' => 'Zona',
-'fil' => 'Fil Hastalığı',
-'sle' => 'Sistemik Lupus Eritomatozus',
-'bph' => 'Benign Prostat Hipertrofisi'
-);
+    include(ABSPATH. '/site/modules/hastalar/hastaliklar.php');
+    
 
 $where = array();
-foreach ($hastaliklar as $v=>$k) {
-    $where[] = $v."=0";
+
+foreach ($tab as $s=>$i) {
+    foreach ($i as $k=>$v) {
+        $where[] = $k."=0";
+    }
 }
 
 $where[] = "pasif=0 ";

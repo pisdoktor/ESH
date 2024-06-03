@@ -33,7 +33,7 @@ class StatsHTML {
      ?>
      <tr>
      <th scope="row">
-     <a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>"><?php echo $row->isim;?> <?php echo $row->soyisim;?></a>
+     <a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row->id;?>"><?php echo $row->isim;?> <?php echo $row->soyisim;?></a>
      </th>
      <td><?php echo $row->tckimlik;?></td>
      <td><?php echo $row->mahalle;?></td>
@@ -423,7 +423,7 @@ $(document).ready(function(){
        //son izlem tarihi
        $row->sonizlemtarihi = $row->sonizlemtarihi ? tarihCevir($row->sonizlemtarihi, 1) : 'Yok';
          
-       $link2 = "index.php?option=site&bolum=hastalar&task=edit&id=".$row->id;
+       $link2 = "index.php?option=admin&bolum=hastalar&task=edit&id=".$row->id;
        if ($pageNav->limit) {
            $link2 .= "&limit=".$pageNav->limit;
        }
@@ -440,11 +440,8 @@ $(document).ready(function(){
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row->isim;?> <?php echo $row->soyisim;?>
 </a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
-     <li class="divider"></li> 
-    <li><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row->tckimlik;?>">İzlemleri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=izlemler&task=hedit&tc=<?php echo $row->tckimlik;?>">Yeni İzlem Gir</a></li>
+  <li><a href="index.php?option=admin&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
   </ul>
 </div> 
       </th>
@@ -536,11 +533,8 @@ echo $pageNav->writePagesLinks($link);
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row->isim;?> <?php echo $row->soyisim;?>
 </a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
-     <li class="divider"></li> 
-    <li><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row->tckimlik;?>">İzlemleri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=izlemler&task=hedit&tc=<?php echo $row->tckimlik;?>">Yeni İzlem Gir</a></li>
+  <li><a href="index.php?option=admin&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
   </ul>
 </div> 
       </th>
@@ -656,11 +650,8 @@ echo $pageNav->writePagesLinks($link);
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row['isim'];?>
 </a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row['id'];?>">Bilgileri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row['id'];?>">Bilgileri Düzenle</a></li>
-     <li class="divider"></li> 
-    <li><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row['tckimlik'];?>">İzlemleri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=izlemler&task=hedit&tc=<?php echo $row['tckimlik'];?>">Yeni İzlem Gir</a></li>
+  <li><a href="index.php?option=admin&bolum=hastalar&task=show&id=<?php echo $row['id'];?>">Bilgileri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row['id'];?>">Bilgileri Düzenle</a></li>
   </ul>
 </div> 
 </th>
@@ -929,11 +920,8 @@ echo $pageNav->writePagesLinks($link);
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row->isim;?> <?php echo $row->soyisim;?>
 </a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
-     <li class="divider"></li> 
-    <li><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row->hastatckimlik;?>">İzlemleri Göster</a></li>
-    <li><a href="index.php?option=site&bolum=izlemler&task=hedit&tc=<?php echo $row->hastatckimlik;?>">Yeni İzlem Gir</a></li>
+  <li><a href="index.php?option=admin&bolum=hastalar&task=show&id=<?php echo $row->id;?>">Bilgileri Göster</a></li>
+    <li><a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row->id;?>">Bilgileri Düzenle</a></li>
   </ul>
 </div>
 </th>

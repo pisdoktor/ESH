@@ -23,8 +23,8 @@ class Dosyalama {
     <div class="panel panel-success">
     <div class="panel-heading">
     <div class="row">
-        <div class="col-xs-11"><h4><i class="fa-regular fa-folder-open"></i> Dosyalama İçin Sıralama</h4></div>
-        <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
+        <div class="col-sm-11"><h4><i class="fa-regular fa-folder-open"></i> Dosyalama İçin Sıralama</h4></div>
+        <div class="col-sm-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>
     
