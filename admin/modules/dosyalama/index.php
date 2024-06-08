@@ -86,6 +86,6 @@ function getirHastalar($isim, $soyisim, $mahalle) {
     }
     $lists['mahalle'] = mosHTML::checkboxList($mlist, 'mahalle', '', 'value', 'text', $mahalle); 
     
-    Dosyalama::getirHastalar($rows, $lists, $pageNav, $isim, $soyisim);
+    Dosyalama::getirHastalar($rows, $lists, $pageNav, $isim, $soyisim, $mahalle);
 
 }

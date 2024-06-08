@@ -6,21 +6,23 @@ class Hastalik extends DBTable {
     
     var $id     = null;
     
-    var $parentid   = null;
+    var $cat = null;
     
     var $hastalikadi = null;
     
     function Hastalik( &$db ) {
         $this->DBTable( '#__hastaliklar', 'id', $db );
     }
+}
+
+class HastalikCAT extends DBTable {
     
-    function treeSelectList() {
-        global $dbase;
-        
-        $dbase->setQuery("SELECT * FROM #__hastaliklar WHERE parent=0");
-        $rows = $db->loadObjectList();
-        
-        return mosHTML::treeSelectList($rows, 'parent', '', 'value', 'text', $this->parent);
-        
+    var $id = null;
+    
+    var $name = null;
+    
+    function HastalikCAT(&$db) {
+        $this->DBTable('#__hastalikcat', 'id', $db);
     }
+
 }

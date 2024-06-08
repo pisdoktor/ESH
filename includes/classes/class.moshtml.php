@@ -270,7 +270,7 @@ class mosHTML {
 				$extra .= ($k == $selected ? " checked=\"checked\"" : '');
 			}
 			$html .= "\n\t<label class=\"radio-inline\" for=\"$tag_name$k\"><input type=\"radio\" name=\"$tag_name\" id=\"$tag_name$k\" value=\"".$k."\"$extra $tag_attribs />";
-			$html .= "\n\t$t</label>";
+			$html .= $t."</label>";
 		}
 		$html .= "\n";
 

@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class HastaList {
     
-    function hastaGoster($hasta) {
+    function hastaGoster($hasta, $hastaliklar) {
         //dogum tarihi düzelt
         $tarih = explode('.',$hasta->dogumtarihi);
         $tarih = mktime(0,0,0,$tarih[1],$tarih[2],$tarih[0]);
@@ -13,8 +13,7 @@ class HastaList {
         $bagimli = array('3' => 'Bağımsız', '1' => 'Yarı Bağımlı', '2' => 'Tam Bağımlı');
          // kayıt ayını seç
         $aylar = array('01' => 'Ocak', '02' => 'Şubat', '03' => 'Mart', '04' => 'Nisan', '05' => 'Mayıs', '06' => 'Haziran', '07' => 'Temmuz', '08' => 'Ağustos', '09' => 'Eylül', '10' => 'Ekim', '11' => 'Kasım', '12' => 'Aralık');
-         // hastalıkları
-        include(dirname(__FILE__). '/hastaliklar.php');
+
 
 
 $list = array();
@@ -65,7 +64,7 @@ foreach ($tab as $v=>$k) {
 
  <div class="form-group row">
 <div class="col-sm-6"><label for="hbilgileri">Hastalık Bilgileri:</label></div>
-<div class="col-sm-6"><?php echo implode(', ', $list);?></div>
+<div class="col-sm-6"><?php echo implode(', ', $hastaliklar);?></div>
 </div>
 
 
@@ -131,8 +130,7 @@ foreach ($tab as $v=>$k) {
     <?php
     } 
     
-    function editHasta($row, $lists, $limitstart, $limit) {
-    include(dirname(__FILE__). '/hastaliklar.php');
+    function editHasta($row, $lists, $limitstart, $limit, $hcats) {
     ?>
     <form action="index.php" method="post" data-toggle="validator" novalidate>
     <div class="panel panel-<?php echo $row->pasif ? 'warning':'primary';?>"><!-- main panel -->
@@ -329,185 +327,30 @@ if ($row->id) { ?>
     <div class="panel-heading"><h5><i class="fa-solid fa-bacterium"></i> Hastalıkları</h5></div>
     <div class="panel-body"><!-- ek özellikler-->
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-
+    
+<?php 
+foreach ($hcats as $hcat) {
+?>
 <div class="panel panel-primary">
-<span class="side-tab" data-target="#tab1" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-<h5 class="collapsed">Nörolojik ve Psikiyatrik Hastalıklar</h5>
+<span class="side-tab" data-target="#tab<?php echo $hcat->id;?>" data-toggle="tab" role="tab" aria-expanded="false">
+<div class="panel-heading" role="tab" id="heading<?php echo $hcat->id;?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $hcat->id;?>" aria-expanded="false" aria-controls="collapse<?php echo $hcat->id;?>">
+<h5 class="collapsed"><?php echo $hcat->name;?></h5>
 </div>
 </span>
                     
-<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+<div id="collapse<?php echo $hcat->id;?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $hcat->id;?>">
 <div class="panel-body">
-<?php 
-foreach ($tab[1] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
+<?php
+echo mosHTML::checkboxList($lists['hastalik'][$hcat->id], 'hastaliklar', '', 'value', 'text', $row->hastaliklar);
 ?>
 </div>
 </div>
 
-</div> 
- 
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab2" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-<h5 class="collapsed">Kas Hastalıkları (Yatağa Bağımlı)</h5>
 </div>
-</span>
-
-<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-<div class="panel-body">
-<?php 
-foreach ($tab[2] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
+<?php
 }
-?>
-</div>
-</div>
-</div>
- 
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab3" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-<h5 class="collapsed">Kardiyovasküler Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-<div class="panel-body">
-<?php 
-foreach ($tab[3] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab4" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-<h5 class="collapsed">Kronik ve Endokrin Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-<div class="panel-body">
-<?php 
-foreach ($tab[4] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div> 
-
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab5" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-<h5 class="collapsed">Hematolojik ve Onkolojik Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-<div class="panel-body">
-<?php 
-foreach ($tab[5] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab6" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingSix" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-<h5 class="collapsed">Akciğer ve Solunum Sistemi Hastalıkları</h5>
-</div>
-</span>
-
-<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-<div class="panel-body">
-<?php 
-foreach ($tab[6] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab7" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingSeven" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-<h5 class="collapsed">Ortopedi ve Travmatoloji Hastalıkları</h5>
-</div>
-</span>
-
-<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
-<div class="panel-body">
-<?php 
-foreach ($tab[7] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>
-
-<div class="panel panel-primary">
-<span class="side-tab" data-target="#tab8" data-toggle="tab" role="tab" aria-expanded="false">
-<div class="panel-heading" role="tab" id="headingEight" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-<h5 class="collapsed">Diğer Hastalıklar</h5>
-</div>
-</span>
-
-<div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
-<div class="panel-body">
-<?php 
-foreach ($tab[8] as $v=>$k) {
-    
-    $checked = $row->$v ? " checked=\"checked\"" : "";
-
-    echo '<label class="checkbox-inline">';
-    echo '<input type="checkbox" name="'.$v.'" id="'.$v.'" value="1"'.$checked.' />'.$k.'</label>';
-}
-?>
-</div>
-</div>
-</div>   
- 
-</div>
+?> 
+</div> <!-- accordion -->
     </div><!-- body hastalıkları -->
     </div><!-- panel-success -->
     </div><!-- col-sm-6 -->
@@ -754,7 +597,7 @@ $(document).ready(function(){
 <?php
 }
     
-    function getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering, $lists) {
+    function getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ozellik, $ordering, $lists) {
         $link = 'index.php?option=site&bolum=hastalar';
         if ($search) {
             $link .= "&amp;search=".$search;
@@ -782,6 +625,9 @@ $(document).ready(function(){
         }
         if ($bagimlilik) {
             $link .= "&amp;bagimlilik=".$bagimlilik;
+        }
+        if ($ozellik) {
+            $link .= "&amp;ozellik=".$ozellik;
         }
         if ($ordering) {
             $link .= "&ordering=".$ordering;
@@ -854,6 +700,11 @@ $(document).ready(function(){
 <div class="form-group">
 <label for="bagimlilik">Bağımlılık Durumu</label> 
 <?php echo $lists['bagimlilik'];?>  
+</div>
+
+<div class="form-group">
+<label for="özellik">Özelliğine Göre Hastalar</label>
+<?php echo $lists['ozellik'];?>
 </div>
 
 <div class="form-group">

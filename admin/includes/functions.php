@@ -15,8 +15,22 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=db"><i class="fa-solid fa-database"></i> <span>Veritabanı Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=ayarlar"><i class="fa-solid fa-gears"></i> <span>Yapılandırma</span></a></li>
 </ul>
-
 </li>
+
+<li class="has-sub"><a href="#"><i class="fa-solid fa-people-roof"></i> <span>Hasta İşlemleri</span></a>
+<ul>
+<li><a href="index.php?option=admin&bolum=hastalar"><i class="fa-solid fa-person-cane"></i> <span>Tüm Hasta Listesi</span></a></li>
+<li><a href="index.php?option=admin&bolum=hastalar&task=new"><i class="fa-solid fa-square-plus"></i> <span>Yeni Hasta Kayıt</span></a></li>
+</ul>
+</li>
+
+<li class="has-sub"><a href="#"><i class="fa-solid fa-bacterium"></i> <span>Hastalık İşlemleri</span></a>
+<ul>
+<li><a href="index.php?option=admin&bolum=hastaliklarcat"><i class="fa-solid fa-bacterium"></i> <span>Hastalık Kategorileri</span></a></li>
+<li><a href="index.php?option=admin&bolum=hastaliklar"><i class="fa-solid fa-bacterium"></i> <span>Hastalıklar Listesi</span></a></li>
+</ul>
+</li>
+
 <li class="has-sub"><a href="#"><i class="fa-solid fa-address-book"></i> <span>Adres Yönetimi</span></a>
 <ul>
 <li><a href="index.php?option=admin&bolum=ilce"><i class="fa-solid fa-sign-hanging"></i> <span>İlçe Yönetimi</span></a></li>
@@ -48,6 +62,8 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=stats&task=hgirilmeyen"><i class="fa-solid fa-circle-half-stroke"></i> <span>Bilgileri Eksik Hastalar</span></a></li> 
 
 <li><a href="index.php?option=admin&bolum=dosyalama"><i class="fa-regular fa-folder-open"></i> <span>Dosyalama Sistemi</span></a></li>
+
+<li><a href="index.php?option=admin&bolum=stats&task=sondadegisim"><i class="fa-solid fa-vial"></i> <span>Sonda Değişimi Takip</span></a></li>
 </ul>
 </li>
 

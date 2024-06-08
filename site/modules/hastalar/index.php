@@ -21,6 +21,7 @@ $kayityili = intval(getParam($_REQUEST, 'kayityili'));
 $kayitay = getParam($_REQUEST, 'kayitay');
 $cinsiyet = getParam($_REQUEST, 'cinsiyet');
 $bagimlilik = getParam($_REQUEST, 'bagimlilik');
+$ozellik = getParam($_REQUEST, 'ozellik'); 
 
 $ordering = getParam($_REQUEST, 'ordering');
 
@@ -29,7 +30,7 @@ $ordering = getParam($_REQUEST, 'ordering');
 switch($task) {
     default:
     case 'list':
-    getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering);
+    getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ozellik, $ordering);
     break;
     
     case 'savesokak':
@@ -240,10 +241,16 @@ function hastaGoster($id) {
     $dbase->setQuery($query);
     $dbase->loadObject($row);
     
-    HastaList::hastaGoster($row); 
+    //hastalıklarını çekelim
+    $dbase->setQuery("SELECT hastalikadi FROM #__hastaliklar WHERE id IN (".$row->hastaliklar.")");
+    $hastaliklar = $dbase->loadResultArray();
+    
+    
+    
+    HastaList::hastaGoster($row, $hastaliklar); 
 }
 
-function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering) {
+function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ozellik, $ordering) {
     global $dbase, $limit, $limitstart;
     
     $where = array();
@@ -287,11 +294,15 @@ function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $ka
          $where[] = "h.bagimlilik='".$bagimlilik."'";  
      }
      
+     if ($ozellik) {
+        $where[] = "h.".$ozellik."=1";
+    }
+     
      if ($ordering) {
          $order = explode('-', $ordering);
          $orderingfilter = "ORDER BY ".$order[0]." ".$order[1];
      } else {
-         $orderingfilter = "ORDER BY h.isim ASC, h.soyisim ASC, h.kayityili DESC";
+         $orderingfilter = "ORDER BY h.isim ASC, h.soyisim ASC";
      } 
      
          $where[] = "h.pasif='0'";  // aktif hastalar
@@ -402,8 +413,21 @@ function getHastaList($search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $ka
         $t[] = mosHTML::makeOption('3', 'Bağımsız Hasta');
         
         $lists['bagimlilik'] = mosHTML::selectList($t, 'bagimlilik', 'id="bagimlilik"', 'value', 'text', $bagimlilik);
+        
+        
+   $oz = array();
+    $oz[] = mosHTML::makeOption('', 'Hasta Özelliği Seçin');
+    $oz[] = mosHTML::makeOption('gecici', 'Geçici Kayıtlı');
+    $oz[] = mosHTML::makeOption('ng', 'Nazogastrik Takılı');
+    $oz[] = mosHTML::makeOption('peg', 'PEGli Hastalar');
+    $oz[] = mosHTML::makeOption('port', 'PORTlu Hastalar');
+    $oz[] = mosHTML::makeOption('o2bagimli', 'O2 Bağımlı Hastalar');
+    $oz[] = mosHTML::makeOption('ventilator', 'Ventilatör Takılı');
+    $oz[] = mosHTML::makeOption('kolostomi', 'Kolostomili Hastalar');
+    $oz[] = mosHTML::makeOption('sonda', 'Sondalı Hastalar');
+    $lists['ozellik'] = mosHTML::selectList($oz, 'ozellik', 'id="ozellik"', 'value', 'text', $ozellik);
     
-   HastaList::getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ordering, $lists);
+   HastaList::getHastaList($rows, $pageNav, $search, $ilce, $mahalle, $sokak, $kapino, $kayityili, $kayitay, $cinsiyet, $bagimlilik, $ozellik, $ordering, $lists);
 }
 
 function saveHasta() {
@@ -425,6 +449,8 @@ function saveHasta() {
     if ($row->sondatarihi) {
     $row->sondatarihi = tarihCevir($row->sondatarihi);
     }
+    
+    $row->hastaliklar = implode(',', $row->hastaliklar);
     
     $tarih = explode('.',$row->dogumtarihi);
     $tarih = mktime(0,0,0,$tarih[1],$tarih[0],$tarih[2]);
@@ -456,7 +482,24 @@ function editHasta($id) {
      $tarih = explode('.',$row->dogumtarihi);
      $tarih = mktime(0,0,0,$tarih[1],$tarih[2],$tarih[0]);
          
-     $row->dogumtarihi = strftime("%d.%m.%Y", $tarih);   
+     $row->dogumtarihi = strftime("%d.%m.%Y", $tarih);
+     
+     $row->hastaliklar = explode(',', $row->hastaliklar);   
+    }
+    
+    //hastanın hastalıklarını alalım
+    $dbase->setQuery("SELECT * FROM #__hastalikcat");
+    
+    $hcats = $dbase->loadObjectList();
+    
+    $hlists = array();
+    foreach ($hcats as $hcat) {
+        $dbase->setQuery("SELECT * FROM #__hastaliklar WHERE cat='".$hcat->id."'");
+        $hlist = $dbase->loadObjectList();
+        
+        foreach ($hlist as $h) {
+            $lists['hastalik'][$hcat->id][] = mosHTML::makeOption($h->id, $h->hastalikadi);
+        }
     }
     
     //adresler için ilçeleri alalım
@@ -517,7 +560,7 @@ function editHasta($id) {
     $lists['mahalleid'] = mosHTML::selectList($dmahalle, 'mahalleid', 'id="mahalle" required', 'value', 'text', $row->mahalle);
     $lists['sokakid'] = mosHTML::selectList($dsokak, 'sokakid', 'id="sokak" required', 'value', 'text', $row->sokak);
     
-    HastaList::editHasta($row, $lists, $limitstart, $limit);
+    HastaList::editHasta($row, $lists, $limitstart, $limit, $hcats);
 }
 
 function cancelHasta() {

@@ -50,8 +50,8 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
       <div class="dropdown">
   <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo tarihCevir($row->izlemtarihi, 1);?></a>
   <ul class="dropdown-menu">
-  <li><a href="index.php?option=site&bolum=izlemler&task=edit&id=<?php echo $row->id;?>">Düzenle</a></li>
-  <li><a href="index.php?option=site&bolum=izlemler&task=delete&id=<?php echo $row->id;?>">Sil</a></li>
+  <li><a href="index.php?option=admin&bolum=izlemler&task=edit&id=<?php echo $row->id;?>">Düzenle</a></li>
+  <li><a href="index.php?option=admin&bolum=izlemler&task=delete&id=<?php echo $row->id;?>">Sil</a></li>
   </ul>
 </div>
       
@@ -68,7 +68,7 @@ static function IzlemGetir($hasta, $rows, $pageNav) {
    </div>
 
 
-<input type="hidden" name="option" value="site" />
+<input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="hastalar" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />

@@ -21,6 +21,7 @@ $ilce = intval(getParam($_REQUEST, 'ilce'));
 $mahalle = intval(getParam($_REQUEST, 'mahalle'));
 $sokak = intval(getParam($_REQUEST, 'sokak'));
 $kapino = intval(getParam($_REQUEST, 'kapino'));
+$ozellik = getParam($_REQUEST, 'ozellik');
 
 include(dirname(__FILE__). '/html.php');
 
@@ -63,7 +64,7 @@ switch($task) {
     break;
     
     case 'adres':
-    adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ordering);
+    adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ozellik, $ordering);
     break;
     
     case 'ilce':
@@ -93,29 +94,60 @@ switch($task) {
     case 'hgirilmeyen':
     hastalikGirilmemiş();
     break;
+    
+    case 'sondadegisim':
+    sondaDegistir();
+    break;
+}
+
+function sondaDegistir() {
+    global $dbase;
+    
+$today = date('d.m.Y');
+$first = date("01.m.Y", strtotime($today));
+$last = date("t.m.Y", strtotime($today));
+    
+    $first = tarihCevir($first);
+    $last = tarihCevir($last);
+    
+    $dbase->setQuery("SELECT h.id, h.isim, h.soyisim, h.tckimlik, m.mahalle, h.sondatarihi FROM #__hastalar AS h "
+    . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
+    . "\n WHERE h.sonda='1' ORDER BY sondatarihi DESC");
+    
+    $rows = $dbase->loadObjectList();
+    
+    $data = array();
+    foreach ($rows as $row) {
+       
+        $nextsonda = $row->sondatarihi+2592000;
+                
+        if ($nextsonda<= $last && $nextsonda>= $first) {
+            $data[$row->id]['id'] = $row->id;
+            $data[$row->id]['isim'] = $row->isim.' '.$row->soyisim;
+            $data[$row->id]['tckimlik'] = $row->tckimlik;
+            $data[$row->id]['mahalle'] = $row->mahalle;
+            $data[$row->id]['sondatarihi'] = tarihCevir($row->sondatarihi, 1);
+            $data[$row->id]['nextsonda'] = tarihCevir($nextsonda, 1);
+        }
+    }
+
+    StatsHTML::sondaDegistir($data);
 }
 
 function hastalikGirilmemiş() {
     global $dbase;
     
-    include(ABSPATH. '/site/modules/hastalar/hastaliklar.php');
-    
 
 $where = array();
 
-foreach ($tab as $s=>$i) {
-    foreach ($i as $k=>$v) {
-        $where[] = $k."=0";
-    }
-}
-
-$where[] = "pasif=0 ";
-$where[] = "bagimlilik=0 OR bagimlilik=NULL ";
+$where[] = "h.pasif=0 ";
+$where[] = "h.bagimlilik=0 OR h.bagimlilik=NULL ";
+$where[] = "h.hastaliklar=0 OR h.hastaliklar='' OR h.hastaliklar=NULL";
 
 $query = "SELECT h.*, m.mahalle FROM #__hastalar AS h "
 . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
 . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
-. "\n ORDER BY isim ASC"
+. "\n ORDER BY h.isim ASC, h.soyisim ASC"
 ;
 
 $dbase->setQuery($query);
@@ -210,7 +242,7 @@ function islemGetir($baslangictarih, $bitistarih) {
     StatsHTML::islemGetir($data, $baslangictarih, $bitistarih);
 }
 
-function adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ordering) {
+function adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ozellik, $ordering) {
     global $dbase, $limitstart, $limit;
     
     if ($ilce) {
@@ -227,6 +259,10 @@ function adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ordering) {
     
     if ($kapino) {
          $where[] = "h.kapino='".$kapino."'";
+    }
+    
+    if ($ozellik) {
+        $where[] = "h.".$ozellik."=1";
     }
     
     if ($ordering) {
@@ -316,8 +352,21 @@ function adresHastaFiltre($ilce, $mahalle, $sokak, $kapino, $ordering) {
     $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalle', 'id="mahalle"', 'value', 'text', $mahalle);
     $lists['sokak'] = mosHTML::selectList($dsokak, 'sokak', 'id="sokak"', 'value', 'text', $sokak);
     $lists['kapino'] = mosHTML::selectList($dkapino, 'kapino', 'id="kapino"', 'value', 'text', $kapino);
+    
+    $oz = array();
+    $oz[] = mosHTML::makeOption('', 'Hasta Özelliği Seçin');
+    $oz[] = mosHTML::makeOption('gecici', 'Geçici Kayıtlı');
+    $oz[] = mosHTML::makeOption('ng', 'Nazogastrik Takılı');
+    $oz[] = mosHTML::makeOption('peg', 'PEGli Hastalar');
+    $oz[] = mosHTML::makeOption('port', 'PORTlu Hastalar');
+    $oz[] = mosHTML::makeOption('o2bagimli', 'O2 Bağımlı Hastalar');
+    $oz[] = mosHTML::makeOption('ventilator', 'Ventilatör Takılı');
+    $oz[] = mosHTML::makeOption('kolostomi', 'Kolostomili Hastalar');
+    $oz[] = mosHTML::makeOption('sonda', 'Sondalı Hastalar');
+    $lists['ozellik'] = mosHTML::selectList($oz, 'ozellik', 'id="ozellik"', 'value', 'text', $ozellik);
+    
 
-    StatsHTML::adresHastaFiltre($rows, $lists, $ilce, $mahalle, $sokak, $kapino, $ordering, $pageNav); 
+    StatsHTML::adresHastaFiltre($rows, $lists, $ilce, $mahalle, $sokak, $kapino, $ozellik, $ordering, $pageNav); 
 }
 
 function getirIlce() {
@@ -457,6 +506,11 @@ function specialGetir($secim) {
         
         $rows = $dbase->loadObjectList();
         
+        foreach ($rows as $row) {
+            $dbase->setQuery("SELECT izlemtarihi FROM #__izlemler WHERE hastatckimlik='".$row->tckimlik."' ORDER BY izlemtarihi DESC LIMIT 1");
+            $row->sonizlem = $dbase->loadResult() ? $dbase->loadResult() : 'Yok';
+        }
+        
         StatsHTML::specialGetir($rows, $title, $secim);
 
 }
@@ -562,24 +616,33 @@ function Izlenmeyenler($secim, $ordering, $limitstart, $limit) {
     
 }
 
-
-
 function hastalikStats() {
     global $dbase;
     
-    //toplam aktif hasta sayısı alalım
-    $dbase->setQuery("SELECT COUNT(id) FROM #__hastalar WHERE pasif='0'");
-    $thasta = $dbase->loadResult();
+    //hastalıkları alalım
+    $dbase->setQuery("SELECT * FROM #__hastalikcat");
+    $hcats = $dbase->loadObjectList();
     
-    include(ABSPATH. '/site/modules/hastalar/hastaliklar.php');
+    $hastaliklar = array();
+    foreach ($hcats as $hcat) {
+        
+        $hastaliklar[$hcat->id]['id'] = $hcat->id;
+        $hastaliklar[$hcat->id]['name'] = $hcat->name;
+        
+        $dbase->setQuery("SELECT id, hastalikadi FROM #__hastaliklar WHERE cat='".$hcat->id."' ORDER BY hastalikadi ASC");
+        $hastaliklar[$hcat->id]['hast'] = $dbase->loadObjectList();
+        
+        foreach ($hastaliklar[$hcat->id]['hast'] as $hast) {            
+            $dbase->setQuery("SELECT COUNT(id) FROM #__hastalar WHERE hastaliklar IN (".$hast->id.")");
+            $hast->total = $dbase->loadResult();
+        }   
+    }
+    
+    //toplam hasta sayısı
+    $dbase->setQuery("SELECT COUNT(id) FROM #__hastalar WHERE pasif='0'");
+    $totalh = $dbase->loadResult();
 
-foreach ($tab as $s=>$i) {
-foreach ($i as $k=>$v) {
-$dbase->setQuery("SELECT COUNT(id) FROM #__hastalar WHERE ".$k."=1");
-$total[$k] = $dbase->loadResult();
-}
-}
-StatsHTML::hastalikStats($tab, $total, $thasta);    
+StatsHTML::hastalikStats($hastaliklar, $totalh);    
 }
 
 function specialStats() {

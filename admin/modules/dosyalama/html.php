@@ -5,7 +5,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Dosyalama {
     
-    static function getirHastalar($rows, $lists, $pageNav, $isim, $soyisim) {
+    static function getirHastalar($rows, $lists, $pageNav, $isim, $soyisim, $mahalle) {
         $link = 'index.php?option=admin&bolum=dosyalama';
         
         if ($isim) {
@@ -14,6 +14,16 @@ class Dosyalama {
         
         if ($soyisim) {
             $link .= '&soyisim='.$soyisim;
+        }
+        
+        if ($mahalle) {
+        if (is_array($mahalle)) {
+            foreach ($mahalle as $mah) {
+                $link .= '&mahalle[]='.$mah;
+            }
+        } else {
+            $link .= 'mahalle[]='.$mahalle;
+        }
         }
     ?>
     <form action="index.php" method="GET" name="adminForm" role="form">

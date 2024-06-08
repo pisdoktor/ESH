@@ -4,6 +4,47 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class StatsHTML {
     
+    function sondaDegistir($data) {
+        ?>
+         <div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+        <div class="col-xs-10"><h4><i class="fa-solid fa-vial"></i> Bu Ay Sonda Değişecek Hastalar</h4></div>
+        <div class="col-xs-2" align="right"><h5>Toplam <?php echo count($data);?> hasta</h5></div>
+        </div>
+    </div>
+    <table class="table table-striped">
+    <thead>
+    <tr>
+    <th>Hasta Adı</th>
+    <th>TC Kimlik</th>
+    <th>Mahalle</th>
+    <th>Sonda Takılma Tarihi</th>
+    <th>Değişim Tarihi</th>
+    </tr>
+    </thead>
+    <tbody>
+     <?php 
+    foreach ($data as $row) {
+     ?>
+     <tr>
+     <th scope="row">
+     <a href="index.php?option=admin&bolum=hastalar&task=edit&id=<?php echo $row['id'];?>"><?php echo $row['isim'];?></a>
+     </th>
+     <td><?php echo $row['tckimlik'];?></td>
+     <td><?php echo $row['mahalle'];?></td>
+     <td><?php echo $row['sondatarihi'];?></td>
+     <td><?php echo $row['nextsonda'];?></td>
+     </tr>
+    <?php
+    }
+    ?>
+    </tbody>
+    </table>
+    </div>
+   <?php 
+    }
+    
     function hastalikGirilmemis($rows) {
         ?>
          <div class="panel panel-default">
@@ -246,7 +287,7 @@ $('.input-daterange').on('changeDate', function(e) {
     <?php
     }
     
-    function adresHastaFiltre($rows, $lists, $ilce, $mahalle, $sokak, $kapino, $ordering, $pageNav) {
+    function adresHastaFiltre($rows, $lists, $ilce, $mahalle, $sokak, $kapino,  $ozellik, $ordering, $pageNav) {
         $link = 'index.php?option=admin&bolum=stats&task=adres';
         if ($ilce) {
             $link .= "&amp;ilce=".$ilce;
@@ -259,6 +300,9 @@ $('.input-daterange').on('changeDate', function(e) {
         }
         if ($kapino) {
             $link .= "&amp;kapino=".$kapino;
+        }
+        if ($ozellik) {
+            $link .= "&amp;ozellik=".$ozellik;
         }
         if ($ordering) {
             $link .= "&ordering=".$ordering;
@@ -297,6 +341,11 @@ $('.input-daterange').on('changeDate', function(e) {
 <div class="form-group">
 <label for="kapino">Kapı No</label>
 <?php echo $lists['kapino'];?>
+</div>
+
+<div class="form-group">
+<label for="özellik">Özelliğine Göre Hastalar</label>
+<?php echo $lists['ozellik'];?>
 </div>
 
 <div class="form-group">
@@ -515,7 +564,8 @@ echo $pageNav->writePagesLinks($link);
       <th scope="col">Sonda Değişim Tarihi</th>
       <?php } ?>
       <th scope="col">Doğum Tarihi</th> 
-      <th scope="col">Yaşı</th>  
+      <th scope="col">Yaşı</th>
+      <th scope="col">Son İzlem Tarihi</th>  
     </tr>
   </thead>
   
@@ -545,7 +595,8 @@ echo $pageNav->writePagesLinks($link);
       <th scope="col"><?php echo tarihCevir($row->sondatarihi, 1);?></th>
       <?php } ?>
       <td><?php echo $row->dtarihi;?></td>
-      <td><?php echo yas_bul($row->dogumtarihi);?></td>  
+      <td><?php echo yas_bul($row->dogumtarihi);?></td>
+      <td><?php echo tarihCevir($row->sonizlem, 1);?></td>  
     </tr>
       <?php   
      }
@@ -786,19 +837,45 @@ echo $pageNav->writePagesLinks($link);
       <?php  
     }
     
-    function hastalikStats($tab, $total, $thasta) {
+    function hastalikStats($hastaliklar, $totalh) {
         ?>
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-heading"><h4><i class="fa-solid fa-chart-area"></i> Hastalıklarına Göre Hastalar</h4></div>
+        
+        <?php
+        foreach ($hastaliklar as $k=>$v) {?>
+        <div class="panel panel-default">
+        <div class="panel-heading"><h5><?php echo $v['name'];?></h5></div>
         <table class="table table-striped">
-  <thead class="thead-dark">
+  <thead>
     <tr>
-      <th scope="col">Hastalık</th>
-      <th scope="col">Hasta Sayısı</th> 
-      <th scope="col">Toplam Hastaya Oranı</th>
+      <th scope="col" width="50%">Hastalık</th>
+      <th scope="col" width="25%">Hasta Sayısı</th> 
+      <th scope="col" width="25%">Toplam Hastaya Oranı</th>
     </tr>
   </thead>
   <tbody>
+        <?php
+        foreach ($v['hast'] as $hast) {
+            
+
+        ?>
+        <tr>
+        <td><?php echo $hast->hastalikadi;?></td>
+        <td><?php echo $hast->total;?></td>
+        <td>% <?php echo round((100*$hast->total)/$totalh);?></td>
+        </tr>
+        <?php
+        }
+        ?>
+         </tbody>
+         </table>
+        </div>
+        <?php
+        }
+        ?>
+        
+        
         <?php
          foreach ($tab as $k=>$v) {
              foreach ($v as $i=>$s) {
