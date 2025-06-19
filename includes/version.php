@@ -5,13 +5,13 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Version {
 	var $PRODUCT     = 'Evde Sağlık Hizmetleri Sistemi';
 	
-	var $RELEASE     = '1.5';
+	var $RELEASE     = '1.13';
 	
 	var $DEV_STATUS  = 'Stabil';
 	
 	var $DEV_LEVEL   = '1';
 	
-	var $CODENAME    = 'Kahramanmaraş';
+	var $CODENAME    = 'Burutay';
 	
 	var $RELDATE     = '14 Mart 2024';
 	

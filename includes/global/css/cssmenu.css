@@ -1,7 +1,9 @@
 #cssmenu {
-  margin: 0px auto;
-  position: relative;
-  width: auto;
+  position: fixed; 
+        top: 0; 
+        left: 0; 
+        z-index: 9999; 
+        width: 100%; 
 }
 #cssmenu ul {
   list-style: none;
@@ -50,7 +52,7 @@
   font-size: 14px;
   font-weight: bold;
   padding: 8px 20px;
-  color: #7a8189;
+  color: #823c67;
   /*text-transform: uppercase;*/
   -webkit-transition: color 0.25s ease-out;
   -moz-transition: color 0.25s ease-out;
@@ -72,17 +74,17 @@
   height: 0;
 }
 #cssmenu > ul > li.has-sub::after {
-  right: 10px;
+  right: 15px;
   top: 15px;
   border: 5px solid transparent;
-  border-top-color: #7a8189;
+  border-top-color: #000;
 }
 #cssmenu > ul > li:hover::after {
   border-top-color: #ffffff;
 }
 #indicatorContainer {
   position: absolute;
-  height: 12px;
+  /*height: 12px;*/
   width: 100%;
   bottom: 0px;
   overflow: hidden;
@@ -157,8 +159,8 @@
   border-bottom: 1px solid #eeeeee;
   padding: 10px 15px;
   font-size: 12px;
-  color: #336699;
-  background: #ffffff;
+  color: #36172a;
+  background: #cacaca;
   -webkit-transition: all .35s ease;
   -moz-transition: all .35s ease;
   -ms-transition: all .35s ease;
@@ -170,7 +172,7 @@
 }
 #cssmenu ul ul li:hover > a {
   background: #f2f2f2;
-  color: #8c9195;
+  color: #823c67;
 }
 #cssmenu ul ul li:last-child > a,
 #cssmenu ul ul li.last > a {

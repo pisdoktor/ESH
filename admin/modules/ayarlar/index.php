@@ -35,7 +35,7 @@ function saveConfig() {
 	
 	$ret = file_put_contents(ABSPATH.'/config.php', $data);
 	
-	Redirect('index.php', 'Yapılandırma dosyası güncellendi');
+	Redirect('index.php?option=admin&bolum=ayarlar', 'Yapılandırma dosyası güncellendi');
 }
 
 function readConfig($filename, $incpath = false, $amount = 0, $chunksize = 8192, $offset = 0)	{
@@ -43,7 +43,7 @@ function readConfig($filename, $incpath = false, $amount = 0, $chunksize = 8192,
 		$data = null;
 		if($amount && $chunksize > $amount) { $chunksize = $amount; }
 		if (false === $fh = fopen($filename, 'rb', $incpath)) {
-			mosErrorAlert('Dosya açılamadı');
+			ErrorAlert('Dosya açılamadı');
 			return false;
 		}
 		clearstatcache();

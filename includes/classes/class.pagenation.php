@@ -72,7 +72,7 @@ class pageNav {
 		$page = ceil( ($this->limitstart + 1) / $this->limit );
 		if ($this->total > 0) {
 			$total_pages = ceil( $this->total / $this->limit );
-			$txt .= "Toplam ". $total_pages. " sayfadan gösterilen sayfa ". $page;
+			$txt .= "Toplam ". $total_pages. " sayfadan ". $page.". sayfa gösteriliyor";
 		}
 		return $txt;
 	}
@@ -84,7 +84,7 @@ class pageNav {
 	function writePagesLinks( $link ) {
 		$txt = '<ul class="pagination">';
 
-		$displayed_pages = 10;
+		$displayed_pages = 15;
 		$total_pages = $this->limit ? ceil( $this->total / $this->limit ) : 0;
 		$this_page = $this->limit ? ceil( ($this->limitstart+1) / $this->limit ) : 1;
 		$start_loop = (floor(($this_page-1)/$displayed_pages))*$displayed_pages+1;

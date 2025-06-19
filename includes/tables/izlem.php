@@ -12,6 +12,10 @@ class Izlem extends DBTable {
     
     var $yapilan = null;
     
+    var $yapildimi = null;
+    
+    var $neden = null;
+    
     var $planli = null;
     
     var $planlanantarih = null;
@@ -31,8 +35,25 @@ class Izlem extends DBTable {
         $dbase->setQuery("SELECT name FROM #__users WHERE id IN (".$izlemiyapan.")");
         $rows = $dbase->loadResultArray();
     
-        return implode(', ', $rows);
+        return implode(',', $rows);
               
+    }
+    
+    function nedenYapilmadi($why) {
+    
+        $neden = array(
+        '0'=> 'Sebep girilmemiş',
+        '1'=> 'Hastanede yatıyor', 
+        '2'=>'Vefat etmiş',
+        '3'=> 'Adresi değişmiş',
+        '4'=> '112 ye teslim edildi',
+        '5'=> 'Hizmet reddedildi/İptal edildi',
+        '6'=> 'Evde kendisi/yakını yok',
+        '7'=>'Gerekli evrak yok'
+        );
+        
+        return $neden[$why];
+    
     }
     
     

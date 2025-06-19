@@ -10,7 +10,7 @@ $('#cssmenu').prepend('<div id="indicatorContainer"><div id="pIndicator"><div id
 	});
 
 
-	var posLeft = activeElement.position().left;
+	var posLeft = activeElement.position();
 	var elementWidth = activeElement.width();
 	posLeft = posLeft + elementWidth/2 -6;
 	if (activeElement.hasClass('has-sub')) {

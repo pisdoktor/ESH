@@ -34,14 +34,20 @@ class HastalikHTML {
 
 <div class="row">
 <div class="col-sm-3">
-<label for="mahalle">Kategori Adı:</label></div>
-<div class="col-sm-9"><?php echo $kategoriler;?></div>
+<label for="kategori">Kategori Adı:</label></div>
+<div class="col-sm-6"><?php echo $kategoriler;?></div>
 </div>
 
 <div class="row">
 <div class="col-sm-3">
-<label for="mahalle">Hastalık Adı:</label></div>
-<div class="col-sm-9"><input type="text" id="hastalikadi" name="hastalikadi" class="form-control" value="<?php echo $row->hastalikadi;?>" required></div>
+<label for="hastalikadi">Hastalık Adı:</label></div>
+<div class="col-sm-6"><input type="text" id="hastalikadi" name="hastalikadi" class="form-control" value="<?php echo $row->hastalikadi;?>" required></div>
+</div>
+
+<div class="row">
+<div class="col-sm-3">
+<label for="icd">ICD Kodu:</label></div>
+<div class="col-sm-6"><input type="text" id="icd" name="icd" class="form-control" value="<?php echo $row->icd;?>" required></div>
 </div>
 
 <input type="hidden" name="option" value="admin" />
@@ -61,7 +67,7 @@ class HastalikHTML {
 <?php
 }
 	
-	static function getHastalikList($rows, $search, $cat, $list, $pageNav) {
+	static function getHastalikList($rows, $search, $cat, $list, $pageNav, $ordering) {
         $link = 'index.php?option=admin&bolum=hastaliklar';
         if ($search) {
             $link .= "&amp;search=".$search;
@@ -89,7 +95,7 @@ class HastalikHTML {
 <div class="btn-group">
 <input type="button" name="button" value="Yeni Hastalık Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
 <input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu mahalleleri silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu hastalıkları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
 </div>
 </div>
 
@@ -121,10 +127,7 @@ class HastalikHTML {
 <tr>
 <th>SIRA</th>
 <th><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-<th>Hastalık ID
- <span><a href="<?php echo $link;?>&ordering=m.id-DESC">▲</a></span>
-  <span><a href="<?php echo $link;?>&ordering=m.id-ASC">▼</a></span>
-</th>
+
 <th>Kategori Adı
  <span><a href="<?php echo $link;?>&ordering=ic.id-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=ic.id-ASC">▼</a></span>
@@ -133,6 +136,7 @@ class HastalikHTML {
  <span><a href="<?php echo $link;?>&ordering=m.mahalle-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=m.mahalle-ASC">▼</a></span>
 </th>
+<th>ICD Kodu</th>
 </tr>
 </thead>
 <tbody>
@@ -146,9 +150,10 @@ $checked = mosHTML::idBox( $i, $row->id );
 <tr>
 <td><?php echo $pageNav->rowNumber( $i ); ?></td>
 <td><?php echo $checked;?></td>
-<td><?php echo $row->id;?></td>
+
 <td><?php echo $row->kategoriadi;?></td>
 <td><a href="index.php?option=admin&bolum=hastaliklar&task=editx&id=<?php echo $row->id;?>"><?php echo $row->hastalikadi;?></a></td>
+<td><?php echo $row->icd;?></td>
 </tr>
 <?php
 $t = 1 - $t;

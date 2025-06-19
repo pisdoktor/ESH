@@ -34,7 +34,7 @@ class MahalleHTML {
 
 <div class="row">
 <div class="col-sm-3">
-<label for="mahalle">İlçe Adı:</label></div>
+<label for="ilceid">İlçe Adı:</label></div>
 <div class="col-sm-9"><?php echo $ilceler;?></div>
 </div>
 
@@ -61,7 +61,7 @@ class MahalleHTML {
 <?php
 }
 	
-	static function getMahalleList($rows, $search, $ilce, $il, $pageNav) {
+	static function getMahalleList($rows, $search, $ilce, $il, $pageNav, $ordering) {
         $link = 'index.php?option=admin&bolum=mahalle';
         if ($search) {
             $link .= "&amp;search=".$search;

@@ -4,16 +4,16 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class PN_Calendar {
  
-    public $first_day_of_week = 1; //0 - sunday, 1 - monday
-    public $current_year = null;
-    public $current_month = null;
-    public $current_day = null;
-    public $show_year_selector = true;
-    public $min_select_year = 1991;
-    public $max_select_year = 2045;
-    public $show_month_selector = true;
+    var $first_day_of_week = 1; //0 - sunday, 1 - monday
+    var $current_year = null;
+    var $current_month = null;
+    var $current_day = null;
+    var $show_year_selector = true;
+    var $min_select_year = 1991;
+    var $max_select_year = 2045;
+    var $show_month_selector = true;
  
-    public function PN_Calendar($atts = array()) {
+    function PN_Calendar($atts = array()) {
         if (isset($atts['first_day_of_week'])) {
             $this->first_day_of_week = $atts['first_day_of_week'];
         }
@@ -53,27 +53,23 @@ class PN_Calendar {
         }
     }
  
-    /*
-     * Month calendar drawing
-     */
- 
-    public function draw($data = array(), $y = 0, $m = 0) {
+    function draw($data = array(), $y = 0, $m = 0) {
         //***
         if ($m == 0 AND $m == 0) {
             $y = $this->current_year;
             $m = $this->current_month;
         }
         //***
-        $data['week_days_names'] = $this->get_week_days_names(true);
+        $data['week_days_names'] = $this->get_week_days_names(false);
         $data['cells'] = $this->generate_calendar_cells($y, $m);
         $data['month_name'] = $this->get_month_name($m);
         $data['year'] = $y;
         $data['month'] = $m;
         $data['events'] = array();//here you can transmit events from database (look PN_CalendarCell::draw($events))
-        return $this->draw_html('calendar', $data);
+        return $this->draw_html('html', $data);
     }
  
-    private function generate_calendar_cells($y, $m) {
+    function generate_calendar_cells($y, $m) {
         $y = intval($y);
         $m = intval($m);
         //***
@@ -139,7 +135,7 @@ class PN_Calendar {
         return $cells;
     }
  
-    public function get_next_month($y, $m) {
+    function get_next_month($y, $m) {
         $y = intval($y);
         $m = intval($m);
  
@@ -153,7 +149,7 @@ class PN_Calendar {
         return array('y' => $y, 'm' => $m);
     }
  
-    public function get_prev_month($y, $m) {
+    function get_prev_month($y, $m) {
         $y = intval($y);
         $m = intval($m);
  
@@ -167,21 +163,21 @@ class PN_Calendar {
         return array('y' => $y, 'm' => $m);
     }
  
-    public function get_days_count_in_month($year, $month) {
+    function get_days_count_in_month($year, $month) {
         return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
     }
  
-    public static function get_month_name($m) {
+    function get_month_name($m) {
         $names = self::get_monthes_names();
         return $names[intval($m)];
     }
  
-    public function get_week_day_name($num, $shortly = false) {
+    function get_week_day_name($num, $shortly = false) {
         $names = $this->get_week_days_names($shortly);
         return $names[intval($num)];
     }
  
-    public function get_week_days_names($shortly = false) {
+    function get_week_days_names($shortly = false) {
         if ($this->first_day_of_week == 1) {
             if ($shortly) {
                 return array(
@@ -196,13 +192,13 @@ class PN_Calendar {
             }
  
             return array(
-                1 => 'Monday',
-                2 => 'Tuesday',
-                3 => 'Wednesday',
-                4 => 'Thursday',
-                5 => 'Friday',
-                6 => 'Saturday',
-                7 => 'Sunday'
+                1 => 'Pazartesi',
+                2 => 'Salı',
+                3 => 'Çarşamba',
+                4 => 'Perşembe',
+                5 => 'Cuma',
+                6 => 'Cumartesi',
+                7 => 'Pazar'
             );
         } else {
             if ($shortly) {
@@ -229,27 +225,27 @@ class PN_Calendar {
         }
     }
  
-    public static function get_monthes_names() {
+    function get_monthes_names() {
         return array(
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December'
+            1 => 'Ocak',
+            2 => 'Şubat',
+            3 => 'Mart',
+            4 => 'Nisan',
+            5 => 'Mayıs',
+            6 => 'Haziran',
+            7 => 'Temmuz',
+            8 => 'Ağustos',
+            9 => 'Eylül',
+            10 => 'Ekim',
+            11 => 'Kasım',
+            12 => 'Aralık'
         );
     }
  
-    public function draw_html($view, $data = array()) {
+    function draw_html($view, $data = array()) {
         @extract($data);
         ob_start();
-        include('views/' . $view . '.php' );
+        include(ABSPATH.'/site/modules/takvim/html.php' );
         return ob_get_clean();
     }
  
@@ -258,23 +254,23 @@ class PN_Calendar {
 //---------------------------------------------------------------------------------------
 class PN_CalendarCell {
  
-    public $cell_year = null;
-    public $cell_month = null;
-    public $cell_day = null;
-    public $in_current_month = true;
+    var $cell_year = null;
+    var $cell_month = null;
+    var $cell_day = null;
+    var $in_current_month = true;
  
-    public function PN_CalendarCell($y, $m, $d, $in_current_month = true) {
+    function PN_CalendarCell($y, $m, $d, $in_current_month = true) {
         $this->cell_year = $y;
         $this->cell_month = $m;
         $this->cell_day = $d;
         $this->in_current_month = $in_current_month;
     }
  
-    public function get_week_day_num() {
+    function get_week_day_num() {
         return date('w', mktime(0, 0, 0, $this->cell_month, $this->cell_day, $this->cell_year)); //from 0 (sunday) to 6 (saturday);
     }
  
-    public function draw($events) {
+    function draw($events) {
         $this_day_events = 0;
         if (is_array($events)) {
             if (isset($events[$this->cell_year][$this->cell_month][$this->cell_day])) {

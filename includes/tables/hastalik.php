@@ -10,6 +10,8 @@ class Hastalik extends DBTable {
     
     var $hastalikadi = null;
     
+    var $icd = null;
+    
     function Hastalik( &$db ) {
         $this->DBTable( '#__hastaliklar', 'id', $db );
     }

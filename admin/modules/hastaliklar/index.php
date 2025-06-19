@@ -130,7 +130,7 @@ function getHastalikList($search, $cat, $ordering) {
 	 
 	 $pageNav = new pageNav( $total, $limitstart, $limit);
      
-	 $query = "SELECT h.id, h.hastalikadi, c.name as kategoriadi FROM #__hastaliklar AS h "
+	 $query = "SELECT h.id, h.hastalikadi, c.name as kategoriadi, h.icd FROM #__hastaliklar AS h "
      . "\n LEFT JOIN #__hastalikcat AS c ON c.id=h.cat "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      . $orderingfilter   
@@ -153,7 +153,7 @@ function getHastalikList($search, $cat, $ordering) {
     $list['cat'] = mosHTML::selectList($catopt, 'cat', ' onchange="document.location.href=\''. $link .'\';"', 'value', 'text', $cat);
     
 	
-	HastalikHTML::getHastalikList($rows, $search, $cat, $list, $pageNav);
+	HastalikHTML::getHastalikList($rows, $search, $cat, $list, $pageNav, $ordering);
 }
 
 function editHastalik($cid) {
@@ -171,7 +171,7 @@ function editHastalik($cid) {
     $catlist[] = mosHTML::makeOption($ob->id, $ob->name);
     }
     
-    $kategoriler = mosHTML::selectList($catlist, 'cat', 'requreid', 'value', 'text', $row->id);
+    $kategoriler = mosHTML::selectList($catlist, 'cat', 'requreid', 'value', 'text', $row->cat);
     
 	HastalikHTML::editHastalik($row, $kategoriler);
 }

@@ -37,7 +37,7 @@ define('smtpuser', 'no-reply@eshsistem.com');
 define('smtppass', 'son20er35');
 define('smtphost', 'smtpout.secureserver.net');
 
-define('GZIPCOMP', 0);
+define('GZIPCOMP', 1);
 define('STATS', 1);
 define('COUNTSTATS', 1);
 define('FILEPERMS', '');
@@ -46,3 +46,8 @@ define('DIRPERMS', '');
 define('SEF', 0); //henüz hazır değil
 define('compactTopicPagesEnable', 1);
 define('compactTopicPagesContiguous', 20);
+define('todayMod', 2); // 0 = bugün gösterme 1 = sadece bugün 2= bugün ve dün
+define('timeformat', '%d.%m.%Y');
+
+define('bolgeSayisi', 7); // bölge sayısı
+//define('max_exe_time', 720); // max_execution_time ayarı

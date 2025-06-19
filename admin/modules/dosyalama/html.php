@@ -5,7 +5,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Dosyalama {
     
-    static function getirHastalar($rows, $lists, $pageNav, $isim, $soyisim, $mahalle) {
+    static function getirHastalar($rows, $lists, $pageNav, $isim, $soyisim, $mahalle, $data) {
         $link = 'index.php?option=admin&bolum=dosyalama';
         
         if ($isim) {
@@ -29,40 +29,103 @@ class Dosyalama {
     <form action="index.php" method="GET" name="adminForm" role="form">
     <input type="hidden" name="option" value="admin" />
     <input type="hidden" name="bolum" value="dosyalama" />
-    <input type="hidden" name="task" value="" /> 
-    <div class="panel panel-success">
+    <input type="hidden" name="task" value="" />
+
+    <div class="col-sm-3">
+    <div class="panel panel-default"> <!-- sol panel başlangıç -->
     <div class="panel-heading">
-    <div class="row">
-        <div class="col-sm-11"><h4><i class="fa-regular fa-folder-open"></i> Dosyalama İçin Sıralama</h4></div>
-        <div class="col-sm-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
+    <h4><i class="fa-solid fa-magnifying-glass"></i> Mahalleler</h4>
     </div>
-    </div>
-    
     <div class="panel-body">
     
     <div class="form-group row">
-    <div class="col-sm-2"><label for="isim">Hastanın Adı:</label></div>
-    <div class="col-sm-1"><?php echo $lists['isim'];?></div>
-    <div class="col-sm-2"><label for="soyisim">Hastanın Soyadı:</label></div>
-    <div class="col-sm-1"><?php echo $lists['soyisim'];?></div>
+    <div class="col-sm-11">
+    
+    <div class="form-group">
+    <label class="checkbox-inline" for="checkAll">
+<input type="checkbox" name="" id="checkAll" value="" class=""  />
+<strong>TÜMÜNÜ İŞARETLE</strong>
+</label>
+<script>
+    $('#checkAll').click(function () {    
+     $('input:checkbox').prop('checked', this.checked);    
+ });
+</script>  
+ <?php
+   foreach ($data as $k=>$v) {
+   ?>
+   <label class="checkbox-inline" for="<?php echo $k;?>">
+<input type="checkbox" name="" id="<?php echo $k;?>" value=""  />
+<strong><?php echo $k;?></strong>
+</label>
+<script>
+    $('#<?php echo $k;?>').click(function () {
+   <?php
+   
+   foreach ($v as $i=>$k) {
+   ?>
+   $('#mahalle<?php echo $i;?>').prop('checked', this.checked);    
+   <?php
+   }
+   ?>
+    });  
+   </script>
+   <?php
+   }
+ ?>
+    </div>
+ 
+    <?php echo $lists['mahalle'];?></div>
+    </div>
+    
+    </div>
     
     
-    <div class="col-sm-3">
-    <input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-primary"  />
+    </div><!-- sol panel bitiş -->
+    
+    </div>
+    <div class="col-sm-9">
+     
+    <div class="panel panel-success"><!-- sağ panel başlangıç -->
+    <div class="panel-heading">
+    <div class="row">
+        <div class="col-xs-7"><h4><i class="fa-regular fa-folder-open"></i> Seçilen Hastalar</h4></div>
+        
+        <div class="col-xs-4" align="right">
+        
+         <div class="input-group">      
+      
+    <div class="input-group-addon">İsim</div>
+    <div class="input-group"><?php echo $lists['isim'];?></div>
+    
+    <div class="input-group-addon">Soyisim</div>
+    <div class="input-group"><?php echo $lists['soyisim'];?></div>
+   
+    <div class="input-group-btn">
+      <button class="btn btn-default" type="button" onclick="javascript:submitbutton('list');">
+        <i class="glyphicon glyphicon-search"></i>
+      </button>
+    </div>
+    
+    </div> <!-- input-group -->
+        
+    </div> <!-- col-xs-->
+        
+        <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>
     
-    </div>
-    <div class="form-group row">
-    <div class="col-sm-11"><?php echo $lists['mahalle'];?></div>
-    </div>
     <table class="table table-striped" id="datatablesSimple">
     <thead>
     <tr>
     <th>Sıra No</th>
+    <th>#</th>
     <th>İsim</th>
     <th>Soyisim</th>
+    <th>TC Kimlik No</th>
+    <th>Kayıt Tarihi</th>
     <th>Mahalle</th>
+    <th>Son İzlem Tarihi</th>
     </tr>
     </thead>
     
@@ -70,12 +133,19 @@ class Dosyalama {
     <?php
     $i = 0;
      foreach ($rows as $row) {
+         $aylar = array('' => 'Boş','01' => 'Ocak','02' => 'Şubat','03' => 'Mart','04' => 'Nisan','05' => 'Mayıs',
+       '06' => 'Haziran','07' => 'Temmuz','08' => 'Ağustos','09' => 'Eylül','10' => 'Ekim','11' => 'Kasım','12' => 'Aralık');
+         $row->sonizlemtarihi = $row->sonizlemtarihi ? tarihCevir($row->sonizlemtarihi, 1):'Yok';
      ?>
      <tr>
      <td><?php echo $pageNav->rowNumber( $i );?></td>
+     <td><span data-toggle="tooltip" title="<?php echo $row->izlemsayisi;?> İzlem" class="label label-<?php echo $row->izlemsayisi ? 'info':'warning';?>"><a href="index.php?option=admin&bolum=izlemler&task=izlemgetir&tc=<?php echo $row->tckimlik;?>"><?php echo $row->izlemsayisi;?></a></span></td>
      <td><?php echo $row->isim;?></td>
      <td><?php echo $row->soyisim;?></td>
-     <td><?php echo $row->mahalle;?></td>
+     <td><?php echo $row->tckimlik;?></td>
+     <td><?php echo $row->kayityili;?> <?php echo $aylar[$row->kayitay];?></td>
+     <td><?php echo $row->mahalle;?> <span class="label label-success"><?php echo $row->ilce;?></span></td>
+     <td><?php echo $row->sonizlemtarihi;?></td>
      <?php
      $i++;
      }
@@ -92,9 +162,16 @@ class Dosyalama {
 echo $pageNav->writePagesLinks($link);
 ?>
 </div>
+<div class="pagenav_leafscounter">
+<?php echo $pageNav->writeLeafsCounter();?>
 </div>
 </div>
+</div>
+    </div><!-- sağ panel bitiş -->
+    
     </div>
+    
+
     </form>
     <?php
     }

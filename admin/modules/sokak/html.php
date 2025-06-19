@@ -22,7 +22,7 @@ class SokakHTML {
 </div>
 
 <div class="form-group row">
-<div class="col-sm-3"><label for="mahalle">Sokak Adı:</label></div>
+<div class="col-sm-3"><label for="sokakadi">Sokak Adı:</label></div>
 <div class="col-sm-4"><input type="text" id="sokakadi" name="sokakadi" class="form-control" value="<?php echo $row->sokakadi;?>" required>
 </div>
 </div>
@@ -46,8 +46,6 @@ class SokakHTML {
 $(document).ready(function(){
     
         $("#ilce").on("change", function(){
-
-            $("#mahalle").attr("disabled", false).html("<option value=''>Bir Mahalle Seçin</option>");
             console.log($(this).val()); 
             
             ajaxFunc("mahalle", $(this).val(), "#mahalle");
@@ -60,10 +58,8 @@ $(document).ready(function(){
                 type: "POST",
                 data: {task:task, id:id},
                 success: function(sonuc){
-                    $.each(JSON.parse(sonuc), function(key, value){
                     console.log(sonuc);
-                        $(name).append("<option value="+key+">"+value+"</option>");
-                    });
+                    $(name).html(sonuc);
                 }});
         }
 });
@@ -133,10 +129,7 @@ $(document).ready(function(){
 <tr>
 <th>SIRA</th>
 <th><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-<th>Sokak ID
- <span><a href="<?php echo $link;?>&ordering=s.id-DESC">▲</a></span>
-  <span><a href="<?php echo $link;?>&ordering=s.id-ASC">▼</a></span>
-</th>
+
 <th>Sokak Adı
  <span><a href="<?php echo $link;?>&ordering=s.sokakadi-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=s.sokakadi-ASC">▼</a></span>
@@ -162,7 +155,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 <tr>
 <td><?php echo $pageNav->rowNumber( $i ); ?></td>
 <td><?php echo $checked;?></td>
-<td><?php echo $row->id;?></td>
+
 <td><a href="index.php?option=admin&bolum=sokak&task=editx&id=<?php echo $row->id;?>"><?php echo $row->sokakadi;?></a></td>
 <td><?php echo $row->ilceadi;?></td>
 <td><?php echo $row->mahalleadi;?></td>
@@ -200,10 +193,8 @@ $(document).ready(function(){
                 type: "POST",
                 data: {task:task, id:id},
                 success: function(sonuc){
-                    $.each(JSON.parse(sonuc), function(key, value){
                     console.log(sonuc);
-                        $(name).append("<option value="+key+">"+value+"</option>");
-                    });
+                    $(name).append(sonuc);
                 }});
         }
 });

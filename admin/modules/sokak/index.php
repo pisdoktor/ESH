@@ -57,15 +57,11 @@ function getMahalle($id) {
     
     $rows = $dbase->loadObjectList();
     
-    $data = array();
+    $html = '';
+    $html .= "<option value=''>Bir Mahalle Seçin</option>";  
     foreach ($rows as $row) {
-        $data[] = '"'.$row->id.'":"'.$row->mahalle.'"';
+        $html .= "<option value=".$row->id.">".$row->mahalle."</option>";
     }
-    
-    $html = "{";
-    $html.= implode(',',$data);
-    $html.= "}";
-    
     echo $html;
 }
 function getSokakList($search, $ilce, $mahalle, $ordering) {
@@ -93,7 +89,7 @@ function getSokakList($search, $ilce, $mahalle, $ordering) {
          $order = explode('-', $ordering);
          $orderingfilter = "ORDER BY ".$order[0]." ".$order[1];
      } else {
-         $orderingfilter = "ORDER BY ic.id ASC, m.id ASC, s.id ASC";
+         $orderingfilter = "ORDER BY ic.id ASC, m.id ASC, s.sokakadi ASC";
      }
      
      $dbase->setQuery("SELECT COUNT(s.id) FROM #__sokak AS s "
@@ -151,7 +147,15 @@ function saveSokak() {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
-	
+    
+    /*
+    $dbase->setQuery("SELECT id FROM #__sokak WHERE ilceid=".$row->ilceid." AND mahalleid=".$row->mahalleid." AND sokakadi=".$row->sokakadi);
+    $var = $dbase->loadResult();
+   
+    if ($var) {
+        ErrorAlert('O sokak/cadde zaten eklenmiş');
+    }
+	 */
 	if (!$row->check()) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
 		exit();
@@ -186,22 +190,32 @@ function editSokak($cid) {
     
     $ilcelist = array();
     $ilcelist[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
+    
 	foreach ($obs as $ob) {
     $ilcelist[] = mosHTML::makeOption($ob->id, $ob->ilce);
     }
     
     $ilceler = mosHTML::selectList($ilcelist, 'ilceid', 'id="ilce" required', 'value', 'text', $row->ilceid);
     
-    $dbase->setQuery("SELECT * FROM #__mahalle ORDER BY mahalle ASC");
+    if ($row->id) {
+    
+    $dbase->setQuery("SELECT * FROM #__mahalle WHERE ilceid=".$row->ilceid." ORDER BY mahalle ASC");
     $mobs = $dbase->loadObjectList();
+
     
     $mahallelist = array();
+    
     $mahallelist[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
     foreach ($mobs as $mob) {
     $mahallelist[] = mosHTML::makeOption($mob->id, $mob->mahalle);
     }
     
-    $mahalleler = mosHTML::selectList($mahallelist, 'mahalleid', 'id="mahalle" disabled="disabled" required', 'value', 'text', $row->mahalleid);
+    $mahalleler = mosHTML::selectList($mahallelist, 'mahalleid', 'id="mahalle" required', 'value', 'text', $row->mahalleid);
     
+    } else {
+        
+        $mahallelist[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
+        $mahalleler = mosHTML::selectList($mahallelist, 'mahalle', 'id="mahalle" required', 'value', 'text');
+    }
 	SokakHTML::editSokak($row, $ilceler, $mahalleler);
 }

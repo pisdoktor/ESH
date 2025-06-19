@@ -4,6 +4,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 ini_set('magic_quotes_runtime', 0);
 
+setlocale(LC_ALL, 'tr_TR.UTF-8');
+
 if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
 	error_reporting( 0 );
 } else if (ERROR_REPORT > 0) {
@@ -1101,7 +1103,11 @@ function josHashPassword($password) {
 	return $hash;
 }
 
-    function timeformat($logTime, $show_today = true, $datetime=false) {
+/**
+* @desc Forum sisteminden aldığım fonksiyonlar
+* sayfalandırma ve tarih çevirme içeriyor
+*/
+function timeformat($logTime, $show_today = true, $datetime=false) {
         
     $txt['days'] = array('Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi');
     $txt['days_short'] = array('Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt');
@@ -1113,7 +1119,7 @@ function josHashPassword($password) {
         $logTime = strtotime($logTime);
     }
     // Offset the time.
-    $time = $logTime + (OFFSET * 3600);
+    //$time = $logTime + (OFFSET * 3600);
 
     // We can't have a negative date (on Windows, at least.)
     if ($time < 0)
@@ -1127,13 +1133,16 @@ function josHashPassword($password) {
         $then = @getdate($time);
         $now = @getdate($nowtime);
 
+        /*
         // Try to make something of a time format string...
         $s = strpos(timeformat, '%S') === false ? '' : ':%S';
+        
         if (strpos(timeformat, '%H') === false && strpos(timeformat, '%T') === false) {
             $today_fmt = '%I:%M' . $s . ' %p';
         } else {
             $today_fmt = '%H:%M' . $s;
         }
+        */
 
         // Same day of the year, same year.... Today!
         if ($then['yday'] == $now['yday'] && $then['year'] == $now['year']) {
@@ -1148,7 +1157,7 @@ function josHashPassword($password) {
 
     $str = !is_bool($show_today) ? $show_today : timeformat;
 
-    if (setlocale(LC_TIME, 'tr_TR')) {
+    if (setlocale(LC_ALL, 'tr_TR.UTF-8')) {
         foreach (array('%a', '%A', '%b', '%B') as $token)
             if (strpos($str, $token) !== false)
                 $str = str_replace($token, ucwords(strftime($token, $time)), $str);
@@ -1190,7 +1199,7 @@ function constructPageIndex($base_url, $total, $limitstart, $limit=10, $flexible
     else
         $limitstart = max(0, (int) $limitstart - ((int) $limitstart % (int) $limit));
 
-    $base_link = '<a class="navPages" href="'.sefLink(($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit)).'">%s</a> ';
+    $base_link = '<a class="navPages" href="'.($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit).'">%s</a> ';
 
     // Compact pages is off or on?
     if (!compactTopicPagesEnable) {

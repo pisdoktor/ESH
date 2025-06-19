@@ -156,9 +156,9 @@ class mosHTML {
         $arr = array();
         
         if ($required) {
-        $arr[] = mosHTML::makeOption('', 'Bir Ay Seçin');    
+        $arr[] = mosHTML::makeOption('', 'Bir Seçim Yapın');    
         } else {
-        $arr[] = mosHTML::makeOption('0', 'Bir Ay Seçin');    
+        $arr[] = mosHTML::makeOption('0', 'Bir Seçim Yapın');    
         }
 
 		$arr[] = 	mosHTML::makeOption( '01', 'Ocak' );
@@ -269,7 +269,8 @@ class mosHTML {
 			} else {
 				$extra .= ($k == $selected ? " checked=\"checked\"" : '');
 			}
-			$html .= "\n\t<label class=\"radio-inline\" for=\"$tag_name$k\"><input type=\"radio\" name=\"$tag_name\" id=\"$tag_name$k\" value=\"".$k."\"$extra $tag_attribs />";
+			$html .= "\n\t<label class=\"radio-inline\" for=\"$tag_name$k\">";
+            $html .= "<input type=\"radio\" name=\"$tag_name\" id=\"$tag_name$k\" value=\"".$k."\"$extra $tag_attribs />";
 			$html .= $t."</label>";
 		}
 		$html .= "\n";

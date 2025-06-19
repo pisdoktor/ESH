@@ -4,15 +4,13 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class HastaList {
     
-    function getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim) {
+    function getHastaList($rows, $pageNav, $search, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim) {
         $link = 'index.php?option=site&bolum=phastalar';
-        if ($baslangictarih) {
+        if ($search) {
+            $link .= "&amp;search=".$search;
+        }
             $link .= "&amp;baslangictarih=".$baslangictarih;
-        }
-        
-        if($bitistarih) {
             $link .= "&amp;bitistarih=".$bitistarih;     
-        }
         
          if ($ordering) {
             $link .= "&ordering=".$ordering;
@@ -22,51 +20,51 @@ class HastaList {
             $link .= "&secim=".$secim;
         }
     ?>
-    <form action="index.php" method="GET" name="adminForm" role="form"> 
+    <form action="index.php" method="GET" name="adminForm" role="form">
+    <input type="hidden" name="option" value="site" />
+<input type="hidden" name="bolum" value="phastalar" />
+<input type="hidden" name="task" value="list" /> 
     <div class="panel panel-warning">
     <div class="panel-heading">
     <div class="row">
-        <div class="col-xs-11"><h4><i class="fa-solid fa-bed-pulse"></i> Pasif Hasta Listesi</h4></div>
+        <div class="col-xs-2"><h4><i class="fa-solid fa-bed-pulse"></i> Pasif Hasta Listesi</h4></div>
+        <div class="col-xs-9">
+        <div class="form-group row">      
+      
+    <div class="col-sm-5">
+    <div class='input-group input-daterange' id='datepicker1' data-date-format="dd.mm.yyyy">
+    <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="baslangictarih" name="baslangictarih" value="<?php echo $baslangictarih;?>" autocomplete="off" />
+    <div class="input-group-addon">ile</div>
+    <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="bitistarih" name="bitistarih" value="<?php echo $bitistarih;?>" autocomplete="off" />
+    <div class="input-group-addon">arası</div>
+    </div>
+    </div>
+    
+    <div class="col-sm-2">
+    <?php echo $pasifneden;?>
+    </div>
+    
+    <div class="col-sm-3">
+    <input type="text" name="search" maxlength="11" value="<?php echo htmlspecialchars( $search );?>" class="form-control"  onChange="document.adminForm.submit();" placeholder="TC Kimlik yada Bir isim Yazın" autocomplete="off">
+    </div>
+    
+
+
+    <div class="col-sm-2">
+    <input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-warning"  />
+    </div>
+    
+    </div> <!-- form-group row-->
+        </div>
         <div class="col-xs-1" align="right"><?php echo $pageNav->getLimitBox($link);?></div>
     </div>
     </div>
     
-    <div class="panel-body">
-        
-    <div class="form-group row">      
-      
-    <div class="col-sm-6">
-    
-    <div class='input-group input-daterange' id='datepicker1' data-date-format="dd.mm.yyyy">
-    
-    <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="baslangictarih" name="baslangictarih" value="<?php echo $baslangictarih;?>" />
-    
-    
-    <div class="input-group-addon">ile</div>
-    
-    <input data-date-format="dd.mm.yyyy" type='text' placeholder="GG.AA.YYYY" class="form-control" id="bitistarih" name="bitistarih" value="<?php echo $bitistarih;?>" />
-    
-    
-    <div class="input-group-addon">arası</div>
-     
-    </div>
-    </div>
-    
-    <div class="col-sm-3">
-    <?php echo $pasifneden;?>
-    </div>
-
-    <div class="col-sm-3">
-    <input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-primary"  />
-    </div>
-    
-    </div> <!-- form-group row-->
-        
-    </div>  <!-- panel-body -->
-    
     <table class="table table-hover">
-    <thead class="thead-dark">
+    <thead class="thead-light">
     <tr>
+    <th scope="col">#</th>
+    
       <th scope="col">Hasta Adı
         <span><a href="<?php echo $link;?>&ordering=h.isim-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.isim-ASC">▼</a></span>
@@ -83,6 +81,12 @@ class HastaList {
         <span><a href="<?php echo $link;?>&ordering=h.kayityili-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.kayityili-ASC">▼</a></span>
   </th>
+  <th scope="col">Doğum Tarihi
+        <span><a href="<?php echo $link;?>&ordering=h.dogumtarihi-DESC">▲</a></span>
+  <span><a href="<?php echo $link;?>&ordering=h.dogumtarihi-ASC">▼</a></span>
+  </th>
+  <th scope="col">Yaşı
+  </th>
       <th scope="col">Pasif Tarihi
         <span><a href="<?php echo $link;?>&ordering=h.pasiftarihi-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.pasiftarihi-ASC">▼</a></span>
@@ -90,7 +94,8 @@ class HastaList {
       <th scope="col">Pasif Nedeni
         <span><a href="<?php echo $link;?>&ordering=h.pasifnedeni-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=h.pasifnedeni-ASC">▼</a></span>
-  </th> 
+  </th>
+  <th scope="col">Son İzlem Tarihi</th> 
     </tr>
     </thead>
     <tbody>
@@ -104,30 +109,36 @@ class HastaList {
   '6' => 'Sonlandırmanın Talep Edilmesi',
   '7' => 'Tedaviye Personel Gerekmemesi',
   '8' => 'ESH Takibine Uygun Olmaması'
-  ); 
-    foreach($rows as $row) {
-        $aylar = array('' => 'Boş','01' => 'Ocak','02' => 'Şubat','03' => 'Mart','04' => 'Nisan','05' => 'Mayıs',
+  );
+  
+  $aylar = array('' => 'Boş','01' => 'Ocak','02' => 'Şubat','03' => 'Mart','04' => 'Nisan','05' => 'Mayıs',
        '06' => 'Haziran','07' => 'Temmuz','08' => 'Ağustos','09' => 'Eylül','10' => 'Ekim','11' => 'Kasım','12' => 'Aralık');
-      
+        
+    foreach($rows as $row) {
+        
+       $row->sonizlemtarihi = $row->sonizlemtarihi ? tarihCevir($row->sonizlemtarihi, 1):'Yok';
+       
+       $tarih = explode('.',$row->dogumtarihi);
+       $tarih = mktime(0,0,0,$tarih[1],$tarih[2],$tarih[0]);
+         
+       $row->dtarihi = strftime("%d.%m.%Y", $tarih); 
       ?>
-   <tr class="<?php echo $row->cinsiyet == "E" ? "info":"warning";?>">
-      <th scope="row"><a href="index.php?option=site&bolum=hastalar&task=edit&id=<?php echo $row->id;?>"><?php echo $row->isim;?> <?php echo $row->soyisim;?></a></th>
+   <tr>
+   <td><span data-toggle="tooltip" title="<?php echo $row->izlemsayisi;?> İzlem" class="label label-<?php echo $row->izlemsayisi ? 'info':'warning';?>"><a href="index.php?option=site&bolum=izlemler&task=izlemgetir&tc=<?php echo $row->tckimlik;?>"><?php echo $row->izlemsayisi;?></a></span></td>
+      <th scope="row"><a href="index.php?option=site&bolum=hastalar&task=show&id=<?php echo $row->id;?>"><span style="color:<?php echo $row->cinsiyet == 'E' ? 'blue':'#f5070f';?>"><?php echo $row->isim;?> <?php echo $row->soyisim;?></span></a></th>
       <td><?php echo $row->tckimlik;?></td>
-      <td><?php echo $row->mahalleadi;?></td>
+      <td><?php echo $row->mahalleadi;?> <span class="label label-success"><?php echo $row->ilceadi;?></span></td>
       <td><?php echo $row->kayityili;?> <?php echo $aylar[$row->kayitay];?></td>
-      <td><?php echo tarihCevir($row->pasiftarihi, 1);?></td>
+      <td><?php echo $row->dtarihi;?></td>
+      <td><?php echo yas_bul($row->dogumtarihi);?></td>
+      <th><?php echo tarihCevir($row->pasiftarihi, 1);?></th>
       <th scope="row"><?php echo $pasif[$row->pasifnedeni];?></th>
+      <td><?php echo $row->sonizlemtarihi;?></td>
    </tr>
  <?php 
     }?>
     </tbody>
     </table>
-   
-
-
-<input type="hidden" name="option" value="site" />
-<input type="hidden" name="bolum" value="phastalar" />
-<input type="hidden" name="task" value="" />
 <script type="text/javascript">
 var userTarget = "";
 var exit = false;
@@ -183,7 +194,5 @@ echo $pageNav->writePagesLinks($link);
    </form>      
 <?php    
     }
-    
-    
     
 }

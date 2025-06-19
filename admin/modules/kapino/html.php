@@ -13,7 +13,7 @@ class KapinoHTML {
 
 <div class="form-group row">
 <div class="col-sm-3">
-<label for="mahalle">İlçe:</label></div>
+<label for="ilce">İlçe:</label></div>
 <div class="col-sm-9"><?php echo $lists['ilce'];?></div>
 </div>
 <div class="form-group row">
@@ -23,13 +23,13 @@ class KapinoHTML {
 </div>
 <div class="form-group row">
 <div class="col-sm-3">
-<label for="mahalle">Cadde/Sokak Adı:</label></div>
+<label for="sokak">Cadde/Sokak Adı:</label></div>
 <div class="col-sm-9"><?php echo $lists['sokak'];?></div>
 </div>
 
 <div class="form-group row">
 <div class="col-sm-3">
-<label for="mahalle">Kapı Numarası:</label></div>
+<label for="kapino">Kapı Numarası:</label></div>
 <div class="col-sm-9"><input type="text" id="kapino" name="kapino" class="form-control" value="<?php echo $row->kapino;?>" required></div>
 </div>
 
@@ -73,13 +73,11 @@ $(document).ready(function(){
         function ajaxFunc(task, id, name ){
             $.ajax({
                 url: "index2.php?option=admin&bolum=kapino",
-                type: "GET",
+                type: "POST",
                 data: {task:task, id:id},
                 success: function(sonuc){
-                    $.each(JSON.parse(sonuc), function(key, value){
-                        console.log(sonuc);
-                        $(name).append("<option value="+key+">"+value+"</option>");
-                    });
+                    console.log(sonuc);
+                    $(name).html(sonuc);
                 }});
         }
     });
@@ -111,24 +109,7 @@ static function getKapinoList($rows, $search, $ilce, $mahalle, $sokak, $ordering
 <input type="hidden" name="bolum" value="kapino" />
 <input type="hidden" name="task" value="list" />
 
-<div class="panel panel-primary">
-        <div class="panel-heading in" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
-          <div class="row">
-            <div class="col-xs-6"><h5><i class="fa-solid fa-magnifying-glass"></i> Arama Seçenekleri</h5></div>
-            <div class="col-xs-6" align="right"><span class="badge" align="right">X</span></div>
-          </div>
-        </div>
-        <div class="panel-body collapse in" id="collapseExample2">
-        
-         <div class="form-group">
-<div class="col-sm-4"><input type="text" name="search" maxlength="11" value="<?php echo htmlspecialchars( $search );?>" class="form-control" placeholder="Aramak istediğiniz kapı numarasını yazın"></div>
-<div class="col-sm-2"><?php echo $lists['ilce'];?></div>
-<div class="col-sm-2"><?php echo $lists['mahalle'];?></div>
-<div class="col-sm-2"><?php echo $lists['sokak'];?></div>
-<div class="col-sm-2"><input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-primary"  /></div>  
-        </div>
-        </div>
-</div>
+
 <script>                                  
 $(document).ready(function(){
     
@@ -151,17 +132,15 @@ $(document).ready(function(){
 
         });
         
-        
+     
         function ajaxFunc(task, id, name ){
             $.ajax({
                 url: "index2.php?option=admin&bolum=kapino",
-                type: "GET",
+                type: "POST",
                 data: {task:task, id:id},
                 success: function(sonuc){
-                    $.each(JSON.parse(sonuc), function(key, value){
-                        console.log(sonuc);
-                        $(name).append("<option value="+key+">"+value+"</option>");
-                    });
+                    console.log(sonuc);
+                    $(name).html(sonuc);
                 }});
         }
     });
@@ -172,8 +151,16 @@ $(document).ready(function(){
 <div class="panel-body">
 	
 <div class="form-group">
-<div class="col-sm-11"> 
+<div class="col-sm-1"> 
 <a href="index.php?option=admin&bolum=kapino&task=add" class="btn btn-default">Yeni Ekle</a>
+</div>
+
+<div class="col-sm-10">
+<div class="col-sm-4"><input type="text" name="search" maxlength="11" value="<?php echo htmlspecialchars( $search );?>" class="form-control" placeholder="Aramak istediğiniz kapı numarasını yazın"></div>
+<div class="col-sm-2"><?php echo $lists['ilce'];?></div>
+<div class="col-sm-2"><?php echo $lists['mahalle'];?></div>
+<div class="col-sm-2"><?php echo $lists['sokak'];?></div>
+<div class="col-sm-2"><input type="button" name="button" value="Kayıtları Getir" onclick="javascript:submitbutton('list');" class="btn btn-primary"  /></div>  
 </div>
  
 <div class="col-sm-1">    
@@ -181,12 +168,11 @@ $(document).ready(function(){
 </div>
 </div>
 
-</div><!-- panel body -->
+</div>
 
 <table class="table table-striped">
 <thead>
 <tr>
-<th>SIRA</th>
 <th>Kapı Numarası
 <span><a href="<?php echo $link;?>&ordering=k.kapino-DESC">▲</a></span>
   <span><a href="<?php echo $link;?>&ordering=k.kapino-ASC">▼</a></span>
@@ -211,8 +197,7 @@ $(document).ready(function(){
 foreach($rows as $row) {
 ?>
 <tr>
-<td><?php echo $row->id;?></td>
-<td>
+<th>
 <div class="dropdown">
 <a class="dropdown-toggle" href="#" data-toggle="dropdown"><?php echo $row->kapino;?></a>
   <ul class="dropdown-menu">
@@ -220,7 +205,7 @@ foreach($rows as $row) {
     <li><a href="index.php?option=admin&bolum=kapino&task=delete&id=<?php echo $row->id;?>">Sil</a></li>
   </ul>
 </div> 
-</td>
+</th>
 <td><?php echo $row->sokakadi;?></td> 
 <td><?php echo $row->mahalleadi;?></td>
 <td><?php echo $row->ilceadi;?></td>  
@@ -245,7 +230,6 @@ echo $pageNav->writePagesLinks($link);?>
 </div>
 </div> <!-- panel footer -->
 
-</div>
 
 
 <?php

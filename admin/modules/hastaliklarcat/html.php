@@ -32,7 +32,7 @@ class IlceHTML {
 
 <div class="row">
 <div class="col-sm-3">
-<label for="mahalle">İlçe Adı:</label></div>
+<label for="name">Hastalık Kategori Adı:</label></div>
 <div class="col-sm-9"><input type="text" id="name" name="name" class="form-control" value="<?php echo $row->name;?>" required></div>
 </div>
 

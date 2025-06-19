@@ -122,7 +122,7 @@ function getMahalleList($search, $ilce, $ordering) {
          $orderingfilter = "ORDER BY ".$order[0]." ".$order[1];
      } else {
          $orderingfilter = "ORDER BY m.ilceid ASC, m.mahalle ASC";
-     }
+     }                                                                 
 	 
 	 $dbase->setQuery("SELECT COUNT(m.id) FROM #__mahalle AS m "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )  
@@ -142,7 +142,7 @@ function getMahalleList($search, $ilce, $ordering) {
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
 	
-	MahalleHTML::getMahalleList($rows, $search, $ilce, $il, $pageNav);
+	MahalleHTML::getMahalleList($rows, $search, $ilce, $il, $pageNav, $ordering);
 }
 
 function editMahalle($cid) {
@@ -160,6 +160,6 @@ function editMahalle($cid) {
     $ilcelist[] = mosHTML::makeOption($ob->id, $ob->ilce);
     }
     
-    $ilceler = mosHTML::selectList($ilcelist, 'ilceid', 'requreid', 'value', 'text', $row->ilceid);
+    $ilceler = mosHTML::selectList($ilcelist, 'ilceid', 'id="ilceid" requreid', 'value', 'text', $row->ilceid);
 	MahalleHTML::editMahalle($row, $ilceler);
 }

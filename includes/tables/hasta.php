@@ -12,19 +12,25 @@ class Hasta extends DBTable {
     
     var $soyisim = null;
     
+    var $anneAdi = null;
+    
+    var $babaAdi = null;
+    
     var $dogumtarihi = null;
     
     var $cinsiyet = null;
     
+    var $boy = null;
+    
+    var $kilo = null;
+    
     var $kayityili = null;
     
-    var $kayitay = null;
-    
-    /* aktif değiller
+    var $kayitay = null; 
+
     var $ceptel1 = null;
     
     var $ceptel2 = null;
-     */
      
     var $ilce = null;
     
@@ -34,8 +40,37 @@ class Hasta extends DBTable {
     
     var $kapino = null;
     
+    var $coords = null;
+    
 
     var $bagimlilik = null;
+    
+    /*
+    * Barthel İndeksi  
+    */
+    var $barbeslenme = null;
+    
+    var $barbanyo = null;
+    
+    var $barbakim = null;
+    
+    var $bargiyinme = null;
+    
+    var $barbarsak = null;
+    
+    var $barmesane = null;
+    
+    var $bartuvalet = null;
+    
+    var $bartransfer = null;
+    
+    var $barmobilite = null;
+    
+    var $barmerdiven = null;
+    
+    /*
+    * Barthel İndeksi 
+    */
     
     var $pasif = null;
     
@@ -61,7 +96,29 @@ class Hasta extends DBTable {
     
     var $sondatarihi = null;
     
+    var $pansuman = null;
+    
+    var $pgunleri = null;
+    
+    var $mama = null;
+    
+    var $mamacesit = null;
+    
+    var $mamaraporbitis = null;
+    
+    var $mamaraporyeri = null;
+    
+    var $bez = null;
+    
+    var $bezrapor = null;
+    
+    var $bezraporbitis = null;
+    
+    var $yatak = null;
+    
     var $hastaliklar = null;
+    
+    var $notes = null;
     
     function Hasta( &$db ) {
         $this->DBTable( '#__hastalar', 'id', $db );
@@ -165,7 +222,9 @@ class Hasta extends DBTable {
         $start = '2007';
         $end = date('Y');
         
-        return mosHTML::integerSelectList($start, $end, '1', 'kayityili', 'id="kayityili" required', $this->kayityili, $required);
+        $kayityili = $this->kayityili ? $this->kayityili : date('Y');
+        
+        return mosHTML::integerSelectList($start, $end, '1', 'kayityili', 'id="kayityili" required', $kayityili, $required);
     }
     
     function getKayityili($link, $kayityili, $required=1) {
@@ -202,6 +261,7 @@ class Hasta extends DBTable {
         return mosHTML::radioList($c, 'pasif', 'id="pasif" class="radio-inline" '.$required ? 'required' : ''.'', 'value', 'text', $this->pasif);
     }
     
+  
     function hastaPasifNedeni($required=0) {
         
         $c = array();
@@ -227,6 +287,18 @@ class Hasta extends DBTable {
         
         
         return mosHTML::radioList($c, 'gecici', 'id="gecici" class="radio-inline" '.$required ? 'required' : ''.'', 'value', 'text', $this->gecici);
+    }
+    
+    function hastaMama($required=1) {
+        
+        $c = array();
+        $c[] = mosHTML::makeOption('0', 'Bilinmiyor');
+        $c[] = mosHTML::makeOption('1', 'Abbot');
+        $c[] = mosHTML::makeOption('2', 'Nestle');
+        $c[] = mosHTML::makeOption('3', 'Nutricia');
+        
+        
+        return mosHTML::selectList($c, 'mamacesit', 'id="mamacesit" required', 'value', 'text', $this->mamacesit);
     }
     
     function hastaBagimlilik($required=1) {

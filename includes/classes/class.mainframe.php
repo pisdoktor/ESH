@@ -197,6 +197,11 @@ class mainFrame {
         $this->addScript(0, SITEURL.'/includes/global/js/bootstrap-datepicker.min.js');
         $this->addScript(0, SITEURL.'/includes/global/js/bootstrap-datepicker.tr.min.js');
         
+        //select eklemesi
+        //$this->addStyleSheet(SITEURL.'/includes/global/css/bootstrap-select.min.css');
+        //$this->addScript(0, SITEURL.'/includes/global/js/bootstrap-select.min.js');
+        //$this->addScript(0, SITEURL.'/includes/global/js/defaults-tr_TR.js');
+        
         //validator eklemesi
         $this->addScript(0, SITEURL.'/includes/global/js/validator.js');
         $this->addScript(0, SITEURL.'/includes/global/js/tableToExcel.js');  
@@ -213,6 +218,30 @@ class mainFrame {
         $this->addScript(0, SITEURL.'/includes/global/calendar/index.global.js');
         $this->addScript(0, SITEURL.'/includes/global/calendar/locales/tr.global.js');
         
+        //harita eklemesi
+        //$this->addStyleSheet(SITEURL.'/includes/leaflet/leaflet.css');    
+        //$this->addScript(0, SITEURL.'/includes/leaflet/leaflet.js');
+        
+        // harita işaretleme 
+        //$this->addStyleSheet(SITEURL.'/includes/leaflet/locationpicker/src/leaflet-locationpicker.css');    
+        //$this->addScript(0, SITEURL.'/includes/leaflet/locationpicker/src/leaflet-locationpicker.js');
+        
+        //php to pdf
+        $this->addScript(0, SITEURL.'/includes/global/js/pdfmake.js');
+        $this->addScript(0, SITEURL.'/includes/global/js/vfs_fonts.js');
+        
+        //tomtom
+        //$this->addStyleSheet(SITEURL.'/tomtom/assets/ui-library/map.css');
+        //$this->addStyleSheet(SITEURL.'/tomtom/assets/ui-library/index.css');
+        
+        //jquery steps
+        /*
+        $this->addScript(0, SITEURL.'/includes/global/js/modernizr.js');
+        $this->addScript(0, SITEURL.'/includes/global/js/jcookie.js');
+        $this->addScript(0, SITEURL.'/includes/global/js/jsteps.js');
+         */
+         $this->addStyleSheet(SITEURL.'/admin/modules/adressistemi/skin-xp/ui.fancytree.min.css');
+     $this->addScript(0, SITEURL.'/admin/modules/adressistemi/jquery.fancytree-all-deps.min.js');
         echo $this->getHead();    
     }
   /**
@@ -265,7 +294,7 @@ class mainFrame {
 	* Old sessions are flushed based on the configuration value for the cookie
 	* lifetime. If an existing session, then the last access time is updated.
 	* If a new session, a session id is generated and a record is created in
-	* the jos_sessions table.
+	* the sessions table.
 	*/
 	function initSession() {
 		global $bolum;
@@ -342,22 +371,6 @@ class mainFrame {
 	}
 
 	/*
-	* Function used to set Session Garbage Cleaning
-	* garbage cleaning set at configured session time + 600 seconds
-	* Added as of 1.0.8
-	* Deprecated 1.1
-	*/
-	function setSessionGarbageClean() {
-		/** ensure that funciton is only called once */
-		if (!defined( '_JOS_GARBAGECLEAN' )) {
-			define( '_JOS_GARBAGECLEAN', 1 );
-
-			$garbage_timeout = 2400;
-			@ini_set('session.gc_maxlifetime', $garbage_timeout);
-		}
-	}
-
-	/*
 	* Static Function used to generate the Session Cookie Name
 	* Added as of 1.0.8
 	* Deprecated 1.1
@@ -365,11 +378,11 @@ class mainFrame {
 	function sessionCookieName() {
 
 		if( substr( SITEURL, 0, 7 ) == 'http://' ) {
-			$hash = md5( 'site' . substr( SITEURL, 7 ) );
+			$hash = md5( SECRETWORD . substr( SITEURL, 7 ) );
 		} elseif( substr( SITEURL, 0, 8 ) == 'https://' ) {
-			$hash = md5( 'site' . substr( SITEURL, 8 ) );
+			$hash = md5( SECRETWORD . substr( SITEURL, 8 ) );
 		} else {
-			$hash = md5( 'site' . SITEURL );
+			$hash = md5( SECRETWORD . SITEURL );
 		}
 
 		return $hash;
@@ -380,7 +393,7 @@ class mainFrame {
 	* Added as of 1.0.8
 	* Deprecated 1.1
 	*/
-	static function sessionCookieValue( $id=null ) {
+	function sessionCookieValue( $id=null ) {
 
 		$type        = SESSION_TYPE;
 		$browser     = @$_SERVER['HTTP_USER_AGENT'];
@@ -491,7 +504,7 @@ class mainFrame {
 			// query used for remember me cookie
 				$harden = mosHash( @$_SERVER['HTTP_USER_AGENT'] );
 
-				$query = "SELECT id, name, username, password"
+				$query = "SELECT id, name, username, password, isadmin"
 				. "\n FROM #__users"
 				. "\n WHERE id = " . (int) $userid
 				;
@@ -509,7 +522,7 @@ class mainFrame {
 				}
 			} else {
 			// query used for login via login module
-				$query = "SELECT u.id, u.name, u.username, u.password, u.activated"
+				$query = "SELECT u.*"
 				. "\n FROM #__users AS u"
 				. "\n WHERE u.username = ". $this->_db->Quote( $username )
 				;
@@ -562,11 +575,7 @@ class mainFrame {
 				$session->userid     = intval( $row->id );
 				$session->nerede     = $bolum;
                 $session->access_type = 'site';
-                $session->isadmin = $row->isadmin;
-				   
-				if ($row->isadmin) {
-				$this->set('_isAdmin', true);
-				} 
+                $session->_isAdmin = $row->isadmin ? true : false; 
                 
 				$session->update();
 
@@ -628,18 +637,18 @@ class mainFrame {
 	*
 	* Reverts the current session record back to 'anonymous' parameters
 	*/
-	function logout() {
+	function logout() {           
 		$session             =& $this->_session;
         
-		$session->username   = '';
-		$session->userid     = '';
+		$session->userid     = '0';
+        $session->username   = '';
 		$session->access_type= '';
 		$session->nerede     = '';
         
 		$session->update();
 
 		// kill remember me cookie
-		$lifetime         = time() - (365*24*60*60);
+		$lifetime         = time() - 86400;
 		$remCookieName     = mainFrame::remCookieName_User();
 		setcookie( $remCookieName, ' ', $lifetime, '/' );
 

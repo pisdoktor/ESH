@@ -10,11 +10,15 @@ class Mahalle extends DBTable {
     
     var $mahalle   = null;
     
+    var $bolge = null;
+    
+    var $gun = null;
+    
     function Mahalle( &$db ) {
         $this->DBTable( '#__mahalle', 'id', $db );
     }
     
-    function getMahalle($link, $mahalle) {
+    function getMahalle($link, $selected) {
         
         $query = "SELECT m.* FROM #__mahalle AS m ORDER BY mahalle ASC";
         $this->_db->setQuery($query);
@@ -30,6 +34,6 @@ class Mahalle extends DBTable {
         }
         // build the html select list 
         $link = $link ."&amp;mahalle=' + this.options[selectedIndex].value + '";
-        return mosHTML::selectList( $s, 'mahalle', 'id="mahalle" onchange="document.location.href=\''. $link .'\';"', 'value', 'text', $mahalle );    
+        return mosHTML::selectList( $s, 'mahalle', 'id="mahalle" onchange="document.location.href=\''. $link .'\';"', 'value', 'text', $selected );    
     }
 }

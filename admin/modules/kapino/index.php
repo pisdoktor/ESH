@@ -58,14 +58,11 @@ function getSokak($id) {
     
     $rows = $dbase->loadObjectList();
     
-     foreach ($rows as $row) {
-        $data[] = '"'.$row->id.'":"'.$row->sokakadi.'"';
+    $html = '';                                         
+    $html .= '<option value="0">Bir Sokak Seçin</option>';
+    foreach ($rows as $row) {
+        $html .= "<option value=".$row->id.">".$row->sokakadi."</option>";
     }
-    
-    $html = "{";
-    $html.= implode(',',$data);
-    $html.= "}";
-    
     echo $html;
 }
 
@@ -77,15 +74,11 @@ function getMahalle($id) {
     
     $rows = $dbase->loadObjectList();
     
-    $data = array();
+    $html = '';
+    $html .= '<option value="0">Bir Mahalle Seçin</option>';
     foreach ($rows as $row) {
-        $data[] = '"'.$row->id.'":"'.$row->mahalle.'"';
+        $html .= "<option value=".$row->id.">".$row->mahalle."</option>";
     }
-    
-    $html = "{";
-    $html.= implode(',',$data);
-    $html.= "}";
-    
     echo $html;
 }
 
@@ -95,7 +88,7 @@ function getKapinoList($search, $ilce, $mahalle, $sokak, $ordering) {
      $where = array();
      if ($search) {
          $search = mosStripslashes($search);
-         $where[] = "k.kapino LIKE '" . $dbase->getEscaped( trim( $search ) ) . "%'";
+         $where[] = "k.kapino LIKE '" . $dbase->getEscaped( trim( $search ) ) . "'";
      }
      
      if ($ilce) {
@@ -114,7 +107,7 @@ function getKapinoList($search, $ilce, $mahalle, $sokak, $ordering) {
          $order = explode('-', $ordering);
          $orderingfilter = "ORDER BY ".$order[0]." ".$order[1];
      } else {
-         $orderingfilter = "ORDER BY ic.id ASC, m.id ASC, s.id ASC, k.id ASC";
+         $orderingfilter = "ORDER BY ic.ilce ASC, m.mahalle ASC, s.sokakadi ASC, k.kapino ASC";
      }
      
 
@@ -146,30 +139,39 @@ function getKapinoList($search, $ilce, $mahalle, $sokak, $ordering) {
     $dbase->setQuery("SELECT * FROM #__ilce ORDER BY ilce ASC");
     $adres['ilce'] = $dbase->loadObjectList();
     
+    $dilce[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
+    foreach ($adres['ilce'] as $ilc) {
+    $dilce[] = mosHTML::makeOption($ilc->id, $ilc->ilce);
+    }
+    
+    if ($ilce) {
     $dbase->setQuery("SELECT * FROM #__mahalle "
     . ($ilce ? 'WHERE ilceid='.$ilce:'')
     . "\n ORDER BY mahalle ASC");
     $adres['mahalle'] = $dbase->loadObjectList();
     
+    $dmahalle[] = mosHTML::makeOption("", "Bir Mahalle Seçin"); 
+    foreach ($adres['mahalle'] as $mahall) {
+    $dmahalle[] = mosHTML::makeOption($mahall->id, $mahall->mahalle);
+    }
+    
+    }
+    
+    if ($mahalle) {
     $dbase->setQuery("SELECT * FROM #__sokak "
     . ($mahalle ? 'WHERE mahalleid='.$mahalle:'')
     . "\n ORDER BY sokakadi ASC");
     $adres['sokak'] = $dbase->loadObjectList();
     
-    $dilce[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
-    $dmahalle[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
-    $dsokak[] = mosHTML::makeOption('', 'Bir Sokak Seçin');
-    
-    foreach ($adres['ilce'] as $ilc) {
-    $dilce[] = mosHTML::makeOption($ilc->id, $ilc->ilce);
-    }
-    
-    foreach ($adres['mahalle'] as $mahall) {
-    $dmahalle[] = mosHTML::makeOption($mahall->id, $mahall->mahalle);
-    }
-    
+    $dsokak[] = mosHTML::makeOption("", "Bir Sokak Seçin");
     foreach ($adres['sokak'] as $soka) {
     $dsokak[] = mosHTML::makeOption($soka->id, $soka->sokakadi);
+    }
+    }
+    
+    if (!$mahalle || !$sokak) {
+    $dmahalle[] = mosHTML::makeOption("", "Bir Mahalle Seçin");
+    $dsokak[] = mosHTML::makeOption("", "Bir Sokak Seçin");
     }
     
     $lists['ilce'] = mosHTML::selectList($dilce, 'ilce', 'id="ilce"', 'value', 'text', $ilce);
@@ -199,6 +201,14 @@ function saveKapino() {
 		exit();
 	}
     
+    /*
+    $dbase->setQuery("SELECT id FROM #__kapino WHERE ilceid=".$row->ilceid." AND mahalleid=".$row->mahalleid." AND sokakid=".$row->sokakid." AND kapino=".$row->kapino);
+    $var = $dbase->loadResult();
+    
+    if ($var) {
+        ErrorAlert('O kapı numarası zaten eklenmiş');
+    }
+    */
     if ( !$row->check( $_POST ) ) {
         echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
         exit();
@@ -220,35 +230,61 @@ function editKapino($cid) {
 	$row = new KapiNo($dbase);
 	$row->load($cid);
     
-    //adresler için ilçeleri alalım
+    if ($row->id) {
+        //adresler için ilçeleri alalım
     $dbase->setQuery("SELECT * FROM #__ilce ORDER BY ilce ASC");
     $adres['ilce'] = $dbase->loadObjectList();
     
-    $dbase->setQuery("SELECT * FROM #__mahalle ORDER BY mahalle ASC");
-    $adres['mahalle'] = $dbase->loadObjectList();
-    
-    $dbase->setQuery("SELECT * FROM #__sokak ORDER BY sokakadi ASC");
-    $adres['sokak'] = $dbase->loadObjectList();
-    
     $dilce[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
-    $dmahalle[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
-    $dsokak[] = mosHTML::makeOption('', 'Bir Sokak Seçin');
-    
     foreach ($adres['ilce'] as $ilc) {
     $dilce[] = mosHTML::makeOption($ilc->id, $ilc->ilce);
     }
+    $lists['ilce'] = mosHTML::selectList($dilce, 'ilceid', 'id="ilce"', 'value', 'text', $row->ilceid); 
     
+   
+    $dbase->setQuery("SELECT * FROM #__mahalle "
+    . ($row->ilceid ? "WHERE ilceid=".$row->ilceid:"")
+    . " ORDER BY mahalle ASC");
+    $adres['mahalle'] = $dbase->loadObjectList();
+    
+    $dmahalle[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
     foreach ($adres['mahalle'] as $mahall) {
     $dmahalle[] = mosHTML::makeOption($mahall->id, $mahall->mahalle);
     }
+    $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalleid', 'id="mahalle"', 'value', 'text', $row->mahalleid);
     
+    $dbase->setQuery("SELECT * FROM #__sokak "
+    . ($row->mahalleid ? "WHERE mahalleid=".$row->mahalleid:"")
+    . " ORDER BY sokakadi ASC");
+    $adres['sokak'] = $dbase->loadObjectList();
+
+    $dsokak[] = mosHTML::makeOption('', 'Bir Sokak Seçin');
+
     foreach ($adres['sokak'] as $soka) {
     $dsokak[] = mosHTML::makeOption($soka->id, $soka->sokakadi);
     }
-    
-    $lists['ilce'] = mosHTML::selectList($dilce, 'ilceid', 'id="ilce"', 'value', 'text', $row->ilceid);
-    $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalleid', 'id="mahalle"', 'value', 'text', $row->mahalleid);
     $lists['sokak'] = mosHTML::selectList($dsokak, 'sokakid', 'id="sokak"', 'value', 'text', $row->sokakid);
+    
+    } else {
+        //adresler için ilçeleri alalım
+    $dbase->setQuery("SELECT * FROM #__ilce ORDER BY ilce ASC");
+    $adres['ilce'] = $dbase->loadObjectList();
+    
+    $dilce[] = mosHTML::makeOption('', 'Bir İlçe Seçin');
+    foreach ($adres['ilce'] as $ilc) {
+    $dilce[] = mosHTML::makeOption($ilc->id, $ilc->ilce);
+    }
+    $lists['ilce'] = mosHTML::selectList($dilce, 'ilceid', 'id="ilce"', 'value', 'text', $row->ilceid);
+    
+    $dmahalle[] = mosHTML::makeOption('', 'Bir Mahalle Seçin');
+    $lists['mahalle'] = mosHTML::selectList($dmahalle, 'mahalleid', 'id="mahalle"', 'value', 'text');
+    
+    $dsokak[] = mosHTML::makeOption('', 'Bir Sokak Seçin');
+    $lists['sokak'] = mosHTML::selectList($dsokak, 'sokakid', 'id="sokak"', 'value', 'text');
+    }
+    
+    
+    
     
 	KapinoHTML::editKapino($row, $lists);
 }

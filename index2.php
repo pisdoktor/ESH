@@ -32,8 +32,7 @@ initGzip();
 if ($my->id) {
 	//sistem yöneticisi ise 
 	if ($my->access_type == 'admin') {    
-		require_once(ABSPATH.'/admin/includes/functions.php');    
-			
+    			
 		loadAdminModule();
 			
 	} else {        

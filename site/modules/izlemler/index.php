@@ -13,15 +13,14 @@ $first = date("01.m.Y", strtotime($today));
 $last = date("t.m.Y", strtotime($today));
 $baslangictarih = getParam($_REQUEST, 'baslangictarih', $today);
 $bitistarih = getParam($_REQUEST, 'bitistarih', $today);
-
 $ordering = getParam($_REQUEST, 'ordering');
-
-$secim = intval(getParam($_REQUEST, 'secim'));  
+$secim = intval(getParam($_REQUEST, 'secim'));
+$yap = intval(getParam($_REQUEST, 'yap', 1));  
 
 switch($task) {
     default:
     case 'list':
-    getIzlemList($baslangictarih, $bitistarih, $ordering, $secim);
+    getIzlemList($baslangictarih, $bitistarih, $ordering, $secim, $yap);
     break;
     
     case 'izlemgetir':
@@ -79,7 +78,7 @@ function getTakvim() {
          {
          title:'".$row->isim." ".$row->soyisim." (".$row->islemadi.")',
          start:'".date('Y-m-d', $row->izlemtarihi)."',
-         url: 'index.php?option=admin&bolum=izlemler&task=edit&id=".$row->id."'
+         url: 'index.php?option=site&bolum=izlemler&task=edit&id=".$row->id."'
          }";
      }    
 ?>
@@ -137,12 +136,12 @@ function deleteIzlem($id) {
     $del->load($id);
     
     if (!$del->id) {
-    Redirect("index.php?option=admin&bolum=izlemler", "Seçili izlem yok!!!");
+    Redirect("index.php?option=site&bolum=izlemler&task=izlemgetir&tc=".$del->hastatckimlik, "Seçili izlem yok!!!");
     }
     
     $del->delete($id);
     
-   Redirect("index.php?option=admin&bolum=izlemler&task=izlemgetir&tc=".$del->hastatckimlik, "Seçilen izlem silindi"); 
+   Redirect("index.php?option=site&bolum=izlemler&task=izlemgetir&tc=".$del->hastatckimlik, "Seçilen izlem silindi"); 
 }
 
 function IzlemGetir($tc) {
@@ -151,15 +150,29 @@ function IzlemGetir($tc) {
     $dbase->setQuery("SELECT * FROM #__hastalar WHERE tckimlik=".$tc);
     $dbase->loadObject($hasta);
     
-    $dbase->setQuery("SELECT COUNT(*) FROM #__izlemler WHERE hastatckimlik=".$tc);
+    $dbase->setQuery("SELECT COUNT(*) FROM #__izlemler WHERE izlemtarihi>0 AND hastatckimlik=".$tc);
     $total = $dbase->loadResult();
     
     $pageNav = new pageNav($total, $limitstart, $limit);
     
-    $dbase->setQuery("SELECT * FROM #__izlemler WHERE hastatckimlik='".$tc."' ORDER BY izlemtarihi ASC", $limitstart, $limit);
+    $dbase->setQuery("SELECT * FROM #__izlemler WHERE izlemtarihi>0 AND hastatckimlik='".$tc."' ORDER BY izlemtarihi DESC", $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
-    IzlemList::IzlemGetir($hasta, $rows, $pageNav);
+    //pansuman listesi işlemleri
+    $daylist[] = mosHTML::makeOption('1', 'Pzt');
+    $daylist[] = mosHTML::makeOption('2', 'Sal');
+    $daylist[] = mosHTML::makeOption('3', 'Çar');
+    $daylist[] = mosHTML::makeOption('4', 'Per');
+    $daylist[] = mosHTML::makeOption('5', 'Cum');
+    $daylist[] = mosHTML::makeOption('6', 'Cmt');
+    $daylist[] = mosHTML::makeOption('0', 'Paz');
+    
+    $hasta->pgunleri = explode(',', $hasta->pgunleri);
+   
+    
+    $lists['days'] = mosHTML::checkboxList($daylist, 'pgunleri', '', 'value', 'text', $hasta->pgunleri);
+    
+    IzlemList::IzlemGetir($hasta, $rows, $pageNav, $lists);
 }
 
 function heditIzlem($tc) {
@@ -173,7 +186,7 @@ function heditIzlem($tc) {
      
   
     //işlem seçme kutusu yapalım
-    $dbase->setQuery("SELECT * FROM #__islem");
+    $dbase->setQuery("SELECT * FROM #__islem ORDER BY islemadi ASC");
     $islemler = $dbase->loadObjectList();
     
     $islemtype = array();
@@ -181,8 +194,8 @@ function heditIzlem($tc) {
         $islemtype[] = mosHTML::makeOption($islem->id, $islem->islemadi);
     }
         
-    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text');
-    $isyapilacak = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text');
+    $lists['isyapilan'] = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text');
+    $lists['isyapilacak'] = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text');
     
     // PERSONEL SEÇME KUTULARI YAPALIM
     $dbase->setQuery("SELECT id, name FROM #__users WHERE activated='1' ORDER BY name ASC");
@@ -195,9 +208,25 @@ function heditIzlem($tc) {
     
     $row->izlemiyapan = explode(',', $row->izlemiyapan);
         
-    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text');
+    $lists['perlist'] = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text');
     
-    IzlemList::heditIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist);
+    $nedenler = array(
+    '1' => 'Hastanede yatıyor',
+    '2' => 'Vefat etmiş',
+    '3' => 'Adresi değişmiş',
+    '4' => '112 ye teslim edildi',
+    '5' => 'Hizmet reddedildi/İptal edildi',
+    '6' => 'Evde kendisi/yakını yok',
+    '7' => 'Gerekli evrak yok' 
+    );
+    
+    foreach ($nedenler as $v=>$k) {
+        $yneden[] = mosHTML::makeOption($v, $k);
+    }
+    
+    $lists['yneden'] = mosHTML::radioList($yneden, 'neden', '', 'value', 'text');
+    
+    IzlemList::heditIzlem($row, $limit, $limitstart, $hasta, $lists);
 
 }
 
@@ -219,7 +248,7 @@ function controlTC($tc) {
    
 }
 
-function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim) {
+function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim, $yap) {
     global $dbase, $limit, $limitstart;
     
     if ($baslangictarih) { 
@@ -245,9 +274,11 @@ function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim) {
      
      if ($secim) {
      
-         $where[] = "i.yapilan IN (".$secim.")";
+         $where[] = "FIND_IN_SET(".$secim.", i.yapilan)";
      
      }
+     
+     $where[] = "i.yapildimi = ".$yap;
     
     $query = "SELECT COUNT(i.id) FROM #__izlemler AS i"
     . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
@@ -257,21 +288,28 @@ function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim) {
      
      $pageNav = new pageNav( $total, $limitstart, $limit);
      
-     $query = "SELECT i.*, h.isim, h.soyisim, isl.islemadi FROM #__izlemler AS i"
-     . "\n LEFT JOIN #__hastalar AS h ON h.tckimlik=i.hastatckimlik"
-     . "\n LEFT JOIN #__islem AS isl ON isl.id=i.yapilan"
+     $query = "SELECT i.*, h.id AS hid, h.isim, h.soyisim, h.cinsiyet, h.gecici, isl.islemadi, il.ilce, m.mahalle, s.sokakadi FROM #__izlemler AS i "
+     . "\n LEFT JOIN #__hastalar AS h ON h.tckimlik=i.hastatckimlik "
+     . "\n LEFT JOIN #__islem AS isl ON isl.id=i.yapilan "
+     . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
+     . "\n LEFT JOIN #__ilce AS il ON il.id=h.ilce "
+     . "\n LEFT JOIN #__sokak AS s ON s.id=h.sokak "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      . "\n GROUP BY i.id "                                                               
      . $orderingfilter   
-     //. "\n ORDER BY izlemtarihi DESC, h.isim ASC, h.soyisim ASC, i.planli DESC"
      ;
     
     
     $dbase->setQuery($query, $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
+    foreach ($rows as $row) {
+        $dbase->setQuery("SELECT COUNT(id) FROM #__izlemler WHERE izlemtarihi>0 AND hastatckimlik=".$row->hastatckimlik);
+        $row->toplamizlem = $dbase->loadResult();
+    }
+    
     //işlemler select listesi
-    $dbase->setQuery("SELECT * FROM #__islem ORDER BY id");
+    $dbase->setQuery("SELECT * FROM #__islem ORDER BY islemadi ASC");
     $islemler = $dbase->loadObjectList();
     
     $data[] = mosHTML::makeOption('0', 'Bir İşlem Seçin'); 
@@ -280,6 +318,13 @@ function getIzlemList($baslangictarih, $bitistarih, $ordering, $secim) {
     }
     
     $list['islem'] = mosHTML::selectList($data, 'secim', '', 'value', 'text', $secim);
+    
+    
+    $yapi[] = mosHTML::makeOption("1", "Yapılan"); 
+    $yapi[] = mosHTML::makeOption("0", "Yapılmayan");
+    
+    
+    $list['yap'] = mosHTML::selectList($yapi, 'yap', '', 'value', 'text', $yap);
     
     IzlemList::getIzlemList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $list, $secim);
 }
@@ -290,40 +335,59 @@ function saveIzlem() {
     $row = new Izlem( $dbase );
     
     if ( !$row->bind( $_POST ) ) {
-        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
-        exit();
+        ErrorAlert($row->getError());
     }
     
     $row->izlemiyapan = implode(',', $row->izlemiyapan);
     $row->yapilan = implode(',', $row->yapilan);
-    $row->yapilacak = implode(',', $row->yapilacak);
-    
     $row->izlemtarihi = tarihCevir($row->izlemtarihi);
-    $row->planlanantarih = $row->planlanantarih ? tarihCevir($row->planlanantarih) : '';
+    
+    if ($row->yapildimi) {
+        $row->neden = '';
+    }
+    
     
     if (!$row->planli) {
-        $row->planlanantarih = NULL;
-        $row->yapilacak = NULL;    
+        $row->planlanantarih = '';
+        $row->yapilacak = '';    
+    } else {
+        
+        $row->planlanantarih = tarihCevir($row->planlanantarih);
+        $row->yapilacak = implode(',', $row->yapilacak);
+        
+        $dbase->setQuery("SELECT id FROM #__izlemler WHERE hastatckimlik=".$row->hastatckimlik." AND planlanantarih=".$row->planlanantarih." AND yapilacak=".$row->yapilacak);
+        $varmi = $dbase->loadResult();
+        
+        if ($varmi) {
+        ErrorAlert('Bu izlem daha önceden planlanmış!!!');
+        }
+        
+        if ($row->planlanantarih == '') {
+        ErrorAlert('Planlanan tarih girilmemiş');
+        }
+        
+        if ($row->yapilacak == '') {
+        ErrorAlert('Yapılacak işlem(ler) seçilmemiş');
+        }
+    }
+    
+    if ($row->izlemiyapan == '') {
+        ErrorAlert('İzlemi yapan(lar) seçilmemiş');
+    }
+    
+    if ($row->yapilan == '') {
+        ErrorAlert('Yapılan işlem(ler) seçilmemiş');
+    }
+    
+    if ($row->izlemtarihi == '') {
+        ErrorAlert('İzlem tarihi seçilmemiş');
     } 
     
     if (!$row->store()) {
-        echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
-        exit();
+        ErrorAlert($row->getError());
     }
     
-    /*
-    $link = "index.php?option=site&bolum=izlemler";
-    
-    if ($limit) {
-        $link .= "&limit".$limit;
-    }
-    
-    if ($limitstart) {
-        $link .= "&limitstart=".$limitstart;   
-    }
-    */
-    $link = "index.php?option=admin&bolum=izlemler&task=izlemgetir&tc=".$row->hastatckimlik;
-    
+    $link = "index.php?option=site&bolum=izlemler&task=izlemgetir&tc=".$row->hastatckimlik;
     Redirect($link);
     
 }
@@ -332,7 +396,7 @@ function editIzlem($id) {
     global $dbase, $limitstart, $limit;
     
     if (!$id) {
-    Redirect("index.php?option=admin&bolum=hastalar", "Hasta seçilmemiş!");
+    Redirect("index.php?option=site&bolum=hastalar", "Hasta seçilmemiş!");
     }
     
     $row = new Izlem($dbase);
@@ -343,7 +407,7 @@ function editIzlem($id) {
      $dbase->loadObject($hasta);   
     
     //işlem seçme kutusu yapalım
-    $dbase->setQuery("SELECT * FROM #__islem");
+    $dbase->setQuery("SELECT * FROM #__islem ORDER BY islemadi ASC");
     $islemler = $dbase->loadObjectList();
     
     $islemtype = array();
@@ -354,8 +418,8 @@ function editIzlem($id) {
     $row->yapilan = explode(',', $row->yapilan);
     $row->yapilacak = explode(',', $row->yapilacak);
     
-    $isyapilan = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text', $row->yapilan);
-    $isyapilacak = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text', $row->yapilacak);
+    $lists['isyapilan'] = mosHTML::checkboxList($islemtype, 'yapilan', '', 'value','text', $row->yapilan);
+    $lists['isyapilacak'] = mosHTML::checkboxList($islemtype, 'yapilacak', '', 'value','text', $row->yapilacak);
     
     // PERSONEL SEÇME KUTULARI YAPALIM
     $dbase->setQuery("SELECT id, name FROM #__users WHERE activated='1' ORDER BY name ASC");
@@ -368,9 +432,25 @@ function editIzlem($id) {
     
     $row->izlemiyapan = explode(',', $row->izlemiyapan);
         
-    $perlist = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text', $row->izlemiyapan);
+    $lists['perlist'] = mosHTML::checkboxList($islemiyapan, 'izlemiyapan', '', 'value', 'text', $row->izlemiyapan);
     
-    IzlemList::editIzlem($row, $limit, $limitstart, $isyapilan, $isyapilacak, $hasta, $perlist);
+    $nedenler = array(
+    '1' => 'Hastanede yatıyor',
+    '2' => 'Vefat etmiş',
+    '3' => 'Adresi değişmiş',
+    '4' => '112 ye teslim edildi',
+    '5' => 'Hizmet reddedildi/İptal edildi',
+    '6' => 'Evde kendisi/yakını yok',
+    '7' => 'Gerekli evrak yok' 
+    );
+    
+    foreach ($nedenler as $v=>$k) {
+        $yneden[] = mosHTML::makeOption($v, $k);
+    }
+    
+    $lists['yneden'] = mosHTML::radioList($yneden, 'neden', '', 'value', 'text', $row->neden);
+    
+    IzlemList::editIzlem($row, $limit, $limitstart, $hasta, $lists);
 
 }
 
@@ -379,6 +459,5 @@ function cancelIzlem() {
     
     $row = new Izlem( $dbase );
     $row->bind( $_POST );
-    Redirect( 'index.php?option=admin&bolum=izlemler');
+    Redirect( 'index.php?option=site&bolum=izlemler');
 }
-

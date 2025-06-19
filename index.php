@@ -209,15 +209,15 @@ if ( $return ) {
 }
 
 function Logout() {
-	global $mainframe, $return;
+	global $mainframe, $return; 
 	
-	$mainframe->logout();
-   
+	$mainframe->logout();  
+    
 	if ( $return ) {
 		Redirect( $return );
 	} else {
 		Redirect( 'index.php' );
-	}
+	} 
 }
 
 function CookieCheck() {
@@ -256,8 +256,7 @@ else {
 		
 		//sistem yöneticisi ise 
     if ($my->access_type == 'admin') {    
-        require_once(ABSPATH.'/admin/includes/functions.php');    
-            
+                
         include_once(ABSPATH.'/admin/templates/'.ADMINTEMPLATE.'/index.php');
             
     } else {        
@@ -268,7 +267,7 @@ else {
 if (DEBUGMODE) {
     ?>
 
-<div class="panel panel-default">    
+<div class="panel panel-warning">    
     <div class="panel-heading"><h4>SQL HATA AYIKLAMA</h4></div>
     
     <div class="panel-body">
@@ -298,5 +297,4 @@ if (DEBUGMODE) {
     </table>
     <?php
 }
-	
 doGzip();

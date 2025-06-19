@@ -18,7 +18,7 @@ class Islem extends DBTable {
         $dbase->setQuery("SELECT islemadi FROM #__islem WHERE id IN (".$islem.")");
         $rows = $dbase->loadResultArray();
     
-        return implode(', ', $rows);
+        return implode(',', $rows);
               
     }
     

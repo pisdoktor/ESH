@@ -40,9 +40,9 @@ function analyzeTables($cid) {
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('ANALYZE TABLE '.$value);
 		if ($dbase->_errorNum) {
-		$html .= $value." tablosu analiz edilemedi! Mesaj:".$dbase->_errorMsg."<br />";    
+		$html .= $value." tablosu analiz edilemedi! Mesaj:".$dbase->_errorMsg;    
 		} else {
-		$html .= $value." tablosu analiz edildi! Sonuç:OK!<br />";    
+		$html .= $value." tablosu analiz edildi! Sonuç:OK!";    
 		}
 	}
 	
@@ -50,40 +50,53 @@ function analyzeTables($cid) {
 }
 function optimizeTables($cid) {
 	global $dbase;
+    
+    $html = '';
 	
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('OPTIMIZE TABLE '.$value);
-		if ($dbase->_errorNum) {
-		echo $value.' tablosu uyarlanamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
+		
+        if ($dbase->_errorNum) {
+		$html .= $value.' tablosu uyarlanamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
 		} else {
-		echo $value.' tablosu uyarlandı! Sonuç:OK!<br />';    
+		$html .= $value.' tablosu uyarlandı! Sonuç:OK!<br />';    
 		}
 	}
+    
+    Redirect('index.php?option=admin&bolum=db', $html);
 }
 function checkTables($cid) {
 	global $dbase;
+    
+    $html = '';
 	
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('CHECK TABLE '.$value);
 		if ($dbase->_errorNum) {
-		echo $value.' tablosu kontrol edilemedi! Mesaj:'.$dbase->_errorMsg.'<br />';    
+		$html .= $value.' tablosu kontrol edilemedi! Mesaj:'.$dbase->_errorMsg.'<br />';    
 		} else {
-		echo $value.' tablosu kontrol edildi! Sonuç:OK!<br />';    
+		$html .= $value.' tablosu kontrol edildi! Sonuç:OK!<br />';    
 		}
 	}
+    
+    Redirect('index.php?option=admin&bolum=db', $html);
 }
 
 function repairTables($cid) {
 	global $dbase;
+    
+    $html = '';
 	
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('REPAIR TABLE '.$value);
 		if ($dbase->_errorNum) {
-		echo $value.' tablosu onarılamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
+		$html .= $value.' tablosu onarılamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
 		} else {
-		echo $value.' tablosu onarıldı! Sonuç:OK!<br />';    
+		$html .= $value.' tablosu onarıldı! Sonuç:OK!<br />';    
 		}
 	}
+    
+    Redirect('index.php?option=admin&bolum=db', $html);
 }
 
 function getDBTables() {
@@ -164,10 +177,10 @@ Redirect('index.php?option=admin&bolum=db', 'Seçilen '.$total.' tablo '.$filena
 function tabloBoyutu($table) {
 	global $dbase;
 	
-	$dbase->setQuery("SELECT SUM(DATA_LENGTH + INDEX_LENGTH) as total FROM INFORMATION_SCHEMA.PARTITIONS WHERE TABLE_SCHEMA = '".DB."' and TABLE_NAME='".$table."'");
+	$dbase->setQuery("SELECT SUM(DATA_LENGTH + INDEX_LENGTH) as total FROM information_schema.TABLES WHERE TABLE_SCHEMA = '".DB."' and TABLE_NAME='".$table."'");
 	$result = $dbase->loadResult();
 	
-	$result = round((($result) / 1024), 2);
+	$result = round((($result) / 1024), 1);
 	
 	return $result;
 }

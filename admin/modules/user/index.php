@@ -38,6 +38,10 @@ switch($task) {
 	case 'delete':
 	delKullanici($cid);
 	break;
+    
+    case 'logout':
+    UserLogout($id);
+    break;
 }
 
 
@@ -169,4 +173,14 @@ function editKullanici($cid) {
 	$row->load($cid);
 	
 	KullaniciHTML::editKullanici($row);
+}
+
+function UserLogout($id) {
+    global $dbase;
+    
+    $dbase->setQuery("DELETE FROM #__sessions WHERE userid=".$id);
+    $dbase->query();
+    
+    Redirect('index.php');
+
 }

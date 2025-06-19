@@ -155,29 +155,15 @@ class Session extends DBTable {
 	function purge( $inc=1800, $and='' ) {
 		global $mainframe;
 
-		if ($inc == 'core') {
-			$past_logged     = time() - 900;
-			$past_guest     = time() - 900;
 
-			$query = "DELETE FROM $this->_tbl"
-			. "\n WHERE ("
-			// purging expired logged sessions
-			. "\n ( time < '" . (int) $past_logged . "' )"
-			. "\n AND groupid > 0"
-			. "\n ) OR ("
-			// purging expired guest sessions
-			. "\n ( time < '" . (int) $past_guest . "' )"
-			. "\n AND userid = 0"
-			. "\n )"
-			;
-		} else {
-		// kept for backward compatability
 			$past = time() - $inc;
+            
 			$query = "DELETE FROM $this->_tbl"
 			. "\n WHERE ( time < '" . (int) $past . "' )"
 			. $and
 			;
-		}
+            
+            
 		$this->_db->setQuery($query);
 
 		return $this->_db->query();

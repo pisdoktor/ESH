@@ -138,6 +138,18 @@ $(document).ready(function() {
 
 </div>
 
+<div class="form-group row">
+
+<div class="col-sm-3">
+<label for="tckimlikno">TC Kimlik Numarası:</label>
+</div>
+
+<div class="col-sm-4">
+<input type="text" id="tckimlikno" name="tckimlikno" class="form-control" value="<?php echo $row->tckimlikno;?>" required>
+</div>
+
+</div>
+
 
 <div class="form-group row">
 
@@ -164,7 +176,7 @@ $(document).ready(function() {
 <div class="form-group row">
 
 <div class="col-sm-3">
-<label for="email">Parola Tekrarı:</label>
+<label for="confirm_password">Parola Tekrarı:</label>
 </div>
 
 <div class="col-sm-4">
@@ -176,7 +188,7 @@ $(document).ready(function() {
 <div class="form-group row">
 
 <div class="col-sm-3">
-<label for="name">Kullanıcı Aktif:</label>
+<label for="activated">Kullanıcı Aktif:</label>
 </div>
 
 <div class="col-sm-4">
@@ -189,7 +201,7 @@ $(document).ready(function() {
 <div class="form-group row">
 
 <div class="col-sm-3">
-<label for="name">Kullanıcı Admin:</label>
+<label for="isadmin">Kullanıcı Admin:</label>
 </div>
 
 <div class="col-sm-4">
@@ -221,6 +233,7 @@ $(document).ready(function() {
 }
 	
 	static function getKullaniciList($rows, $pageNav, $search) {
+        global $dbase;
         $link = 'index.php?option=admin&bolum=user';
 		?>
 		<div class="panel panel-default">
@@ -257,6 +270,7 @@ $(document).ready(function() {
 <th>E-posta Adresi</th>
 <th>Aktif?</th> 
 <th>ADMİN</th>
+<th>ÇIKIŞ</th>
 </thead>
 <tbody>
 
@@ -267,6 +281,9 @@ $row = $rows[$i];
 
 $checked = mosHTML::idBox( $i, $row->id );
 
+//giriş yapmış mı?
+$dbase->setQuery("SELECT COUNT(*) FROM #__sessions WHERE username='".$row->username."'");
+$loggedin = $dbase->loadResult();
 ?>
 <td><?php echo $pageNav->rowNumber( $i ); ?></td>
 <td><?php echo $checked;?></td>
@@ -275,6 +292,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 <td><?php echo $row->email;?></td>
 <td><?php echo $row->activated ? 'EVET':'HAYIR';?></td>
 <td><?php echo $row->isadmin ? '<strong>EVET</strong>':'HAYIR';?></td>
+<td><?php echo $loggedin ? '<a href="index.php?option=admin&bolum=user&task=logout&id='.$row->id.'"><strong>Evet</strong></a>':'Hayır';?></td>
 </tr>
 <?php
 $t = 1 - $t;

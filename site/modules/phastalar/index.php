@@ -9,24 +9,32 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 $today = date('d.m.Y');
 $first = date("01.m.Y", strtotime($today));
 $last = date("t.m.Y", strtotime($today));
-$baslangictarih = getParam($_REQUEST, 'baslangictarih', $first);
-$bitistarih = getParam($_REQUEST, 'bitistarih', $last);
-
+$search = strval(getParam($_REQUEST, 'search'));
+$baslangictarih = getParam($_REQUEST, 'baslangictarih');
+$bitistarih = getParam($_REQUEST, 'bitistarih');
 $ordering = getParam($_REQUEST, 'ordering'); 
-
 $secim = intval(getParam($_REQUEST, 'secim'));  
 
 switch($task) {
     default:
     case 'list':
-    getHastaList($baslangictarih, $bitistarih, $ordering, $secim);
+    getHastaList($search, $baslangictarih, $bitistarih, $ordering, $secim);
     break;
 }
 
-function getHastaList($baslangictarih, $bitistarih, $ordering, $secim) {
+function getHastaList($search, $baslangictarih, $bitistarih, $ordering, $secim) {
     global $dbase, $limit, $limitstart;
     
-    $where = array(); 
+    $where = array();
+    if ($search) {
+         $search = mosStripslashes($search);
+         if (is_numeric($search)) {
+         $where[] = "h.tckimlik = ". $dbase->getEscaped( $search );
+         } else {
+         $where[] = "(h.isim LIKE '" . $dbase->getEscaped( trim( $search ) ) . "%' OR h.soyisim LIKE '" . $dbase->getEscaped( trim( $search ) ) . "%')";
+         } 
+     }
+      
     if ($baslangictarih) {
     
         $cbaslangictarih = tarihCevir($baslangictarih);    
@@ -54,6 +62,7 @@ function getHastaList($baslangictarih, $bitistarih, $ordering, $secim) {
 
      //Pasif olanları alalım
      $where[] = "h.pasif=1";
+     $where[] = "iz.izlemtarihi>0"; // yapılan ve yapılmayan tüm izlemler, planlılar hariç
     
     $query = "SELECT COUNT(h.id) FROM #__hastalar AS h"
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
@@ -76,24 +85,29 @@ function getHastaList($baslangictarih, $bitistarih, $ordering, $secim) {
   '8' => 'ESH Takibine Uygun Olmaması'
   );
   
-    $s[] = mosHTML::makeOption('0', 'Bir Neden Seçin');
+    $s[] = mosHTML::makeOption('0', 'Seçim Yapın');
     foreach ($pasif as $v=>$k) {
     $s[] = mosHTML::makeOption($v, $k);
     }
     
     $pasifneden = mosHTML::selectList($s, 'secim', 'id="secim"', 'value', 'text', $secim);
      
-     $query = "SELECT h.*, m.mahalle AS mahalleadi FROM #__hastalar AS h "
-     . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle"
+     $query = "SELECT h.*, m.mahalle AS mahalleadi, i.ilce AS ilceadi, COUNT(iz.id) AS izlemsayisi FROM #__hastalar AS h "
+     . "\n CROSS JOIN #__izlemler AS iz ON iz.hastatckimlik=h.tckimlik "
+     . "\n LEFT JOIN #__ilce AS i ON i.id=h.ilce "
+     . "\n LEFT JOIN #__mahalle AS m ON m.id=h.mahalle "
      . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
      . "\n GROUP BY h.id "
      . $orderingfilter    
-     //. "\n ORDER BY h.pasiftarihi DESC"
-     
      ;
     
     $dbase->setQuery($query, $limitstart, $limit);
     $rows = $dbase->loadObjectList();
     
-    HastaList::getHastaList($rows, $pageNav, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim);
+    foreach ($rows as $row) {
+        $dbase->setQuery("SELECT izlemtarihi FROM #__izlemler WHERE hastatckimlik=".$row->tckimlik." ORDER BY izlemtarihi DESC LIMIT 1");
+        $row->sonizlemtarihi = $dbase->loadResult();
+    }
+    
+    HastaList::getHastaList($rows, $pageNav, $search, $baslangictarih, $bitistarih, $ordering, $pasifneden, $secim);
 }

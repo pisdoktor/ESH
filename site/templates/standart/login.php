@@ -33,11 +33,6 @@ $validate = spoofValue(1);
 
 </div>
 
-<div id="header-bar" class="clearfix">
-<div class="header">
-<?php siteMenu();?> 
-</div>
-</div>
 
 <div id="content" class="clearfix">
 <?php
@@ -51,13 +46,13 @@ $validate = spoofValue(1);
 
 <div class="col-sm-4 center">
 <div class="panel panel-default">
-<div class="panel-heading"><i class="fa-solid fa-right-to-bracket"></i> ÜYE GİRİŞİ</div>
+<div class="panel-heading"><i class="fa-solid fa-right-to-bracket"></i> ESH GİRİŞ</div>
 <div class="panel-body">
-<form action="index.php" method="post" name="login" id="loginForm" role="form">
+<form action="index.php" method="post" name="login" id="loginForm" role="form"  data-toggle="validator" novalidate>
 
 <div class="form-group">
 <label class="sr-only" for="username">Kullanıcı Adı:</label>
-<input name="username" id="username" type="text" class="form-control" placeholder="Kullanıcı adınızı yazın" required />
+<input name="username" id="username" type="text" class="form-control" placeholder="Kullanıcı adınızı yazın" autocomplete="on" required />
 </div>
 
 <div class="form-group">
@@ -76,11 +71,11 @@ $validate = spoofValue(1);
 <button type="submit" class="btn btn-primary">GİRİŞ YAP</button>
 </div>   
 
+<?php if (USER_ACTIVATION) { ?>
 <div class="form-group">
 <a href="#" id="forgot">ŞİFREMİ UNUTTUM!</a>
 </div>
 
-<?php if (USER_ACTIVATION) { ?>
 <div class="form-group">
 <a href="#" id="activ">HESAP AKTİVASYONU</a>
 </div>
@@ -106,17 +101,17 @@ $validate = spoofValue(1);
 
 </div><!-- content -->
 
-<div id="forgotpass">
-<form action="index.php" method="post" role="form">
+<div id="forgotpass" style="display:none;">
+<form action="index.php" method="post" role="form" data-toggle="validator" novalidate>
 <span class="help-block">* Şifrenizi sıfırlamak için lütfen kayıtlı e-posta adresinizi yazın.</span>
 
 <div class="form-group">
 <div class="row">
 <div class="col-sm-5">
-<label for="email">E-posta Adresiniz:</label>
+<label class="sr-only" for="email">Parola:</label>
 </div>
 <div class="col-sm-7">
-<input type="text" name="email" id="email" class="form-control" required />
+<input type="text" name="email" id="email" class="form-control" autocomplete="off" required />
 </div> 
 </div>
 </div>
